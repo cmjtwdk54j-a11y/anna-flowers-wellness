@@ -1,0 +1,233 @@
+{
+  "nav": {
+    "home": "Etusivu",
+    "flowers": "Kukkakauppa",
+    "massage": "Päänahkahieronta",
+    "giftCards": "Lahjakortit",
+    "delivery": "Toimitus",
+    "contact": "Yhteystiedot",
+    "cart": "Ostoskori",
+    "checkout": "Kassa"
+  },
+  "home": {
+    "hero": {
+      "title": "Kauneutta ja hyvinvointia",
+      "subtitle": "Tuoreet kukat ja rentouttava päänahkahieronta – kaikki saman katon alta",
+      "shopNow": "Tilaa kukkia",
+      "bookMassage": "Varaa hieronta"
+    },
+    "services": {
+      "title": "Palvelumme",
+      "flowers": {
+        "title": "Kukkakauppa",
+        "description": "Kauniit tuorelukkuja jokaiseen tilaisuuteen – häistä hautajaisiin"
+      },
+      "massage": {
+        "title": "Päänahkahieronta",
+        "description": "Rentouttava ja elvyttävä päänahkahieronta ammattitaitoisten käsissä"
+      },
+      "delivery": {
+        "title": "Kotiinkuljetus",
+        "description": "Toimitamme kukat kotiovellesi Helsingissä, Espoossa, Vantaalla ja Keravalla"
+      }
+    },
+    "featured": "Suositut tuotteet",
+    "whyUs": {
+      "title": "Miksi valita meidät?",
+      "fresh": "Tuoreet kukat",
+      "freshDesc": "Kaikki kukat ovat tuoreita ja laadukkaita",
+      "fast": "Nopea toimitus",
+      "fastDesc": "Toimitus samana päivänä kaupunkikeskustaan",
+      "personal": "Henkilökohtainen palvelu",
+      "personalDesc": "Autamme sinua löytämään täydellisen lahjan"
+    }
+  },
+  "flowers": {
+    "title": "Kukkakauppa",
+    "subtitle": "Tuoreet kukat jokaiseen tilaisuuteen",
+    "categories": {
+      "all": "Kaikki",
+      "bouquets": "Kukkakimput",
+      "wedding": "Häätarjoilut",
+      "funeral": "Muistokukat"
+    },
+    "sizes": {
+      "small": "Pieni",
+      "large": "Suuri"
+    },
+    "addToCart": "Lisää ostoskoriin",
+    "funeralNotice": "Suosittelemme tilaamaan hautajaiskukat 3–5 päivää ennen hautajaisia.",
+    "outOfStock": "Loppu varastosta",
+    "from": "Alkaen"
+  },
+  "product": {
+    "details": "Tuotetiedot",
+    "selectSize": "Valitse koko",
+    "selectDate": "Valitse toimituspäivä",
+    "selectTime": "Valitse toimitusaika",
+    "preOrder": "Ennakkotilaus",
+    "quantity": "Määrä",
+    "addToCart": "Lisää ostoskoriin",
+    "relatedProducts": "Samankaltaiset tuotteet"
+  },
+  "massage": {
+    "title": "Päänahkahieronta",
+    "subtitle": "Rentouttava ja elvyttävä kokemus",
+    "description": "Päänahkahieronta parantaa verenkiertoa, vähentää stressiä ja edistää hiusten kasvua. Asiantuntevat kätemme huolehtivat sinun hyvinvoinnistasi.",
+    "benefits": {
+      "title": "Hyödyt",
+      "circulation": "Parantaa verenkiertoa",
+      "stress": "Vähentää stressiä ja jännitystä",
+      "hair": "Edistää hiusten kasvua",
+      "relax": "Syvä rentoutuminen",
+      "headache": "Lievittää päänsärkyä",
+      "focus": "Parantaa keskittymiskykyä"
+    },
+    "services": {
+      "title": "Palvelut ja hinnat",
+      "basic": "Perus päänahkahieronta",
+      "basic_duration": "30 min",
+      "basic_price": "35 €",
+      "basic_desc": "Rentouttava päänahkahieronta perusöljyllä",
+      "premium": "Premium päänahkahieronta",
+      "premium_duration": "60 min",
+      "premium_price": "65 €",
+      "premium_desc": "Syvä päänahkahieronta erikoisöljyillä ja aromiterapialla",
+      "treatment": "Hoitava päänahkahieronta",
+      "treatment_duration": "45 min",
+      "treatment_price": "50 €",
+      "treatment_desc": "Hoitava hieronta kuivalle tai hiustenlähtöongelmaiselle päänahalle"
+    },
+    "booking": {
+      "title": "Varaa aika",
+      "name": "Nimi",
+      "email": "Sähköposti",
+      "phone": "Puhelin",
+      "service": "Palvelu",
+      "date": "Päivämäärä",
+      "time": "Aika",
+      "notes": "Lisätietoja",
+      "submit": "Varaa aika",
+      "success": "Varaus vastaanotettu! Otamme sinuun yhteyttä pian.",
+      "selectService": "Valitse palvelu"
+    }
+  },
+  "giftCards": {
+    "title": "Lahjakortit",
+    "subtitle": "Täydellinen lahja kaikille",
+    "description": "Lahjakortit ovat voimassa 12 kuukautta ostopäivästä. Niitä voi käyttää sekä kukkaostoksiin että päänahkahierontaan.",
+    "amount": "Summa",
+    "customAmount": "Oma summa",
+    "minAmount": "Vähintään 50 €",
+    "recipientName": "Vastaanottajan nimi",
+    "recipientEmail": "Vastaanottajan sähköposti",
+    "message": "Henkilökohtainen viesti",
+    "buyNow": "Osta lahjakortti",
+    "yourName": "Sinun nimesi",
+    "yourEmail": "Sinun sähköpostisi",
+    "validFor": "Voimassa 12 kuukautta",
+    "usableFor": "Käytettävissä kukkaostoksiin ja hierontaan"
+  },
+  "delivery": {
+    "title": "Toimitusehdot",
+    "subtitle": "Toimitamme tuoreet kukat sinulle",
+    "zones": {
+      "title": "Toimitusalueet",
+      "helsinki": "Helsinki",
+      "espoo": "Espoo",
+      "vantaa": "Vantaa",
+      "kerava": "Kerava"
+    },
+    "free": "Ilmainen toimitus",
+    "freeDesc": "Ilmainen toimitus {km} km säteellä",
+    "price": "Toimitusmaksu {km} km ulkopuolella: {price} €",
+    "sameDay": "Samana päivänä toimitus kaupunkikeskustaan",
+    "homeDelivery": "Kotiinkuljetus",
+    "schoolDelivery": "Toimitamme myös kouluihin",
+    "times": {
+      "title": "Toimitusajat",
+      "weekdays": "Maanantai–Perjantai: 9:00–18:00",
+      "saturday": "Lauantai: 10:00–16:00",
+      "sunday": "Sunnuntai: Suljettu"
+    }
+  },
+  "contact": {
+    "title": "Yhteystiedot",
+    "address": "Osoite",
+    "phone": "Puhelin",
+    "email": "Sähköposti",
+    "whatsapp": "WhatsApp",
+    "openingHours": "Aukioloajat",
+    "parking": {
+      "title": "Pysäköinti",
+      "spot1": "1 pysäköintipaikka – 3 tunnin aikaraja",
+      "spot2": "2 lisäpaikkaa – 2 tunnin aikaraja"
+    },
+    "weekdays": "Ma–Pe: 9:00–18:00",
+    "saturday": "La: 10:00–16:00",
+    "sunday": "Su: Suljettu",
+    "sendMessage": "Lähetä viesti",
+    "name": "Nimi",
+    "yourEmail": "Sähköposti",
+    "message": "Viesti",
+    "send": "Lähetä"
+  },
+  "cart": {
+    "title": "Ostoskori",
+    "empty": "Ostoskori on tyhjä",
+    "continue": "Jatka ostoksia",
+    "total": "Yhteensä",
+    "checkout": "Siirry kassalle",
+    "remove": "Poista",
+    "quantity": "Kpl",
+    "subtotal": "Välisumma",
+    "delivery": "Toimitus"
+  },
+  "checkout": {
+    "title": "Kassa",
+    "customerInfo": "Yhteystiedot",
+    "deliveryInfo": "Toimitusosoite",
+    "paymentInfo": "Maksutapa",
+    "orderSummary": "Tilauksen yhteenveto",
+    "name": "Nimi",
+    "email": "Sähköposti",
+    "phone": "Puhelin",
+    "address": "Katuosoite",
+    "city": "Kaupunki",
+    "deliveryType": "Toimitustapa",
+    "home": "Kotiinkuljetus",
+    "school": "Kouluun",
+    "cityCenter": "Kaupunkikeskusta",
+    "pickup": "Nouto liikkeestä",
+    "scheduleDate": "Toimituspäivä",
+    "scheduleTime": "Toimitusaika",
+    "giftCard": "Lahjakortti",
+    "giftCardCode": "Lahjakortin koodi",
+    "apply": "Käytä",
+    "card": "Pankkikortti",
+    "mobilePay": "MobilePay",
+    "edenred": "Edenred",
+    "placeOrder": "Tilaa nyt",
+    "processing": "Käsitellään...",
+    "notes": "Lisätietoja tilaukseen",
+    "deliveryFee": "Toimitusmaksu",
+    "total": "Yhteensä",
+    "free": "Ilmainen"
+  },
+  "common": {
+    "loading": "Ladataan...",
+    "error": "Virhe tapahtui",
+    "back": "Takaisin",
+    "readMore": "Lue lisää",
+    "close": "Sulje",
+    "confirm": "Vahvista",
+    "cancel": "Peruuta",
+    "save": "Tallenna",
+    "currency": "€"
+  },
+  "footer": {
+    "rights": "Kaikki oikeudet pidätetään",
+    "privacy": "Tietosuoja",
+    "terms": "Käyttöehdot"
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "nav": {
+    "home": "Home",
+    "flowers": "Flower Shop",
+    "massage": "Head Massage",
+    "giftCards": "Gift Cards",
+    "delivery": "Delivery",
+    "contact": "Contact",
+    "cart": "Cart",
+    "checkout": "Checkout"
+  },
+  "home": {
+    "hero": {
+      "title": "Beauty & Wellbeing",
+      "subtitle": "Fresh flowers and relaxing head massages – all under one roof",
+      "shopNow": "Shop Flowers",
+      "bookMassage": "Book Massage"
+    },
+    "services": {
+      "title": "Our Services",
+      "flowers": {
+        "title": "Flower Shop",
+        "description": "Beautiful fresh bouquets for every occasion – from weddings to funerals"
+      },
+      "massage": {
+        "title": "Head Massage",
+        "description": "Relaxing and revitalizing head massage in professional hands"
+      },
+      "delivery": {
+        "title": "Home Delivery",
+        "description": "We deliver flowers to your door in Helsinki, Espoo, Vantaa and Kerava"
+      }
+    },
+    "featured": "Popular Products",
+    "whyUs": {
+      "title": "Why Choose Us?",
+      "fresh": "Fresh Flowers",
+      "freshDesc": "All flowers are fresh and high quality",
+      "fast": "Fast Delivery",
+      "fastDesc": "Same-day delivery to city center",
+      "personal": "Personal Service",
+      "personalDesc": "We help you find the perfect gift"
+    }
+  },
+  "flowers": {
+    "title": "Flower Shop",
+    "subtitle": "Fresh flowers for every occasion",
+    "categories": {
+      "all": "All",
+      "bouquets": "Bouquets",
+      "wedding": "Wedding",
+      "funeral": "Memorial Flowers"
+    },
+    "sizes": {
+      "small": "Small",
+      "large": "Large"
+    },
+    "addToCart": "Add to Cart",
+    "funeralNotice": "We recommend ordering funeral flowers 3–5 days before the funeral date.",
+    "outOfStock": "Out of Stock",
+    "from": "From"
+  },
+  "product": {
+    "details": "Product Details",
+    "selectSize": "Select Size",
+    "selectDate": "Select Delivery Date",
+    "selectTime": "Select Delivery Time",
+    "preOrder": "Pre-order",
+    "quantity": "Quantity",
+    "addToCart": "Add to Cart",
+    "relatedProducts": "Related Products"
+  },
+  "massage": {
+    "title": "Head Massage",
+    "subtitle": "A relaxing and revitalizing experience",
+    "description": "Head massage improves blood circulation, reduces stress, and promotes hair growth. Our expert hands take care of your wellbeing.",
+    "benefits": {
+      "title": "Benefits",
+      "circulation": "Improves blood circulation",
+      "stress": "Reduces stress and tension",
+      "hair": "Promotes hair growth",
+      "relax": "Deep relaxation",
+      "headache": "Relieves headaches",
+      "focus": "Improves concentration"
+    },
+    "services": {
+      "title": "Services & Prices",
+      "basic": "Basic Head Massage",
+      "basic_duration": "30 min",
+      "basic_price": "35 €",
+      "basic_desc": "Relaxing head massage with basic oil",
+      "premium": "Premium Head Massage",
+      "premium_duration": "60 min",
+      "premium_price": "65 €",
+      "premium_desc": "Deep head massage with special oils and aromatherapy",
+      "treatment": "Treatment Head Massage",
+      "treatment_duration": "45 min",
+      "treatment_price": "50 €",
+      "treatment_desc": "Therapeutic massage for dry scalp or hair loss"
+    },
+    "booking": {
+      "title": "Book an Appointment",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "service": "Service",
+      "date": "Date",
+      "time": "Time",
+      "notes": "Additional notes",
+      "submit": "Book Now",
+      "success": "Booking received! We will contact you soon.",
+      "selectService": "Select service"
+    }
+  },
+  "giftCards": {
+    "title": "Gift Cards",
+    "subtitle": "The perfect gift for everyone",
+    "description": "Gift cards are valid for 12 months from the date of purchase. They can be used for both flower purchases and head massages.",
+    "amount": "Amount",
+    "customAmount": "Custom amount",
+    "minAmount": "Minimum 50 €",
+    "recipientName": "Recipient's name",
+    "recipientEmail": "Recipient's email",
+    "message": "Personal message",
+    "buyNow": "Buy Gift Card",
+    "yourName": "Your name",
+    "yourEmail": "Your email",
+    "validFor": "Valid for 12 months",
+    "usableFor": "Usable for flowers and massage"
+  },
+  "delivery": {
+    "title": "Delivery Information",
+    "subtitle": "We deliver fresh flowers to you",
+    "zones": {
+      "title": "Delivery Areas",
+      "helsinki": "Helsinki",
+      "espoo": "Espoo",
+      "vantaa": "Vantaa",
+      "kerava": "Kerava"
+    },
+    "free": "Free Delivery",
+    "freeDesc": "Free delivery within {km} km radius",
+    "price": "Delivery fee outside {km} km: {price} €",
+    "sameDay": "Same-day delivery to city center",
+    "homeDelivery": "Home delivery",
+    "schoolDelivery": "We also deliver to schools",
+    "times": {
+      "title": "Delivery Times",
+      "weekdays": "Monday–Friday: 9:00–18:00",
+      "saturday": "Saturday: 10:00–16:00",
+      "sunday": "Sunday: Closed"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "openingHours": "Opening Hours",
+    "parking": {
+      "title": "Parking",
+      "spot1": "1 parking space – 3-hour limit",
+      "spot2": "2 additional spaces – 2-hour limit"
+    },
+    "weekdays": "Mon–Fri: 9:00–18:00",
+    "saturday": "Sat: 10:00–16:00",
+    "sunday": "Sun: Closed",
+    "sendMessage": "Send a Message",
+    "name": "Name",
+    "yourEmail": "Email",
+    "message": "Message",
+    "send": "Send"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continue": "Continue Shopping",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "remove": "Remove",
+    "quantity": "Qty",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "customerInfo": "Contact Information",
+    "deliveryInfo": "Delivery Address",
+    "paymentInfo": "Payment Method",
+    "orderSummary": "Order Summary",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Street Address",
+    "city": "City",
+    "deliveryType": "Delivery Type",
+    "home": "Home Delivery",
+    "school": "To School",
+    "cityCenter": "City Center",
+    "pickup": "Pick Up In Store",
+    "scheduleDate": "Delivery Date",
+    "scheduleTime": "Delivery Time",
+    "giftCard": "Gift Card",
+    "giftCardCode": "Gift Card Code",
+    "apply": "Apply",
+    "card": "Bank Card",
+    "mobilePay": "MobilePay",
+    "edenred": "Edenred",
+    "placeOrder": "Place Order",
+    "processing": "Processing...",
+    "notes": "Order notes",
+    "deliveryFee": "Delivery Fee",
+    "total": "Total",
+    "free": "Free"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "back": "Back",
+    "readMore": "Read More",
+    "close": "Close",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "currency": "€"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}
