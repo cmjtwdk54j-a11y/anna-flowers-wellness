@@ -21,7 +21,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
   if (session_id) {
     try {
       order = await prisma.order.findFirst({
-        where: { stripeSessionId: session_id },
+        where: { stripeSessionId: session_id } as any,
         include: { items: true },
       }) as any;
     } catch {
