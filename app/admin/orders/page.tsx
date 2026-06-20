@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search, Filter } from 'lucide-react';
 import OrderStatusBadge, { STATUS_CONFIG } from '@/components/admin/OrderStatusBadge';
@@ -24,14 +24,13 @@ const DELIVERY_LABELS: Record<string, string> = {
 
 export default function OrdersPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [status, setStatus] = useState(searchParams.get('status') || '');
-  const [page, setPage] = useState(parseInt(searchParams.get('page') || '1'));
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState('');
+  const [page, setPage] = useState(1);
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
