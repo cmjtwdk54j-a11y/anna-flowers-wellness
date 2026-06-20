@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Flower2, Lock } from 'lucide-react';
 
-export default function AdminLoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [password, setPassword] = useState('');
@@ -37,6 +37,39 @@ export default function AdminLoginPage() {
   };
 
   return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-xs font-medium text-stone-400 mb-1.5">Salasana</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoFocus
+          required
+          placeholder="••••••••"
+          className="w-full bg-stone-700 border border-stone-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
+
+      {error && (
+        <p className="text-xs text-red-400 bg-red-900/30 px-3 py-2 rounded-lg border border-red-800/40">
+          {error}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading || !password}
+        className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm py-2.5 rounded-lg transition-colors"
+      >
+        {loading ? 'Kirjaudutaan...' : 'Kirjaudu sisään'}
+      </button>
+    </form>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
     <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="flex justify-center mb-8">
@@ -57,34 +90,9 @@ export default function AdminLoginPage() {
             <h1 className="text-sm font-semibold text-stone-200">Kirjaudu sisään</h1>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-medium text-stone-400 mb-1.5">Salasana</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoFocus
-                required
-                placeholder="••••••••"
-                className="w-full bg-stone-700 border border-stone-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-            </div>
-
-            {error && (
-              <p className="text-xs text-red-400 bg-red-900/30 px-3 py-2 rounded-lg border border-red-800/40">
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading || !password}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm py-2.5 rounded-lg transition-colors"
-            >
-              {loading ? 'Kirjaudutaan...' : 'Kirjaudu sisään'}
-            </button>
-          </form>
+          <Suspense fallback={<div className="h-32 animate-pulse bg-stone-700 rounded-lg" />}>
+            <LoginForm />
+          </Suspense>
 
           <p className="text-xs text-stone-500 text-center mt-4">
             Oletussalasana: <code className="text-stone-400">admin123</code>
