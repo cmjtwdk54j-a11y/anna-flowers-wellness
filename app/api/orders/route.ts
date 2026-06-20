@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         cardMessage: cardMessage || null,
         deliveryType, deliveryAddress, deliveryCity, deliveryNote,
         scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
-        addons: validatedAddons.length > 0 ? validatedAddons : undefined,
+        addons: validatedAddons.length > 0 ? (validatedAddons as any) : undefined,
         paymentMethod,
         giftCardCode: giftCardCode || null,
         giftCardDiscount: discount || null,
