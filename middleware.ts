@@ -6,7 +6,7 @@ const ADMIN_COOKIE = 'admin_session';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/admin/login') {
+  if (pathname === '/admin/login' || pathname.startsWith('/api/admin/auth/')) {
     return NextResponse.next();
   }
 
