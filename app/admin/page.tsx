@@ -91,7 +91,7 @@ async function getDashboardStats(): Promise<DashboardStats | null> {
     };
   } catch (err) {
     console.error('Dashboard error:', err);
-    return null;
+    throw err;
   }
 }
 
@@ -104,15 +104,24 @@ function fmtDate(iso: string) {
 }
 
 export default async function AdminDashboardPage() {
-  const stats = await getDashboardStats();
+  let stats: DashboardStats | null = null;
+  let errorMsg = '';
+  try {
+    stats = await getDashboardStats();
+  } catch (err: any) {
+    errorMsg = String(err?.message || err);
+  }
 
   if (!stats) {
     return (
       <div className="p-6 lg:p-8">
         <h1 className="text-xl font-bold text-stone-800 mb-6">Dashboard</h1>
-        <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm px-4 py-3 rounded-xl flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-          Tietokantayhteyttä ei löydy. Varmista DATABASE_URL ympäristömuuttuja.
+        <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm px-4 py-3 rounded-xl">
+          <div className="flex items-center gap-2 mb-1">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+            Tietokantayhteyttä ei löydy.
+          </div>
+          {errorMsg && <pre className="text-xs mt-2 whitespace-pre-wrap break-all">{errorMsg}</pre>}
         </div>
       </div>
     );
