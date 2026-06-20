@@ -183,6 +183,35 @@ model PaymentMethod {
   @@map("payment_methods")
 }
 
+model PromoCode {
+  id             String    @id @default(cuid())
+  code           String    @unique
+  discountType   String    // PERCENT | FIXED
+  discountValue  Float
+  minOrderAmount Float?
+  startsAt       DateTime?
+  expiresAt      DateTime?
+  maxUses        Int?
+  maxUsesPerUser Int?
+  usageCount     Int       @default(0)
+  applicableTo   String    @default("ALL") // ALL | CATEGORIES | PRODUCTS
+  categoryIds    String[]  @default([])
+  productIds     String[]  @default([])
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("promo_codes")
+}
+
+model StoreSettings {
+  id        String   @id @default("singleton")
+  data      Json
+  updatedAt DateTime @updatedAt
+
+  @@map("store_settings")
+}
+
 enum OrderStatus {
   PENDING
   CONFIRMED

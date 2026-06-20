@@ -1,0 +1,249 @@
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import type { AdminCategory, AdminProduct } from '@/lib/admin/types';
+import Image from 'next/image';
+
+const schema = z.object({
+  slug: z.string().min(1, 'Pakollinen').regex(/^[a-z0-9-]+$/, 'Vain pieniä kirjaimia, numeroita ja viivoja'),
+  name_fi: z.string().min(1, 'Pakollinen'),
+  name_en: z.string().min(1, 'Pakollinen'),
+  description_fi: z.string().min(1, 'Pakollinen'),
+  description_en: z.string().min(1, 'Pakollinen'),
+  composition_fi: z.string().optional(),
+  composition_en: z.string().optional(),
+  careInfo_fi: z.string().optional(),
+  careInfo_en: z.string().optional(),
+  priceSmall: z.coerce.number().positive('Hinnan on oltava positiivinen'),
+  priceLarge: z.coerce.number().positive().optional().or(z.literal('')),
+  imageUrl: z.string().url('Virheellinen URL').min(1, 'Pakollinen'),
+  imageUrls: z.string().optional(),
+  categoryId: z.string().min(1, 'Valitse kategoria'),
+  occasions: z.string().optional(),
+  color: z.string().optional(),
+  flowerCount: z.coerce.number().int().positive().optional().or(z.literal('')),
+  heightCm: z.coerce.number().int().positive().optional().or(z.literal('')),
+  popularity: z.coerce.number().int().min(0).default(0),
+  inStock: z.boolean().default(true),
+  isFeatured: z.boolean().default(false),
+  isFuneral: z.boolean().default(false),
+  isWedding: z.boolean().default(false),
+});
+
+type FormData = z.infer<typeof schema>;
+
+interface ProductFormProps {
+  product?: AdminProduct;
+  categories: AdminCategory[];
+}
+
+export default function ProductForm({ product, categories }: ProductFormProps) {
+  const router = useRouter();
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const {
+    register, handleSubmit, watch,
+    formState: { errors },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } = useForm<FormData>({
+    resolver: zodResolver(schema) as any,
+    defaultValues: product
+      ? {
+          ...product,
+          composition_fi: product.composition_fi ?? undefined,
+          composition_en: product.composition_en ?? undefined,
+          careInfo_fi: product.careInfo_fi ?? undefined,
+          careInfo_en: product.careInfo_en ?? undefined,
+          color: product.color ?? undefined,
+          priceLarge: product.priceLarge ?? '',
+          imageUrls: product.imageUrls.join('\n'),
+          occasions: product.occasions.join(', '),
+          flowerCount: product.flowerCount ?? '',
+          heightCm: product.heightCm ?? '',
+        }
+      : { inStock: true, isFeatured: false, isFuneral: false, isWedding: false, popularity: 0 },
+  });
+
+  const imageUrl = watch('imageUrl');
+  const isEdit = !!product;
+
+  const onSubmit = async (data: FormData) => {
+    setSaving(true);
+    setError('');
+    try {
+      const payload = {
+        ...data,
+        priceLarge: data.priceLarge !== '' ? data.priceLarge : null,
+        imageUrls: data.imageUrls ? data.imageUrls.split('\n').map((u) => u.trim()).filter(Boolean) : [],
+        occasions: data.occasions ? data.occasions.split(',').map((o) => o.trim()).filter(Boolean) : [],
+        flowerCount: data.flowerCount !== '' ? data.flowerCount : null,
+        heightCm: data.heightCm !== '' ? data.heightCm : null,
+      };
+
+      const url = isEdit ? `/api/admin/products/${product.id}` : '/api/admin/products';
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (!res.ok) { setError(json.error || 'Virhe'); return; }
+      router.push('/admin/products');
+      router.refresh();
+    } catch {
+      setError('Verkkovirhe');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const Field = ({ label, name, textarea, type = 'text', placeholder }: {
+    label: string; name: keyof FormData; textarea?: boolean; type?: string; placeholder?: string;
+  }) => (
+    <div>
+      <label className="block text-xs font-medium text-stone-600 mb-1">{label}</label>
+      {textarea ? (
+        <textarea
+          {...register(name)}
+          placeholder={placeholder}
+          rows={3}
+          className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
+        />
+      ) : (
+        <input
+          {...register(name)}
+          type={type}
+          placeholder={placeholder}
+          className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+      )}
+      {errors[name] && <p className="text-xs text-red-500 mt-1">{errors[name]?.message as string}</p>}
+    </div>
+  );
+
+  const CheckField = ({ label, name }: { label: string; name: keyof FormData }) => (
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" {...register(name)} className="rounded border-stone-300 text-indigo-500 focus:ring-indigo-400" />
+      <span className="text-sm text-stone-700">{label}</span>
+    </label>
+  );
+
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg border border-red-200">{error}</div>
+      )}
+
+      {/* Perustiedot */}
+      <section className="bg-white border border-stone-200 rounded-xl p-5">
+        <h2 className="text-sm font-semibold text-stone-700 mb-4">Perustiedot</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label="Slug / URL *" name="slug" placeholder="ruusukimppu-klassinen" />
+          <div>
+            <label className="block text-xs font-medium text-stone-600 mb-1">Kategoria *</label>
+            <select
+              {...register('categoryId')}
+              className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white"
+            >
+              <option value="">Valitse kategoria</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>{c.name_fi}</option>
+              ))}
+            </select>
+            {errors.categoryId && <p className="text-xs text-red-500 mt-1">{errors.categoryId.message}</p>}
+          </div>
+          <Field label="Nimi (FI) *" name="name_fi" placeholder="Klassinen ruusukimppu" />
+          <Field label="Nimi (EN) *" name="name_en" placeholder="Classic rose bouquet" />
+          <div className="sm:col-span-2">
+            <Field label="Kuvaus (FI) *" name="description_fi" textarea placeholder="Kaunis klassinen ruusukimppu..." />
+          </div>
+          <div className="sm:col-span-2">
+            <Field label="Kuvaus (EN) *" name="description_en" textarea placeholder="Beautiful classic rose bouquet..." />
+          </div>
+          <Field label="Koostumus (FI)" name="composition_fi" textarea placeholder="10 punaista ruusua, vihreät..." />
+          <Field label="Koostumus (EN)" name="composition_en" textarea placeholder="10 red roses, greenery..." />
+          <Field label="Hoito-ohjeet (FI)" name="careInfo_fi" textarea placeholder="Vaihda vesi päivittäin..." />
+          <Field label="Hoito-ohjeet (EN)" name="careInfo_en" textarea placeholder="Change water daily..." />
+        </div>
+      </section>
+
+      {/* Hinnat */}
+      <section className="bg-white border border-stone-200 rounded-xl p-5">
+        <h2 className="text-sm font-semibold text-stone-700 mb-4">Hinnat</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label="Hinta pieni (€) *" name="priceSmall" type="number" placeholder="35.00" />
+          <Field label="Hinta suuri (€)" name="priceLarge" type="number" placeholder="65.00" />
+        </div>
+      </section>
+
+      {/* Kuvat */}
+      <section className="bg-white border border-stone-200 rounded-xl p-5">
+        <h2 className="text-sm font-semibold text-stone-700 mb-4">Kuvat</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <Field label="Pääkuvan URL *" name="imageUrl" placeholder="https://images.unsplash.com/..." />
+            {imageUrl && (
+              <div className="mt-2 w-24 h-24 rounded-lg overflow-hidden border border-stone-200">
+                <Image src={imageUrl} alt="Esikatselu" width={96} height={96} className="w-full h-full object-cover" />
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-stone-600 mb-1">Lisäkuvien URL:t (yksi per rivi)</label>
+            <textarea
+              {...register('imageUrls')}
+              rows={4}
+              placeholder="https://..."
+              className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Lisätiedot */}
+      <section className="bg-white border border-stone-200 rounded-xl p-5">
+        <h2 className="text-sm font-semibold text-stone-700 mb-4">Lisätiedot</h2>
+        <div className="grid sm:grid-cols-3 gap-4">
+          <Field label="Väri" name="color" placeholder="Punainen" />
+          <Field label="Kukkien määrä" name="flowerCount" type="number" placeholder="10" />
+          <Field label="Korkeus (cm)" name="heightCm" type="number" placeholder="40" />
+          <Field label="Suosio (0–100)" name="popularity" type="number" placeholder="0" />
+          <div className="sm:col-span-2">
+            <Field label="Tilaisuudet (pilkulla eroteltu)" name="occasions" placeholder="Syntymäpäivä, Häät, Juhla" />
+          </div>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-3 mt-4">
+          <CheckField label="Varastossa" name="inStock" />
+          <CheckField label="Suosittu tuote (featured)" name="isFeatured" />
+          <CheckField label="Hautajaiskukka" name="isFuneral" />
+          <CheckField label="Häätarjoilu" name="isWedding" />
+        </div>
+      </section>
+
+      <div className="flex items-center gap-3">
+        <button
+          type="submit"
+          disabled={saving}
+          className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
+        >
+          {saving ? 'Tallennetaan...' : isEdit ? 'Tallenna muutokset' : 'Luo tuote'}
+        </button>
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="text-sm text-stone-500 hover:text-stone-700 px-4 py-2.5"
+        >
+          Peruuta
+        </button>
+      </div>
+    </form>
+  );
+}

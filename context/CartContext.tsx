@@ -92,18 +92,21 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, { items: [], isOpen: false });
-
-  useEffect(() => {
+function loadCartFromStorage(): CartItem[] {
+  if (typeof window === 'undefined') return [];
+  try {
     const saved = localStorage.getItem('anna-flowers-cart');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        dispatch({ type: 'LOAD_CART', payload: parsed });
-      } catch {}
-    }
-  }, []);
+    if (saved) return JSON.parse(saved) as CartItem[];
+  } catch {}
+  return [];
+}
+
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [state, dispatch] = useReducer(
+    cartReducer,
+    { items: [], isOpen: false },
+    (initial) => ({ ...initial, items: loadCartFromStorage() })
+  );
 
   useEffect(() => {
     localStorage.setItem('anna-flowers-cart', JSON.stringify(state.items));

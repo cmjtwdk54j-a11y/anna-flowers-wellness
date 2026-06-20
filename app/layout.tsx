@@ -1,12 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
-import { CartProvider } from '@/context/CartContext';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import CartDrawer from '@/components/cart/CartDrawer';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -29,22 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await getLocale();
-  const messages = await getMessages();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={locale} className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-stone-50 font-sans">
-        <NextIntlClientProvider messages={messages}>
-          <CartProvider>
-            <Header locale={locale} />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <CartDrawer locale={locale} />
-          </CartProvider>
-        </NextIntlClientProvider>
-      </body>
+    <html lang="fi" className={`${inter.variable} h-full`}>
+      <body className="h-full">{children}</body>
     </html>
   );
 }
