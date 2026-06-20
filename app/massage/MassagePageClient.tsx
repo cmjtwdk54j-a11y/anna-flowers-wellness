@@ -16,6 +16,7 @@ export default function MassagePageClient() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [bookingError, setBookingError] = useState('');
 
   const benefits = [
     { icon: Droplets, key: 'circulation' },
@@ -32,9 +33,10 @@ export default function MassagePageClient() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setBookingError('');
     try {
       const service = MASSAGE_SERVICES.find((s) => s.id === form.service);
-      await fetch('/api/bookings', {
+      const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -44,9 +46,10 @@ export default function MassagePageClient() {
           date: new Date(form.date).toISOString(),
         }),
       });
+      if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
     } catch {
-      setSubmitted(true);
+      setBookingError(t('booking.error'));
     } finally {
       setLoading(false);
     }
@@ -60,7 +63,7 @@ export default function MassagePageClient() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 text-xs font-medium px-3 py-1.5 rounded-full mb-4">
               <Hand className="w-3.5 h-3.5" />
-              Wellness-palvelut
+              {t('booking.wellness')}
             </div>
             <h1 className="text-3xl lg:text-4xl font-bold text-stone-800 mb-4">{t('title')}</h1>
             <p className="text-lg text-stone-500 mb-6">{t('subtitle')}</p>
@@ -77,7 +80,7 @@ export default function MassagePageClient() {
             {benefits.map(({ icon: Icon, key }) => (
               <div key={key} className="flex items-start gap-3 p-4 bg-stone-50 rounded-xl">
                 <div className="w-9 h-9 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4.5 h-4.5 text-emerald-600" />
+                  <Icon className="w-[18px] h-[18px] text-emerald-600" />
                 </div>
                 <p className="text-sm font-medium text-stone-700 leading-snug">
                   {t(`benefits.${key}` as any)}
@@ -109,7 +112,7 @@ export default function MassagePageClient() {
               >
                 {service.featured && (
                   <span className="inline-block bg-white/20 text-white text-xs font-medium px-2 py-0.5 rounded-full mb-3">
-                    Suosituin
+                    {t('booking.popular')}
                   </span>
                 )}
                 <h3 className={cn('font-semibold text-lg mb-1', service.featured ? 'text-white' : 'text-stone-800')}>
@@ -135,20 +138,20 @@ export default function MassagePageClient() {
       <section className="py-14 bg-white" id="booking">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-stone-800 mb-2">{t('booking.title')}</h2>
-          <p className="text-stone-500 text-sm mb-8">Täytä lomake ja otamme sinuun yhteyttä vahvistuksella.</p>
+          <p className="text-stone-500 text-sm mb-8">{t('booking.formDesc')}</p>
 
           {submitted ? (
             <div className="flex flex-col items-center text-center py-10">
               <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
                 <CheckCircle2 className="w-8 h-8 text-emerald-500" />
               </div>
-              <h3 className="text-lg font-semibold text-stone-800 mb-2">Kiitos!</h3>
+              <h3 className="text-lg font-semibold text-stone-800 mb-2">{t('booking.thanks')}</h3>
               <p className="text-stone-500 text-sm">{t('booking.success')}</p>
               <button
                 onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', service: '', date: '', time: '', notes: '' }); }}
                 className="mt-6 text-sm text-emerald-500 hover:text-emerald-600 font-medium"
               >
-                Tee uusi varaus
+                {t('booking.newBooking')}
               </button>
             </div>
           ) : (
@@ -244,7 +247,7 @@ export default function MassagePageClient() {
                     onChange={(e) => setForm({ ...form, time: e.target.value })}
                     className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-400 transition-colors"
                   >
-                    <option value="">Valitse aika</option>
+                    <option value="">{t('booking.selectTime')}</option>
                     {availableTimes.map((time) => (
                       <option key={time} value={time}>{time}</option>
                     ))}
@@ -266,13 +269,16 @@ export default function MassagePageClient() {
                 />
               </div>
 
+              {bookingError && (
+                <p className="text-xs text-red-500 text-center">{bookingError}</p>
+              )}
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-300 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
               >
                 <Hand className="w-4 h-4" />
-                {loading ? 'Lähetetään...' : t('booking.submit')}
+                {loading ? t('booking.sending') : t('booking.submit')}
               </button>
             </form>
           )}

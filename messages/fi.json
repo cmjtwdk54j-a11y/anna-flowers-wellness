@@ -7,7 +7,9 @@
     "delivery": "Toimitus",
     "contact": "Yhteystiedot",
     "cart": "Ostoskori",
-    "checkout": "Kassa"
+    "checkout": "Kassa",
+    "openMenu": "Avaa valikko",
+    "closeMenu": "Sulje valikko"
   },
   "home": {
     "hero": {
@@ -20,18 +22,32 @@
       "title": "Palvelumme",
       "flowers": {
         "title": "Kukkakauppa",
-        "description": "Kauniit tuorelukkuja jokaiseen tilaisuuteen – häistä hautajaisiin"
+        "description": "Kauniit tuorelukkuja jokaiseen tilaisuuteen – häistä hautajaisiin",
+        "link": "Katso tuotteet"
       },
       "massage": {
         "title": "Päänahkahieronta",
-        "description": "Rentouttava ja elvyttävä päänahkahieronta ammattitaitoisten käsissä"
+        "description": "Rentouttava ja elvyttävä päänahkahieronta ammattitaitoisten käsissä",
+        "link": "Varaa aika"
       },
       "delivery": {
         "title": "Kotiinkuljetus",
-        "description": "Toimitamme kukat kotiovellesi Helsingissä, Espoossa, Vantaalla ja Keravalla"
+        "description": "Toimitamme kukat kotiovellesi Helsingissä, Espoossa, Vantaalla ja Keravalla",
+        "link": "Toimitusalueet"
       }
     },
     "featured": "Suositut tuotteet",
+    "allProducts": "Kaikki tuotteet",
+    "trustBadge": {
+      "customers": "tyytyväistä asiakasta",
+      "rating": "asiakasarvio",
+      "delivery": "toimitusaika"
+    },
+    "giftCardBanner": {
+      "title": "Osta lahjakortti läheisellesi",
+      "subtitle": "Lahjakortit alkaen 50 € – sopii kaikille tilaisuuksiin",
+      "button": "Osta lahjakortti"
+    },
     "whyUs": {
       "title": "Miksi valita meidät?",
       "fresh": "Tuoreet kukat",
@@ -58,7 +74,9 @@
     "addToCart": "Lisää ostoskoriin",
     "funeralNotice": "Suosittelemme tilaamaan hautajaiskukat 3–5 päivää ennen hautajaisia.",
     "outOfStock": "Loppu varastosta",
-    "from": "Alkaen"
+    "from": "Alkaen",
+    "notice": "Huomio",
+    "addAnyway": "Lisää silti"
   },
   "product": {
     "details": "Tuotetiedot",
@@ -68,7 +86,17 @@
     "preOrder": "Ennakkotilaus",
     "quantity": "Määrä",
     "addToCart": "Lisää ostoskoriin",
-    "relatedProducts": "Samankaltaiset tuotteet"
+    "added": "Lisätty!",
+    "relatedProducts": "Samankaltaiset tuotteet",
+    "home": "Etusivu",
+    "back": "Takaisin",
+    "total": "Yhteensä",
+    "selectTimeFirst": "Valitse aika",
+    "preOrderError": "Valitse toimituspäivä ja -aika ennen kuin lisäät ostoskoriin.",
+    "cancel": "Peruuta",
+    "confirm": "Lisää ostoskoriin",
+    "weddingBadge": "Häät",
+    "funeralBadge": "Muistokukat"
   },
   "massage": {
     "title": "Päänahkahieronta",
@@ -109,7 +137,15 @@
       "notes": "Lisätietoja",
       "submit": "Varaa aika",
       "success": "Varaus vastaanotettu! Otamme sinuun yhteyttä pian.",
-      "selectService": "Valitse palvelu"
+      "selectService": "Valitse palvelu",
+      "selectTime": "Valitse aika",
+      "formDesc": "Täytä lomake ja otamme sinuun yhteyttä vahvistuksella.",
+      "thanks": "Kiitos!",
+      "newBooking": "Tee uusi varaus",
+      "sending": "Lähetetään...",
+      "error": "Varauksen lähettämisessä tapahtui virhe. Yritä uudelleen.",
+      "wellness": "Wellness-palvelut",
+      "popular": "Suosituin"
     }
   },
   "giftCards": {
@@ -126,7 +162,23 @@
     "yourName": "Sinun nimesi",
     "yourEmail": "Sinun sähköpostisi",
     "validFor": "Voimassa 12 kuukautta",
-    "usableFor": "Käytettävissä kukkaostoksiin ja hierontaan"
+    "usableFor": "Käytettävissä kukkaostoksiin ja hierontaan",
+    "usableFlowers": "Voidaan käyttää kukkiin",
+    "usableMassage": "Voidaan käyttää hierontaan",
+    "badge": "Lahjakortit",
+    "continue": "Jatka",
+    "back": "← Takaisin",
+    "details": "Tiedot",
+    "buyer": "Ostaja",
+    "recipient": "Vastaanottaja (valinnainen)",
+    "cardValue": "Lahjakortin arvo",
+    "validity": "Voimassa 12 kk",
+    "orderReceived": "Tilaus vastaanotettu!",
+    "orderSentTo": "Lähetämme lahjakortin sähköpostiin",
+    "thankYou": "Kiitos tilauksestasi!",
+    "browseFlowers": "Selaa kukkia",
+    "home": "Etusivulle",
+    "error": "Tilauksen käsittelyssä tapahtui virhe. Yritä uudelleen."
   },
   "delivery": {
     "title": "Toimitusehdot",
@@ -170,7 +222,16 @@
     "name": "Nimi",
     "yourEmail": "Sähköposti",
     "message": "Viesti",
-    "send": "Lähetä"
+    "send": "Lähetä",
+    "sending": "Lähetetään...",
+    "sent": "Viesti lähetetty!",
+    "sentDesc": "Vastaamme pian sähköpostiisi.",
+    "newMessage": "Lähetä uusi viesti",
+    "sendError": "Viestin lähetyksessä tapahtui virhe. Yritä uudelleen.",
+    "here": "Olemme täällä sinua varten.",
+    "weekdays": "Ma – Pe",
+    "saturday": "La",
+    "sunday": "Su"
   },
   "cart": {
     "title": "Ostoskori",
@@ -181,7 +242,10 @@
     "remove": "Poista",
     "quantity": "Kpl",
     "subtotal": "Välisumma",
-    "delivery": "Toimitus"
+    "delivery": "Toimitus",
+    "sizeSmall": "Pieni",
+    "sizeLarge": "Suuri",
+    "deliveryNote": "Toimitus lisätään kassalla"
   },
   "checkout": {
     "title": "Kassa",
@@ -212,7 +276,36 @@
     "notes": "Lisätietoja tilaukseen",
     "deliveryFee": "Toimitusmaksu",
     "total": "Yhteensä",
-    "free": "Ilmainen"
+    "free": "Ilmainen",
+    "orderReceived": "Tilaus vastaanotettu!",
+    "confirmationSentTo": "Vahvistus lähetetään sähköpostiosoitteeseen",
+    "homeLink": "Etusivu",
+    "selectTime": "Valitse aika",
+    "mobilePayDesc": "MobilePay (tulossa pian)",
+    "giftCardApplied": "Lahjakortti käytetty",
+    "giftCardInvalid": "Lahjakortti ei ole voimassa",
+    "giftCardCheckError": "Virhe lahjakortin tarkistuksessa",
+    "stripeError": "Maksun käsittelyssä tapahtui virhe. Yritä uudelleen.",
+    "networkError": "Verkkoyhteys ei toimi. Tarkista internetyhteys ja yritä uudelleen.",
+    "stripeNote": "Maksu suoritetaan turvallisesti Stripe-palvelun kautta",
+    "soon": "Pian"
+  },
+  "success": {
+    "title": "Tilaus vahvistettu!",
+    "orderNumber": "Tilausnumero",
+    "confirmationSent": "Lähetämme vahvistuksen sähköpostiisi.",
+    "orderSummary": "Tilauksen yhteenveto",
+    "deliveryFee": "Toimitusmaksu",
+    "giftCardDiscount": "Lahjakorttialennus",
+    "total": "Yhteensä",
+    "deliveryInfo": "Toimitusosoite",
+    "whatsNext": "Mitä seuraavaksi?",
+    "step1": "Saat tilausvahvistuksen sähköpostiisi.",
+    "step2": "Valmistamme tilauksesi huolellisesti.",
+    "step3": "Toimitetaan sinulle sovittuna aikana.",
+    "questions": "Kysymyksiä? Soita meille:",
+    "continueShopping": "Jatka ostoksia",
+    "home": "Etusivulle"
   },
   "common": {
     "loading": "Ladataan...",
@@ -228,6 +321,13 @@
   "footer": {
     "rights": "Kaikki oikeudet pidätetään",
     "privacy": "Tietosuoja",
-    "terms": "Käyttöehdot"
+    "terms": "Käyttöehdot",
+    "tagline": "Tuoreet kukat ja rentouttava päänahkahieronta Helsingissä.",
+    "pages": "Sivut",
+    "weekdays": "Ma–Pe:",
+    "saturday": "La:",
+    "sunday": "Su:",
+    "parking": "Pysäköinti:",
+    "parkingDesc": "1 paikka (3h) + 2 paikkaa (2h)"
   }
 }

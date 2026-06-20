@@ -5,7 +5,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   return {
     title: slug.replace(/-/g, ' '),
-    description: 'Tilaa kaunis kukkakimppu Anna Flowers & Wellness -kukkakaupasta.',
+    description: 'Tilaa kaunis kukkakimppu Aavafloristilta.',
   };
 }
 

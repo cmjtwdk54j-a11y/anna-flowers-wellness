@@ -9,10 +9,26 @@ export default function ContactClient() {
   const t = useTranslations('contact');
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    setSending(true);
+    setSendError('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error('Failed');
+      setSent(true);
+    } catch {
+      setSendError(t('sendError'));
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -21,9 +37,36 @@ export default function ContactClient() {
       <section className="bg-gradient-to-br from-violet-50 via-stone-50 to-rose-50 py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl lg:text-4xl font-bold text-stone-800 mb-3">{t('title')}</h1>
-          <p className="text-stone-500">Olemme täällä sinua varten.</p>
+          <p className="text-stone-500">{t('here')}</p>
         </div>
       </section>
+
+      {/* Full-width Google Maps */}
+      <div className="w-full h-96 relative border-b border-stone-100">
+        <iframe
+          src="https://maps.google.com/maps?q=Puistolantori+1,+00760+Helsinki&hl=fi&z=17&output=embed"
+          width="100%"
+          height="100%"
+          style={{ border: 0, display: 'block' }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Aavafloristi – Puistolantori 1, 00760 Helsinki"
+        />
+        {/* Overlay badge */}
+        <div className="absolute bottom-4 left-4 bg-white rounded-xl shadow-lg px-4 py-2.5 flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-rose-500 flex-shrink-0" />
+          <span className="text-sm font-medium text-stone-700">Puistolantori 1, 00760 Helsinki</span>
+        </div>
+        <a
+          href="https://www.google.com/maps/search/Puistolantori+1+00760+Helsinki"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-4 right-4 bg-white hover:bg-stone-50 text-stone-700 rounded-xl shadow-lg px-4 py-2.5 text-sm font-medium transition-colors border border-stone-100"
+        >
+          Avaa Google Maps ↗
+        </a>
+      </div>
 
       <section className="py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,15 +134,15 @@ export default function ContactClient() {
                 </h3>
                 <ul className="space-y-2">
                   <li className="flex justify-between text-sm">
-                    <span className="text-stone-500">Ma – Pe</span>
+                    <span className="text-stone-500">{t('weekdays')}</span>
                     <span className="text-stone-800 font-medium">{BUSINESS_INFO.hours.weekdays}</span>
                   </li>
                   <li className="flex justify-between text-sm">
-                    <span className="text-stone-500">La</span>
+                    <span className="text-stone-500">{t('saturday')}</span>
                     <span className="text-stone-800 font-medium">{BUSINESS_INFO.hours.saturday}</span>
                   </li>
                   <li className="flex justify-between text-sm">
-                    <span className="text-stone-500">Su</span>
+                    <span className="text-stone-500">{t('sunday')}</span>
                     <span className="text-stone-400">{BUSINESS_INFO.hours.sunday}</span>
                   </li>
                 </ul>
@@ -124,32 +167,18 @@ export default function ContactClient() {
               </div>
             </div>
 
-            {/* Right column: Map + Contact form */}
+            {/* Right column: Contact form */}
             <div className="space-y-6">
-              {/* Google Maps embed */}
-              <div className="rounded-2xl overflow-hidden border border-stone-100 h-64">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15919.85461441765!2d24.920584!3d60.169857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46920bc796210691%3A0xad6039088b0b6af0!2sHelsinki!5e0!3m2!1sfi!2sfi!4v1700000000000!5m2!1sfi!2sfi"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Anna Flowers & Wellness sijainti"
-                />
-              </div>
-
               {/* Contact form */}
               <div className="bg-stone-50 rounded-2xl p-6 border border-stone-100">
                 <h2 className="font-semibold text-stone-800 mb-5">{t('sendMessage')}</h2>
                 {sent ? (
                   <div className="flex flex-col items-center text-center py-6">
                     <CheckCircle2 className="w-10 h-10 text-emerald-400 mb-3" />
-                    <p className="text-stone-700 font-medium">Viesti lähetetty!</p>
-                    <p className="text-stone-400 text-sm mt-1">Vastaamme pian sähköpostiisi.</p>
+                    <p className="text-stone-700 font-medium">{t('sent')}</p>
+                    <p className="text-stone-400 text-sm mt-1">{t('sentDesc')}</p>
                     <button onClick={() => { setSent(false); setForm({ name: '', email: '', message: '' }); }} className="mt-4 text-sm text-rose-500 hover:text-rose-600">
-                      Lähetä uusi viesti
+                      {t('newMessage')}
                     </button>
                   </div>
                 ) : (
@@ -175,11 +204,15 @@ export default function ContactClient() {
                       placeholder={t('message')}
                       className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400 bg-white resize-none"
                     />
+                    {sendError && (
+                      <p className="text-xs text-red-500">{sendError}</p>
+                    )}
                     <button
                       type="submit"
-                      className="w-full bg-rose-500 hover:bg-rose-600 text-white font-medium py-3 rounded-xl transition-colors"
+                      disabled={sending}
+                      className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-rose-300 text-white font-medium py-3 rounded-xl transition-colors"
                     >
-                      {t('send')}
+                      {sending ? t('sending') : t('send')}
                     </button>
                   </form>
                 )}

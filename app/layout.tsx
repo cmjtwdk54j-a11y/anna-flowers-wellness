@@ -16,8 +16,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Anna Flowers & Wellness',
-    default: 'Anna Flowers & Wellness – Kukkakauppa ja Päänahkahieronta Helsinki',
+    template: '%s | Aavafloristi',
+    default: 'Aavafloristi – Kukkakauppa ja Päänahkahieronta Helsinki',
   },
   description:
     'Tilaa tuoreita kukkia ja varaa päänahkahieronta Helsingissä. Toimitus Helsingissä, Espoossa, Vantaalla ja Keravalla.',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'fi_FI',
-    siteName: 'Anna Flowers & Wellness',
+    siteName: 'Aavafloristi',
   },
 };
 

@@ -9,6 +9,7 @@ import { formatPrice } from '@/lib/utils';
 
 export default function CartDrawer({ locale }: { locale: string }) {
   const t = useTranslations('cart');
+  const tCommon = useTranslations('common');
   const { state, removeItem, updateQuantity, closeCart, subtotal } = useCart();
 
   if (!state.isOpen) return null;
@@ -22,7 +23,12 @@ export default function CartDrawer({ locale }: { locale: string }) {
       />
 
       {/* Drawer */}
-      <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white z-50 shadow-2xl flex flex-col">
+      <div
+        className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white z-50 shadow-2xl flex flex-col"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('title')}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-100">
           <h2 className="font-semibold text-stone-800 flex items-center gap-2">
@@ -32,6 +38,7 @@ export default function CartDrawer({ locale }: { locale: string }) {
           <button
             onClick={closeCart}
             className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+            aria-label={tCommon('close')}
           >
             <X className="w-5 h-5" />
           </button>
@@ -69,7 +76,7 @@ export default function CartDrawer({ locale }: { locale: string }) {
                       {locale === 'fi' ? item.name_fi : item.name_en}
                     </p>
                     <p className="text-xs text-stone-400 mt-0.5">
-                      {item.size === 'SMALL' ? 'Pieni' : 'Suuri'} · {formatPrice(item.price)}
+                      {item.size === 'SMALL' ? t('sizeSmall') : t('sizeLarge')} · {formatPrice(item.price)}
                     </p>
                     {item.scheduledDate && (
                       <p className="text-xs text-rose-400 mt-0.5">
@@ -98,6 +105,7 @@ export default function CartDrawer({ locale }: { locale: string }) {
                     <button
                       onClick={() => removeItem(item.id)}
                       className="p-1 text-stone-300 hover:text-red-400 transition-colors"
+                      aria-label={t('remove')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -118,7 +126,7 @@ export default function CartDrawer({ locale }: { locale: string }) {
               <span className="text-sm text-stone-500">{t('subtotal')}</span>
               <span className="text-sm font-semibold text-stone-800">{formatPrice(subtotal)}</span>
             </div>
-            <p className="text-xs text-stone-400">{t('delivery')} lisätään kassalla</p>
+            <p className="text-xs text-stone-400">{t('deliveryNote')}</p>
             <Link
               href="/checkout"
               onClick={closeCart}

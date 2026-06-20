@@ -18,6 +18,8 @@ export default function GiftCardsClient() {
     recipientName: '', recipientEmail: '', message: '',
   });
   const [step, setStep] = useState<'select' | 'details' | 'done'>('select');
+  const [buyError, setBuyError] = useState('');
+  const [buying, setBuying] = useState(false);
 
   const finalAmount = isCustom ? (parseFloat(customAmount) || 0) : amount;
 
@@ -28,8 +30,10 @@ export default function GiftCardsClient() {
 
   const handleBuy = async (e: React.FormEvent) => {
     e.preventDefault();
+    setBuying(true);
+    setBuyError('');
     try {
-      await fetch('/api/gift-cards', {
+      const res = await fetch('/api/gift-cards', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -41,8 +45,13 @@ export default function GiftCardsClient() {
           message: form.message,
         }),
       });
-    } catch {}
-    setStep('done');
+      if (!res.ok) throw new Error('Failed');
+      setStep('done');
+    } catch {
+      setBuyError(t('error'));
+    } finally {
+      setBuying(false);
+    }
   };
 
   return (
@@ -53,7 +62,7 @@ export default function GiftCardsClient() {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-700 text-xs font-medium px-3 py-1.5 rounded-full mb-4">
               <Gift className="w-3.5 h-3.5" />
-              Lahjakortit
+              {t('badge')}
             </div>
             <h1 className="text-3xl lg:text-4xl font-bold text-stone-800 mb-3">{t('title')}</h1>
             <p className="text-lg text-stone-500 mb-4">{t('subtitle')}</p>
@@ -68,12 +77,12 @@ export default function GiftCardsClient() {
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               { icon: Clock, text: t('validFor') },
-              { icon: Flower2, text: 'Voidaan käyttää kukkiin' },
-              { icon: Hand, text: 'Voidaan käyttää hierontaan' },
+              { icon: Flower2, text: t('usableFlowers') },
+              { icon: Hand, text: t('usableMassage') },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4.5 h-4.5 text-amber-500" />
+                  <Icon className="w-[18px] h-[18px] text-amber-500" />
                 </div>
                 <p className="text-sm text-stone-600">{text}</p>
               </div>
@@ -143,12 +152,12 @@ export default function GiftCardsClient() {
                     <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center">
                       <span className="text-xs font-bold">AF</span>
                     </div>
-                    <span className="text-sm font-medium">Anna Flowers & Wellness</span>
+                    <span className="text-sm font-medium">Aavafloristi</span>
                   </div>
                   <Gift className="w-5 h-5 text-rose-200" />
                 </div>
                 <div className="text-3xl font-bold mb-1">{formatPrice(finalAmount)}</div>
-                <div className="text-rose-200 text-xs">Lahjakortti · Voimassa 12 kk</div>
+                <div className="text-rose-200 text-xs">Lahjakortti · {t('validity')}</div>
               </div>
 
               <button
@@ -156,7 +165,7 @@ export default function GiftCardsClient() {
                 disabled={finalAmount < 50}
                 className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-stone-200 disabled:text-stone-400 text-white font-medium py-3 rounded-xl transition-colors"
               >
-                Jatka →
+                {t('continue')} →
               </button>
             </div>
           )}
@@ -164,13 +173,13 @@ export default function GiftCardsClient() {
           {step === 'details' && (
             <form onSubmit={handleBuy} className="bg-white rounded-2xl border border-stone-100 p-6 shadow-sm">
               <button onClick={() => setStep('select')} className="text-sm text-stone-400 hover:text-stone-600 mb-4 block">
-                ← Takaisin
+                {t('back')}
               </button>
-              <h2 className="text-xl font-semibold text-stone-800 mb-6">Tiedot</h2>
+              <h2 className="text-xl font-semibold text-stone-800 mb-6">{t('details')}</h2>
 
               <div className="space-y-4">
                 <div>
-                  <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-3">Ostaja</p>
+                  <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-3">{t('buyer')}</p>
                   <div className="grid sm:grid-cols-2 gap-3">
                     <input
                       type="text" required
@@ -190,7 +199,7 @@ export default function GiftCardsClient() {
                 </div>
 
                 <div>
-                  <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-3">Vastaanottaja (valinnainen)</p>
+                  <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-3">{t('recipient')}</p>
                   <div className="grid sm:grid-cols-2 gap-3">
                     <input
                       type="text"
@@ -220,16 +229,20 @@ export default function GiftCardsClient() {
                 </div>
 
                 <div className="flex items-center justify-between py-3 border-t border-stone-100">
-                  <span className="text-sm text-stone-500">Lahjakortin arvo</span>
+                  <span className="text-sm text-stone-500">{t('cardValue')}</span>
                   <span className="text-lg font-bold text-stone-800">{formatPrice(finalAmount)}</span>
                 </div>
 
+                {buyError && (
+                  <p className="text-xs text-red-500 text-center">{buyError}</p>
+                )}
                 <button
                   type="submit"
-                  className="w-full bg-rose-500 hover:bg-rose-600 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+                  disabled={buying}
+                  className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-rose-300 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
                 >
                   <Gift className="w-4 h-4" />
-                  {t('buyNow')}
+                  {buying ? '...' : t('buyNow')}
                 </button>
               </div>
             </form>
@@ -240,16 +253,16 @@ export default function GiftCardsClient() {
               <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-8 h-8 text-rose-500" />
               </div>
-              <h2 className="text-xl font-semibold text-stone-800 mb-2">Tilaus vastaanotettu!</h2>
+              <h2 className="text-xl font-semibold text-stone-800 mb-2">{t('orderReceived')}</h2>
               <p className="text-stone-500 text-sm mb-6">
-                Lähetämme lahjakortin sähköpostiin {form.yourEmail}. Kiitos tilauksestasi!
+                {t('orderSentTo')} <strong>{form.yourEmail}</strong>. {t('thankYou')}
               </p>
               <div className="flex gap-3">
                 <Link href="/flowers" className="flex-1 py-2.5 bg-rose-500 text-white rounded-xl text-sm font-medium hover:bg-rose-600 transition-colors text-center">
-                  Selaa kukkia
+                  {t('browseFlowers')}
                 </Link>
                 <Link href="/" className="flex-1 py-2.5 border border-stone-200 text-stone-600 rounded-xl text-sm hover:bg-stone-50 transition-colors text-center">
-                  Etusivulle
+                  {t('home')}
                 </Link>
               </div>
             </div>

@@ -44,9 +44,8 @@ export default function Header({ locale }: HeaderProps) {
             </div>
             <div className="hidden sm:block">
               <span className="font-semibold text-stone-800 text-sm leading-tight block">
-                Anna Flowers
+                Aavafloristi
               </span>
-              <span className="text-stone-400 text-xs leading-tight block">& Wellness</span>
             </div>
           </Link>
 
@@ -58,7 +57,7 @@ export default function Header({ locale }: HeaderProps) {
                 href={link.href}
                 className={cn(
                   'text-sm font-medium transition-colors hover:text-rose-500',
-                  pathname === link.href ? 'text-rose-500' : 'text-stone-600'
+                  (link.href === '/' ? pathname === '/' : pathname.startsWith(link.href)) ? 'text-rose-500' : 'text-stone-600'
                 )}
               >
                 {link.label}
@@ -110,6 +109,8 @@ export default function Header({ locale }: HeaderProps) {
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden p-2 text-stone-600 hover:text-rose-500 transition-colors"
+              aria-label={mobileOpen ? t('closeMenu') : t('openMenu')}
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -128,7 +129,7 @@ export default function Header({ locale }: HeaderProps) {
                 onClick={() => setMobileOpen(false)}
                 className={cn(
                   'px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                  pathname === link.href
+                  (link.href === '/' ? pathname === '/' : pathname.startsWith(link.href))
                     ? 'bg-rose-50 text-rose-500'
                     : 'text-stone-600 hover:bg-stone-50'
                 )}

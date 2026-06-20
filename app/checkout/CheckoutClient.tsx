@@ -31,6 +31,7 @@ export default function CheckoutClient() {
   const [giftCardError, setGiftCardError] = useState('');
   const [loading, setLoading] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [stripeError, setStripeError] = useState('');
 
   const selectedZone = DELIVERY_ZONES.find((z) => z.city === deliveryInfo.city);
   const deliveryFee =
@@ -52,10 +53,10 @@ export default function CheckoutClient() {
         setGiftCardDiscount(data.balance);
         setGiftCardError('');
       } else {
-        setGiftCardError('Lahjakortti ei ole voimassa');
+        setGiftCardError(t('giftCardInvalid'));
       }
     } catch {
-      setGiftCardError('Virhe lahjakortin tarkistuksessa');
+      setGiftCardError(t('giftCardCheckError'));
     }
   };
 
@@ -92,27 +93,50 @@ export default function CheckoutClient() {
       };
 
       if (paymentMethod === 'card') {
-        const res = await fetch('/api/checkout/stripe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderPayload),
-        });
+        let res: Response;
+        try {
+          res = await fetch('/api/checkout/stripe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderPayload),
+          });
+        } catch {
+          setStripeError(t('networkError'));
+          return;
+        }
+        if (!res.ok) {
+          setStripeError(t('stripeError'));
+          return;
+        }
         const { url } = await res.json();
         if (url) {
           window.location.href = url;
           return;
+        } else {
+          setStripeError(t('stripeError'));
+          return;
         }
       } else {
-        await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderPayload),
-        });
+        let res: Response;
+        try {
+          res = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderPayload),
+          });
+        } catch {
+          setStripeError(t('networkError'));
+          return;
+        }
+        if (!res.ok) {
+          setStripeError(t('stripeError'));
+          return;
+        }
         clearCart();
         setOrderPlaced(true);
       }
     } catch {
-      alert('Tilauksen käsittelyssä tapahtui virhe. Yritä uudelleen.');
+      setStripeError(t('stripeError'));
     } finally {
       setLoading(false);
     }
@@ -136,16 +160,16 @@ export default function CheckoutClient() {
         <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle2 className="w-10 h-10 text-emerald-500" />
         </div>
-        <h2 className="text-2xl font-bold text-stone-800 mb-2">Tilaus vastaanotettu!</h2>
+        <h2 className="text-2xl font-bold text-stone-800 mb-2">{t('orderReceived')}</h2>
         <p className="text-stone-500 mb-8">
-          Vahvistus lähetetään sähköpostiosoitteeseen <strong>{customerInfo.email}</strong>.
+          {t('confirmationSentTo')} <strong>{customerInfo.email}</strong>.
         </p>
         <div className="flex gap-3 justify-center">
           <Link href="/flowers" className="px-5 py-2.5 bg-rose-500 text-white rounded-xl font-medium hover:bg-rose-600 transition-colors">
-            Jatka ostoksia
+            {tCart('continue')}
           </Link>
           <Link href="/" className="px-5 py-2.5 border border-stone-200 text-stone-600 rounded-xl hover:bg-stone-50 transition-colors">
-            Etusivu
+            {t('homeLink')}
           </Link>
         </div>
       </div>
@@ -223,12 +247,14 @@ export default function CheckoutClient() {
                 <div className="space-y-3">
                   <input
                     type="text"
+                    required
                     value={deliveryInfo.address}
                     onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })}
                     placeholder={`${t('address')} *`}
                     className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
                   />
                   <select
+                    required
                     value={deliveryInfo.city}
                     onChange={(e) => setDeliveryInfo({ ...deliveryInfo, city: e.target.value })}
                     className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
@@ -266,7 +292,7 @@ export default function CheckoutClient() {
                     onChange={(e) => setDeliveryInfo({ ...deliveryInfo, scheduleTime: e.target.value })}
                     className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
                   >
-                    <option value="">Valitse aika</option>
+                    <option value="">{t('selectTime')}</option>
                     {availableTimes.map((time) => (
                       <option key={time} value={time}>{time}</option>
                     ))}
@@ -290,7 +316,7 @@ export default function CheckoutClient() {
               <div className="space-y-3">
                 {([
                   { id: 'card', icon: CreditCard, label: t('card'), desc: 'Visa, Mastercard' },
-                  { id: 'mobilepay', icon: Smartphone, label: t('mobilePay'), desc: 'MobilePay (tulossa pian)' },
+                  { id: 'mobilepay', icon: Smartphone, label: t('mobilePay'), desc: t('mobilePayDesc') },
                   { id: 'edenred', icon: Wallet, label: t('edenred'), desc: 'Edenred Virike & Kulttuuri' },
                 ] as const).map(({ id, icon: Icon, label, desc }) => (
                   <label
@@ -316,7 +342,7 @@ export default function CheckoutClient() {
                       <p className="text-xs text-stone-400">{desc}</p>
                     </div>
                     {id === 'mobilepay' && (
-                      <span className="text-xs bg-amber-100 text-amber-600 px-2 py-0.5 rounded-full">Pian</span>
+                      <span className="text-xs bg-amber-100 text-amber-600 px-2 py-0.5 rounded-full">{t('soon')}</span>
                     )}
                   </label>
                 ))}
@@ -348,7 +374,7 @@ export default function CheckoutClient() {
                 {giftCardDiscount > 0 && (
                   <p className="text-xs text-emerald-600 mt-1 flex items-center gap-1">
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    Lahjakortti käytetty: -{formatPrice(giftCardDiscount)}
+                    {t('giftCardApplied')}: -{formatPrice(giftCardDiscount)}
                   </p>
                 )}
               </div>
@@ -375,7 +401,7 @@ export default function CheckoutClient() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-stone-800 truncate">{item.name_fi}</p>
                       <p className="text-xs text-stone-400">
-                        {item.size === 'SMALL' ? 'Pieni' : 'Suuri'} × {item.quantity}
+                        {item.size === 'SMALL' ? tCart('sizeSmall') : tCart('sizeLarge')} × {item.quantity}
                       </p>
                     </div>
                     <p className="text-xs font-semibold text-stone-800">
@@ -387,7 +413,7 @@ export default function CheckoutClient() {
 
               <div className="space-y-2 pt-4 border-t border-stone-100 mb-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-stone-500">{t('subtotal' as any) || 'Välisumma'}</span>
+                  <span className="text-stone-500">{tCart('subtotal')}</span>
                   <span className="text-stone-700">{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -398,7 +424,7 @@ export default function CheckoutClient() {
                 </div>
                 {giftCardDiscount > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-stone-500">Lahjakortti</span>
+                    <span className="text-stone-500">{t('giftCard')}</span>
                     <span className="text-emerald-600">-{formatPrice(giftCardDiscount)}</span>
                   </div>
                 )}
@@ -421,8 +447,11 @@ export default function CheckoutClient() {
                 )}
               </button>
 
+              {stripeError && (
+                <p className="text-xs text-red-500 text-center mt-2">{stripeError}</p>
+              )}
               <p className="text-xs text-stone-400 text-center mt-3">
-                Maksu suoritetaan turvallisesti Stripe-palvelun kautta
+                {t('stripeNote')}
               </p>
             </div>
           </div>

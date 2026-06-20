@@ -19,12 +19,11 @@ export default function Footer() {
                 <span className="text-white text-xs font-bold">AF</span>
               </div>
               <div>
-                <span className="font-semibold text-white text-sm block">Anna Flowers</span>
-                <span className="text-stone-400 text-xs block">& Wellness</span>
+                <span className="font-semibold text-white text-sm block">Aavafloristi</span>
               </div>
             </div>
             <p className="text-sm text-stone-400 leading-relaxed">
-              Tuoreet kukat ja rentouttava päänahkahieronta Helsingissä.
+              {tFooter('tagline')}
             </p>
             <div className="flex gap-3 mt-4">
               <a
@@ -52,7 +51,7 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <h3 className="text-white font-medium text-sm mb-4">Sivut</h3>
+            <h3 className="text-white font-medium text-sm mb-4">{tFooter('pages')}</h3>
             <ul className="space-y-2">
               {[
                 { href: '/flowers', label: t('flowers') },
@@ -101,19 +100,19 @@ export default function Footer() {
             <h3 className="text-white font-medium text-sm mb-4">{tContact('openingHours')}</h3>
             <ul className="space-y-2">
               <li className="text-sm text-stone-400">
-                <span className="text-stone-300">Ma–Pe:</span> {BUSINESS_INFO.hours.weekdays}
+                <span className="text-stone-300">{tFooter('weekdays')}</span> {BUSINESS_INFO.hours.weekdays}
               </li>
               <li className="text-sm text-stone-400">
-                <span className="text-stone-300">La:</span> {BUSINESS_INFO.hours.saturday}
+                <span className="text-stone-300">{tFooter('saturday')}</span> {BUSINESS_INFO.hours.saturday}
               </li>
               <li className="text-sm text-stone-400">
-                <span className="text-stone-300">Su:</span> {BUSINESS_INFO.hours.sunday}
+                <span className="text-stone-300">{tFooter('sunday')}</span> {BUSINESS_INFO.hours.sunday}
               </li>
             </ul>
             <div className="mt-4 p-3 bg-stone-700 rounded-lg">
               <p className="text-xs text-stone-400">
-                <span className="text-white font-medium">Pysäköinti:</span>
-                <br />1 paikka (3h) + 2 paikkaa (2h)
+                <span className="text-white font-medium">{tFooter('parking')}</span>
+                <br />{tFooter('parkingDesc')}
               </p>
             </div>
           </div>
@@ -121,7 +120,7 @@ export default function Footer() {
 
         <div className="border-t border-stone-700 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-xs text-stone-500">
-            © {new Date().getFullYear()} Anna Flowers & Wellness. {tFooter('rights')}.
+            © {new Date().getFullYear()} Aavafloristi. {tFooter('rights')}.
           </p>
           <div className="flex gap-4">
             <Link href="/privacy" className="text-xs text-stone-500 hover:text-stone-300">

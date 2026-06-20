@@ -33,14 +33,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
-  try {
-    const bookings = await prisma.massageBooking.findMany({
-      orderBy: { date: 'asc' },
-      where: { date: { gte: new Date() } },
-    });
-    return NextResponse.json(bookings);
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });
-  }
-}
+// GET not exposed — admin-only data. Next.js returns 405 for unlisted methods.

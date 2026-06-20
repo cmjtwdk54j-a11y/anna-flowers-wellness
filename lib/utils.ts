@@ -77,8 +77,8 @@ export const MASSAGE_SERVICES = [
 ];
 
 export const BUSINESS_INFO = {
-  name: 'Anna Flowers & Wellness',
-  address: 'Mannerheimintie 1, 00100 Helsinki',
+  name: 'Aavafloristi',
+  address: 'Puistolantori 1, 00760 Helsinki',
   phone: '+358 50 123 4567',
   email: 'info@annaflowers.fi',
   whatsapp: '+358 50 123 4567',

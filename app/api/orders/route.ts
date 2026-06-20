@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generateOrderNumber } from '@/lib/utils';
+import { getProductPrice, calcDeliveryFee } from '@/lib/prices';
+import { sendOrderConfirmationEmail, sendAdminOrderNotification } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,33 +11,53 @@ export async function POST(request: NextRequest) {
       customerName, customerEmail, customerPhone,
       deliveryType, deliveryAddress, deliveryCity, deliveryNote,
       scheduledAt, paymentMethod, giftCardCode, giftCardDiscount,
-      subtotal, deliveryFee, total, notes, items,
+      notes, items,
     } = body;
+
+    if (!customerName || !customerEmail || !customerPhone) {
+      return NextResponse.json({ error: 'Missing required customer fields' }, { status: 400 });
+    }
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ error: 'Order must contain at least one item' }, { status: 400 });
+    }
+
+    // Server-side price recalculation — ignore client-sent prices
+    let subtotal = 0;
+    const validatedItems: Array<{
+      productId: string; quantity: number; size: 'SMALL' | 'LARGE';
+      price: number; name_fi: string; name_en: string;
+    }> = [];
+
+    for (const item of items) {
+      const price = getProductPrice(String(item.productId), item.size as 'SMALL' | 'LARGE');
+      if (price === null) {
+        return NextResponse.json({ error: `Unknown product: ${item.productId}` }, { status: 400 });
+      }
+      subtotal += price * Number(item.quantity);
+      validatedItems.push({ ...item, price });
+    }
+
+    const deliveryFee = calcDeliveryFee(deliveryType, deliveryCity || '');
+    const discount = giftCardDiscount ? parseFloat(String(giftCardDiscount)) : 0;
+    const total = Math.max(0, subtotal + deliveryFee - discount);
 
     const order = await prisma.order.create({
       data: {
         orderNumber: generateOrderNumber(),
-        customerName,
-        customerEmail,
-        customerPhone,
-        deliveryType,
-        deliveryAddress,
-        deliveryCity,
-        deliveryNote,
+        customerName, customerEmail, customerPhone,
+        deliveryType, deliveryAddress, deliveryCity, deliveryNote,
         scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
         paymentMethod,
-        giftCardCode,
-        giftCardDiscount: giftCardDiscount ? parseFloat(giftCardDiscount) : null,
-        subtotal: parseFloat(subtotal),
-        deliveryFee: parseFloat(deliveryFee || 0),
-        total: parseFloat(total),
+        giftCardCode: giftCardCode || null,
+        giftCardDiscount: discount || null,
+        subtotal, deliveryFee, total,
         notes,
         items: {
-          create: items.map((item: any) => ({
+          create: validatedItems.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
             size: item.size,
-            price: parseFloat(item.price),
+            price: item.price,
             name_fi: item.name_fi,
             name_en: item.name_en,
           })),
@@ -43,6 +65,23 @@ export async function POST(request: NextRequest) {
       },
       include: { items: true },
     });
+
+    const emailData = {
+      orderNumber: order.orderNumber,
+      customerName, customerEmail, customerPhone,
+      items: validatedItems.map((i) => ({
+        name_fi: i.name_fi, size: i.size, quantity: i.quantity, price: i.price,
+      })),
+      deliveryType,
+      deliveryAddress: deliveryAddress || undefined,
+      deliveryCity: deliveryCity || undefined,
+      scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
+      subtotal, deliveryFee, total,
+    };
+    await Promise.allSettled([
+      sendOrderConfirmationEmail(emailData),
+      sendAdminOrderNotification(emailData),
+    ]);
 
     return NextResponse.json({ order, orderNumber: order.orderNumber });
   } catch (error) {
@@ -55,9 +94,16 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const email = searchParams.get('email');
 
+  if (!email) {
+    return NextResponse.json(
+      { error: 'Query parameter "email" is required' },
+      { status: 400 }
+    );
+  }
+
   try {
     const orders = await prisma.order.findMany({
-      where: email ? { customerEmail: email } : {},
+      where: { customerEmail: email },
       include: { items: true },
       orderBy: { createdAt: 'desc' },
       take: 20,

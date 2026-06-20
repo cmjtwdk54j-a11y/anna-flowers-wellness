@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ShoppingCart, ChevronLeft, Minus, Plus, AlertCircle, Calendar, Clock } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
@@ -22,10 +23,10 @@ const PRODUCTS: Record<string, {
     description_fi: 'Kaunis romanttinen ruusukukka punaisista ruusuista. Sopii täydellisesti lahjaksi rakkaalle. Ruusut ovat tuoreita ja laadukkaita, kestäen vähintään 7–10 päivää oikeassa hoidossa.',
     description_en: 'Beautiful romantic bouquet of red roses. Perfect as a gift for your loved one. Roses are fresh and high quality, lasting at least 7-10 days with proper care.',
     priceSmall: 35, priceLarge: 65, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=600&h=600&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1548266652-99cf27701ced?w=600&h=600&fit=crop',
     imageUrls: [
-      'https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1490750967868-88df5691cc66?w=600&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1548266652-99cf27701ced?w=600&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600&h=600&fit=crop',
     ],
   },
   'haiden-valkoinen-kimppu': {
@@ -34,8 +35,8 @@ const PRODUCTS: Record<string, {
     description_fi: 'Elegantti valkoinen häätarjoilu ruusuilla, pioneilla ja vihreydellä. Täydellinen valkoinen häätarjoilu erityiselle päivälle.',
     description_en: 'Elegant white wedding bouquet with roses, peonies and greenery. Perfect white bridal bouquet for your special day.',
     priceSmall: 85, priceLarge: 150, category: 'wedding', isFuneral: false, isWedding: true,
-    imageUrl: 'https://images.unsplash.com/photo-1487530811015-780a59f9e2e0?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1487530811015-780a59f9e2e0?w=600&h=600&fit=crop'],
+    imageUrl: 'https://images.unsplash.com/photo-1519225421980-716e8e87cef2?w=600&h=600&fit=crop',
+    imageUrls: ['https://images.unsplash.com/photo-1519225421980-716e8e87cef2?w=600&h=600&fit=crop'],
   },
   'hautajaiskimppu-valkoinen': {
     id: '5', slug: 'hautajaiskimppu-valkoinen',
@@ -43,17 +44,54 @@ const PRODUCTS: Record<string, {
     description_fi: 'Arvokas ja kunnioittava valkoinen kimppu hautajaisiin. Valmistettu rakkaudella läheisesi muistoksi.',
     description_en: 'Dignified and respectful white bouquet for funerals. Made with love in memory of your loved one.',
     priceSmall: 45, priceLarge: 90, category: 'funeral', isFuneral: true, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600&h=600&fit=crop'],
+    imageUrl: 'https://images.unsplash.com/photo-1561059488-916d8cdb01c5?w=600&h=600&fit=crop',
+    imageUrls: ['https://images.unsplash.com/photo-1561059488-916d8cdb01c5?w=600&h=600&fit=crop'],
   },
-};
-
-const FALLBACK_PRODUCT = {
-  id: '0', slug: '', name_fi: 'Tuote', name_en: 'Product',
-  description_fi: 'Kaunis kukkakimppu.', description_en: 'Beautiful bouquet.',
-  priceSmall: 30, priceLarge: 55, category: 'bouquets', isFuneral: false, isWedding: false,
-  imageUrl: 'https://images.unsplash.com/photo-1490750967868-88df5691cc66?w=600&h=600&fit=crop',
-  imageUrls: ['https://images.unsplash.com/photo-1490750967868-88df5691cc66?w=600&h=600&fit=crop'],
+  'vaaleanpunainen-sekakimppu': {
+    id: '3', slug: 'vaaleanpunainen-sekakimppu',
+    name_fi: 'Vaaleanpunainen sekakimppu', name_en: 'Pink Mixed Bouquet',
+    description_fi: 'Pirteä vaaleanpunainen sekakimppu kausiluonteisista kukista. Tuo iloa ja väriä jokaiseen tilaan.',
+    description_en: 'Cheerful pink mixed bouquet of seasonal flowers. Brings joy and colour to any space.',
+    priceSmall: 28, priceLarge: 55, category: 'bouquets', isFuneral: false, isWedding: false,
+    imageUrl: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600&h=600&fit=crop',
+    imageUrls: ['https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600&h=600&fit=crop'],
+  },
+  'kevainen-tulppaanikimppu': {
+    id: '4', slug: 'kevainen-tulppaanikimppu',
+    name_fi: 'Kevään tulppaanit', name_en: 'Spring Tulip Bouquet',
+    description_fi: 'Kirkkaat kevättulppaanit eri väreissä. Iloa jokaiseen kotiin – täydellinen kevään lahja.',
+    description_en: 'Bright spring tulips in various colours. Joy for every home – the perfect spring gift.',
+    priceSmall: 22, priceLarge: 42, category: 'bouquets', isFuneral: false, isWedding: false,
+    imageUrl: 'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=600&h=600&fit=crop',
+    imageUrls: ['https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=600&h=600&fit=crop'],
+  },
+  'haiden-roosa-kimppu': {
+    id: '6', slug: 'haiden-roosa-kimppu',
+    name_fi: 'Häiden roosa kimppu', name_en: 'Wedding Pink Bouquet',
+    description_fi: 'Romanttinen vaaleanpunainen häätarjoilu pionien ja ruusujen kanssa. Täydellinen romanttiseen häätilaisuuteen.',
+    description_en: 'Romantic pink wedding bouquet with peonies and roses. Perfect for a romantic wedding ceremony.',
+    priceSmall: 95, priceLarge: 175, category: 'wedding', isFuneral: false, isWedding: true,
+    imageUrl: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600&h=600&fit=crop',
+    imageUrls: ['https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600&h=600&fit=crop'],
+  },
+  'auringonkukkakimppu': {
+    id: '7', slug: 'auringonkukkakimppu',
+    name_fi: 'Auringonkukkakimppu', name_en: 'Sunflower Bouquet',
+    description_fi: 'Iloinen ja kirkas auringonkukkakimppu, joka tuo auringonpaisteen sisätiloihin. Pirteä kesälahja.',
+    description_en: 'Cheerful and bright sunflower bouquet that brings sunshine indoors. A lively summer gift.',
+    priceSmall: 25, priceLarge: 48, category: 'bouquets', isFuneral: false, isWedding: false,
+    imageUrl: 'https://images.unsplash.com/photo-1469439870-4a45f0b2a284?w=600&h=600&fit=crop',
+    imageUrls: ['https://images.unsplash.com/photo-1469439870-4a45f0b2a284?w=600&h=600&fit=crop'],
+  },
+  'muistokimppu-punainen': {
+    id: '8', slug: 'muistokimppu-punainen',
+    name_fi: 'Muistokimppu punainen', name_en: 'Memorial Red Bouquet',
+    description_fi: 'Kaunis ja arvokas punainen muistokimppu hautajaisiin. Osoita kunnioituksesi läheiselle punaisilla kukilla.',
+    description_en: 'Beautiful and dignified red memorial bouquet. Express your respect with red flowers.',
+    priceSmall: 50, priceLarge: 95, category: 'funeral', isFuneral: true, isWedding: false,
+    imageUrl: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600&h=600&fit=crop',
+    imageUrls: ['https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600&h=600&fit=crop'],
+  },
 };
 
 export default function ProductPageClient({ slug }: { slug: string }) {
@@ -61,7 +99,8 @@ export default function ProductPageClient({ slug }: { slug: string }) {
   const tFlowers = useTranslations('flowers');
   const { addItem, openCart } = useCart();
 
-  const product = PRODUCTS[slug] || FALLBACK_PRODUCT;
+  const product = PRODUCTS[slug];
+  if (!product) notFound();
   const [selectedSize, setSelectedSize] = useState<'SMALL' | 'LARGE'>('SMALL');
   const [quantity, setQuantity] = useState(1);
   const [selectedDate, setSelectedDate] = useState('');
@@ -70,10 +109,16 @@ export default function ProductPageClient({ slug }: { slug: string }) {
   const [mainImage, setMainImage] = useState(product.imageUrl);
   const [showFuneralNotice, setShowFuneralNotice] = useState(false);
   const [added, setAdded] = useState(false);
+  const [preOrderError, setPreOrderError] = useState('');
 
   const price = selectedSize === 'SMALL' ? product.priceSmall : (product.priceLarge || product.priceSmall);
 
   const handleAddToCart = () => {
+    if (isPreOrder && (!selectedDate || !selectedTime)) {
+      setPreOrderError(t('preOrderError'));
+      return;
+    }
+    setPreOrderError('');
     if (product.isFuneral && !showFuneralNotice) {
       setShowFuneralNotice(true);
       return;
@@ -104,7 +149,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-stone-400 mb-6">
-        <Link href="/" className="hover:text-stone-600">Etusivu</Link>
+        <Link href="/" className="hover:text-stone-600">{t('home')}</Link>
         <span>/</span>
         <Link href="/flowers" className="hover:text-stone-600">{tFlowers('title')}</Link>
         <span>/</span>
@@ -116,7 +161,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
         className="inline-flex items-center gap-1.5 text-sm text-stone-500 hover:text-rose-500 mb-6 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
-        Takaisin
+        {t('back')}
       </Link>
 
       <div className="grid lg:grid-cols-2 gap-10">
@@ -161,10 +206,10 @@ export default function ProductPageClient({ slug }: { slug: string }) {
 
           <div className="flex items-center gap-2 mb-2">
             {product.isWedding && (
-              <span className="text-xs bg-rose-50 text-rose-400 px-2 py-0.5 rounded-full">Häät</span>
+              <span className="text-xs bg-rose-50 text-rose-400 px-2 py-0.5 rounded-full">{t('weddingBadge')}</span>
             )}
             {product.isFuneral && (
-              <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">Muistokukat</span>
+              <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">{t('funeralBadge')}</span>
             )}
           </div>
 
@@ -260,7 +305,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                     onChange={(e) => setSelectedTime(e.target.value)}
                     className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-rose-400"
                   >
-                    <option value="">Valitse aika</option>
+                    <option value="">{t('selectTimeFirst')}</option>
                     {availableTimes.map((time) => (
                       <option key={time} value={time}>{time}</option>
                     ))}
@@ -270,10 +315,15 @@ export default function ProductPageClient({ slug }: { slug: string }) {
             )}
           </div>
 
+          {/* Pre-order error */}
+          {preOrderError && (
+            <p className="text-xs text-red-500 mb-3">{preOrderError}</p>
+          )}
+
           {/* Price & Add to cart */}
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-xs text-stone-400">Yhteensä</p>
+              <p className="text-xs text-stone-400">{t('total')}</p>
               <p className="text-2xl font-bold text-stone-800">{formatPrice(price * quantity)}</p>
             </div>
             <button
@@ -286,7 +336,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
               )}
             >
               <ShoppingCart className="w-4 h-4" />
-              {added ? 'Lisätty!' : t('addToCart')}
+              {added ? t('added') : t('addToCart')}
             </button>
           </div>
 
@@ -299,13 +349,13 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                   onClick={() => setShowFuneralNotice(false)}
                   className="flex-1 px-3 py-2 border border-stone-200 rounded-lg text-xs text-stone-600 hover:bg-stone-50"
                 >
-                  Peruuta
+                  {t('cancel')}
                 </button>
                 <button
                   onClick={handleAddToCart}
                   className="flex-1 px-3 py-2 bg-rose-500 text-white rounded-lg text-xs font-medium hover:bg-rose-600"
                 >
-                  Lisää ostoskoriin
+                  {t('confirm')}
                 </button>
               </div>
             </div>

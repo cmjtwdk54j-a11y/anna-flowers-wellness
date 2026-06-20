@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createCheckoutSession } from '@/lib/stripe';
 import { generateOrderNumber } from '@/lib/utils';
+import { getProductPrice, calcDeliveryFee } from '@/lib/prices';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,33 +11,53 @@ export async function POST(request: NextRequest) {
       customerName, customerEmail, customerPhone,
       deliveryType, deliveryAddress, deliveryCity, deliveryNote,
       scheduledAt, giftCardCode, giftCardDiscount,
-      subtotal, deliveryFee, total, notes, items,
+      notes, items,
     } = body;
+
+    if (!customerName || !customerEmail || !customerPhone) {
+      return NextResponse.json({ error: 'Missing required customer fields' }, { status: 400 });
+    }
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ error: 'Order must contain at least one item' }, { status: 400 });
+    }
+
+    // Server-side price recalculation — never trust client-sent prices
+    let subtotal = 0;
+    const validatedItems: Array<{
+      productId: string; quantity: number; size: 'SMALL' | 'LARGE';
+      price: number; name_fi: string; name_en: string;
+    }> = [];
+
+    for (const item of items) {
+      const price = getProductPrice(String(item.productId), item.size as 'SMALL' | 'LARGE');
+      if (price === null) {
+        return NextResponse.json({ error: `Unknown product: ${item.productId}` }, { status: 400 });
+      }
+      subtotal += price * Number(item.quantity);
+      validatedItems.push({ ...item, price });
+    }
+
+    const deliveryFee = calcDeliveryFee(deliveryType, deliveryCity || '');
+    const discount = giftCardDiscount ? parseFloat(String(giftCardDiscount)) : 0;
+    const total = Math.max(0, subtotal + deliveryFee - discount);
 
     const order = await prisma.order.create({
       data: {
         orderNumber: generateOrderNumber(),
-        customerName,
-        customerEmail,
-        customerPhone,
-        deliveryType,
-        deliveryAddress,
-        deliveryCity,
-        deliveryNote,
+        customerName, customerEmail, customerPhone,
+        deliveryType, deliveryAddress, deliveryCity, deliveryNote,
         scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
         paymentMethod: 'card',
         giftCardCode: giftCardCode || null,
-        giftCardDiscount: giftCardDiscount ? parseFloat(giftCardDiscount) : null,
-        subtotal: parseFloat(subtotal),
-        deliveryFee: parseFloat(deliveryFee || 0),
-        total: parseFloat(total),
+        giftCardDiscount: discount || null,
+        subtotal, deliveryFee, total,
         notes,
         items: {
-          create: items.map((item: any) => ({
+          create: validatedItems.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
             size: item.size,
-            price: parseFloat(item.price),
+            price: item.price,
             name_fi: item.name_fi,
             name_en: item.name_en,
           })),
@@ -47,14 +68,14 @@ export async function POST(request: NextRequest) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
     const session = await createCheckoutSession({
-      items: items.map((item: any) => ({
+      items: validatedItems.map((item) => ({
         productId: item.productId,
         name: item.name_fi,
-        price: parseFloat(item.price),
+        price: item.price,
         quantity: item.quantity,
         size: item.size,
       })),
-      deliveryFee: parseFloat(deliveryFee || 0),
+      deliveryFee,
       customerEmail,
       orderId: order.id,
       successUrl: `${appUrl}/checkout/success`,

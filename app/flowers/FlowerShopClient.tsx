@@ -16,7 +16,7 @@ const PRODUCTS = [
     description_fi: 'Kaunis romanttinen ruusukukka punaisista ruusuista. Sopii täydellisesti lahjaksi rakkaalle.',
     description_en: 'Beautiful romantic bouquet of red roses. Perfect as a gift for your loved one.',
     priceSmall: 35, priceLarge: 65, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=500&h=500&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1548266652-99cf27701ced?w=500&h=500&fit=crop',
   },
   {
     id: '2', slug: 'haiden-valkoinen-kimppu',
@@ -24,7 +24,7 @@ const PRODUCTS = [
     description_fi: 'Elegantti valkoinen häätarjoilu, jossa on ruusuja, pioneja ja vihreyttä.',
     description_en: 'Elegant white wedding bouquet with roses, peonies and greenery.',
     priceSmall: 85, priceLarge: 150, category: 'wedding', isFuneral: false, isWedding: true,
-    imageUrl: 'https://images.unsplash.com/photo-1487530811015-780a59f9e2e0?w=500&h=500&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1519225421980-716e8e87cef2?w=500&h=500&fit=crop',
   },
   {
     id: '3', slug: 'vaaleanpunainen-sekakimppu',
@@ -32,7 +32,7 @@ const PRODUCTS = [
     description_fi: 'Pirteä vaaleanpunainen sekakimppu kausiluonteisista kukista.',
     description_en: 'Cheerful pink mixed bouquet of seasonal flowers.',
     priceSmall: 28, priceLarge: 55, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1490750967868-88df5691cc66?w=500&h=500&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=500&h=500&fit=crop',
   },
   {
     id: '4', slug: 'kevainen-tulppaanikimppu',
@@ -40,7 +40,7 @@ const PRODUCTS = [
     description_fi: 'Kirkkaat kevättulppaanit eri väreissä. Iloa jokaiseen kotiin.',
     description_en: 'Bright spring tulips in various colors. Joy for every home.',
     priceSmall: 22, priceLarge: 42, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1453293425659-d33fef51fa7c?w=500&h=500&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=500&h=500&fit=crop',
   },
   {
     id: '5', slug: 'hautajaiskimppu-valkoinen',
@@ -48,7 +48,7 @@ const PRODUCTS = [
     description_fi: 'Arvokas ja kunnioittava valkoinen kimppu hautajaisiin.',
     description_en: 'Dignified and respectful white bouquet for funerals.',
     priceSmall: 45, priceLarge: 90, category: 'funeral', isFuneral: true, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=500&h=500&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1561059488-916d8cdb01c5?w=500&h=500&fit=crop',
   },
   {
     id: '6', slug: 'haiden-roosa-kimppu',
@@ -56,7 +56,7 @@ const PRODUCTS = [
     description_fi: 'Romanttinen vaaleanpunainen häätarjoilu pionien ja ruusujen kanssa.',
     description_en: 'Romantic pink wedding bouquet with peonies and roses.',
     priceSmall: 95, priceLarge: 175, category: 'wedding', isFuneral: false, isWedding: true,
-    imageUrl: 'https://images.unsplash.com/photo-1468327768560-75b778cbb551?w=500&h=500&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=500&h=500&fit=crop',
   },
   {
     id: '7', slug: 'auringonkukkakimppu',
@@ -64,7 +64,7 @@ const PRODUCTS = [
     description_fi: 'Iloinen ja kirkas auringonkukkakimppu, joka tuo auringonpaisteen sisätiloihin.',
     description_en: 'Cheerful and bright sunflower bouquet that brings sunshine indoors.',
     priceSmall: 25, priceLarge: 48, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1416339134316-0e91dc9ded92?w=500&h=500&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1469439870-4a45f0b2a284?w=500&h=500&fit=crop',
   },
   {
     id: '8', slug: 'muistokimppu-punainen',
@@ -72,12 +72,13 @@ const PRODUCTS = [
     description_fi: 'Kaunis ja arvokas punainen muistokimppu hautajaisiin.',
     description_en: 'Beautiful and dignified red memorial bouquet for funerals.',
     priceSmall: 50, priceLarge: 95, category: 'funeral', isFuneral: true, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=500&h=500&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=500&h=500&fit=crop',
   },
 ];
 
 export default function FlowerShopClient() {
   const t = useTranslations('flowers');
+  const tCommon = useTranslations('common');
   const { addItem, openCart } = useCart();
   const [activeCategory, setActiveCategory] = useState('all');
   const [showFuneralNotice, setShowFuneralNotice] = useState<string | null>(null);
@@ -161,12 +162,12 @@ export default function FlowerShopClient() {
           <div key={product.id} className="group">
             {/* Funeral notice modal */}
             {showFuneralNotice === product.id && (
-              <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+              <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
                 <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
                   <div className="flex items-start gap-3 mb-4">
                     <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-semibold text-stone-800 mb-2">Huomio</h3>
+                      <h3 className="font-semibold text-stone-800 mb-2">{t('notice')}</h3>
                       <p className="text-sm text-stone-600 leading-relaxed">
                         {t('funeralNotice')}
                       </p>
@@ -177,13 +178,13 @@ export default function FlowerShopClient() {
                       onClick={() => setShowFuneralNotice(null)}
                       className="flex-1 px-4 py-2 border border-stone-200 rounded-xl text-sm text-stone-600 hover:bg-stone-50 transition-colors"
                     >
-                      Peruuta
+                      {tCommon('cancel')}
                     </button>
                     <button
                       onClick={() => confirmFuneralAdd(product)}
                       className="flex-1 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-sm font-medium transition-colors"
                     >
-                      Lisää silti
+                      {t('addAnyway')}
                     </button>
                   </div>
                 </div>
@@ -205,12 +206,12 @@ export default function FlowerShopClient() {
               <div className="p-4 flex flex-col flex-1">
                 {product.isFuneral && (
                   <span className="inline-block text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full mb-2 w-fit">
-                    Muistokukat
+                    {t('categories.funeral')}
                   </span>
                 )}
                 {product.isWedding && (
                   <span className="inline-block text-xs bg-rose-50 text-rose-400 px-2 py-0.5 rounded-full mb-2 w-fit">
-                    Häät
+                    {t('categories.wedding')}
                   </span>
                 )}
                 <Link href={`/flowers/${product.slug}`}>
