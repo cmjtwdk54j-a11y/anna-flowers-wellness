@@ -1,86 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { ShoppingCart, AlertCircle, Filter } from 'lucide-react';
+import { ShoppingCart, AlertCircle, Filter, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { formatPrice, cn } from '@/lib/utils';
+import type { CatalogProduct } from '@/lib/products';
 import { v4 as uuidv4 } from 'uuid';
 
-const PRODUCTS = [
-  {
-    id: '1', slug: 'romanttinen-ruusukukka',
-    name_fi: 'Romanttinen ruusukukka', name_en: 'Romantic Rose Bouquet',
-    description_fi: 'Kaunis romanttinen ruusukukka punaisista ruusuista. Sopii täydellisesti lahjaksi rakkaalle.',
-    description_en: 'Beautiful romantic bouquet of red roses. Perfect as a gift for your loved one.',
-    priceSmall: 35, priceLarge: 65, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1548266652-99cf27701ced?w=500&h=500&fit=crop',
-  },
-  {
-    id: '2', slug: 'haiden-valkoinen-kimppu',
-    name_fi: 'Häiden valkoinen kimppu', name_en: 'Wedding White Bouquet',
-    description_fi: 'Elegantti valkoinen häätarjoilu, jossa on ruusuja, pioneja ja vihreyttä.',
-    description_en: 'Elegant white wedding bouquet with roses, peonies and greenery.',
-    priceSmall: 85, priceLarge: 150, category: 'wedding', isFuneral: false, isWedding: true,
-    imageUrl: 'https://images.unsplash.com/photo-1519225421980-716e8e87cef2?w=500&h=500&fit=crop',
-  },
-  {
-    id: '3', slug: 'vaaleanpunainen-sekakimppu',
-    name_fi: 'Vaaleanpunainen sekakimppu', name_en: 'Pink Mixed Bouquet',
-    description_fi: 'Pirteä vaaleanpunainen sekakimppu kausiluonteisista kukista.',
-    description_en: 'Cheerful pink mixed bouquet of seasonal flowers.',
-    priceSmall: 28, priceLarge: 55, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=500&h=500&fit=crop',
-  },
-  {
-    id: '4', slug: 'kevainen-tulppaanikimppu',
-    name_fi: 'Kevään tulppaanit', name_en: 'Spring Tulip Bouquet',
-    description_fi: 'Kirkkaat kevättulppaanit eri väreissä. Iloa jokaiseen kotiin.',
-    description_en: 'Bright spring tulips in various colors. Joy for every home.',
-    priceSmall: 22, priceLarge: 42, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=500&h=500&fit=crop',
-  },
-  {
-    id: '5', slug: 'hautajaiskimppu-valkoinen',
-    name_fi: 'Hautajaisten valkoinen kimppu', name_en: 'Funeral White Bouquet',
-    description_fi: 'Arvokas ja kunnioittava valkoinen kimppu hautajaisiin.',
-    description_en: 'Dignified and respectful white bouquet for funerals.',
-    priceSmall: 45, priceLarge: 90, category: 'funeral', isFuneral: true, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1561059488-916d8cdb01c5?w=500&h=500&fit=crop',
-  },
-  {
-    id: '6', slug: 'haiden-roosa-kimppu',
-    name_fi: 'Häiden roosa kimppu', name_en: 'Wedding Pink Bouquet',
-    description_fi: 'Romanttinen vaaleanpunainen häätarjoilu pionien ja ruusujen kanssa.',
-    description_en: 'Romantic pink wedding bouquet with peonies and roses.',
-    priceSmall: 95, priceLarge: 175, category: 'wedding', isFuneral: false, isWedding: true,
-    imageUrl: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=500&h=500&fit=crop',
-  },
-  {
-    id: '7', slug: 'auringonkukkakimppu',
-    name_fi: 'Auringonkukkakimppu', name_en: 'Sunflower Bouquet',
-    description_fi: 'Iloinen ja kirkas auringonkukkakimppu, joka tuo auringonpaisteen sisätiloihin.',
-    description_en: 'Cheerful and bright sunflower bouquet that brings sunshine indoors.',
-    priceSmall: 25, priceLarge: 48, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1469439870-4a45f0b2a284?w=500&h=500&fit=crop',
-  },
-  {
-    id: '8', slug: 'muistokimppu-punainen',
-    name_fi: 'Muistokimppu punainen', name_en: 'Memorial Red Bouquet',
-    description_fi: 'Kaunis ja arvokas punainen muistokimppu hautajaisiin.',
-    description_en: 'Beautiful and dignified red memorial bouquet for funerals.',
-    priceSmall: 50, priceLarge: 95, category: 'funeral', isFuneral: true, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=500&h=500&fit=crop',
-  },
-];
+type SortKey = 'popular' | 'priceAsc' | 'priceDesc' | 'newest';
 
-export default function FlowerShopClient() {
+export default function FlowerShopClient({ products }: { products: CatalogProduct[] }) {
   const t = useTranslations('flowers');
   const tCommon = useTranslations('common');
   const { addItem, openCart } = useCart();
   const [activeCategory, setActiveCategory] = useState('all');
+  const [occasion, setOccasion] = useState('all');
+  const [color, setColor] = useState('all');
+  const [maxPrice, setMaxPrice] = useState('all');
+  const [sort, setSort] = useState<SortKey>('popular');
   const [showFuneralNotice, setShowFuneralNotice] = useState<string | null>(null);
 
   const categories = [
@@ -90,11 +30,52 @@ export default function FlowerShopClient() {
     { key: 'funeral', label: t('categories.funeral') },
   ];
 
-  const filtered = activeCategory === 'all'
-    ? PRODUCTS
-    : PRODUCTS.filter((p) => p.category === activeCategory);
+  // Derive available occasions and colours from the actual product set
+  const occasionOptions = useMemo(
+    () => Array.from(new Set(products.flatMap((p) => p.occasions))).sort(),
+    [products]
+  );
+  const colorOptions = useMemo(
+    () => Array.from(new Set(products.map((p) => p.color).filter((c): c is string => !!c))).sort(),
+    [products]
+  );
 
-  const handleAddToCart = (product: typeof PRODUCTS[0]) => {
+  const filtersActive = activeCategory !== 'all' || occasion !== 'all' || color !== 'all' || maxPrice !== 'all';
+
+  const resetFilters = () => {
+    setActiveCategory('all');
+    setOccasion('all');
+    setColor('all');
+    setMaxPrice('all');
+  };
+
+  const filtered = useMemo(() => {
+    const max = maxPrice === 'all' ? Infinity : Number(maxPrice);
+    const result = products.filter((p) => {
+      if (activeCategory !== 'all' && p.categorySlug !== activeCategory) return false;
+      if (occasion !== 'all' && !p.occasions.includes(occasion)) return false;
+      if (color !== 'all' && p.color !== color) return false;
+      if (p.priceSmall > max) return false;
+      return true;
+    });
+    const sorted = [...result];
+    switch (sort) {
+      case 'priceAsc':
+        sorted.sort((a, b) => a.priceSmall - b.priceSmall);
+        break;
+      case 'priceDesc':
+        sorted.sort((a, b) => b.priceSmall - a.priceSmall);
+        break;
+      case 'newest':
+        sorted.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+        break;
+      default:
+        sorted.sort((a, b) => b.popularity - a.popularity);
+    }
+    return sorted;
+  }, [products, activeCategory, occasion, color, maxPrice, sort]);
+
+  const handleAddToCart = (product: CatalogProduct) => {
     if (product.isFuneral) {
       setShowFuneralNotice(product.id);
       return;
@@ -113,7 +94,7 @@ export default function FlowerShopClient() {
     openCart();
   };
 
-  const confirmFuneralAdd = (product: typeof PRODUCTS[0]) => {
+  const confirmFuneralAdd = (product: CatalogProduct) => {
     addItem({
       id: uuidv4(),
       productId: product.id,
@@ -138,7 +119,7 @@ export default function FlowerShopClient() {
       </div>
 
       {/* Category filter */}
-      <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2">
+      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
         <Filter className="w-4 h-4 text-stone-400 flex-shrink-0" />
         {categories.map((cat) => (
           <button
@@ -155,6 +136,85 @@ export default function FlowerShopClient() {
           </button>
         ))}
       </div>
+
+      {/* Filters & sorting */}
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <select
+          value={occasion}
+          onChange={(e) => setOccasion(e.target.value)}
+          aria-label={t('filters.occasion')}
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-600 bg-white focus:outline-none focus:border-rose-400"
+        >
+          <option value="all">{t('filters.allOccasions')}</option>
+          {occasionOptions.map((o) => (
+            <option key={o} value={o}>{t(`occasions.${o}` as any)}</option>
+          ))}
+        </select>
+
+        <select
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+          aria-label={t('filters.color')}
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-600 bg-white focus:outline-none focus:border-rose-400"
+        >
+          <option value="all">{t('filters.allColors')}</option>
+          {colorOptions.map((c) => (
+            <option key={c} value={c}>{t(`colors.${c}` as any)}</option>
+          ))}
+        </select>
+
+        <select
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+          aria-label={t('filters.maxPrice')}
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-600 bg-white focus:outline-none focus:border-rose-400"
+        >
+          <option value="all">{t('filters.anyPrice')}</option>
+          <option value="30">≤ 30 €</option>
+          <option value="50">≤ 50 €</option>
+          <option value="100">≤ 100 €</option>
+        </select>
+
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as SortKey)}
+          aria-label={t('filters.sort')}
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-600 bg-white focus:outline-none focus:border-rose-400 ml-auto"
+        >
+          <option value="popular">{t('sort.popular')}</option>
+          <option value="priceAsc">{t('sort.priceAsc')}</option>
+          <option value="priceDesc">{t('sort.priceDesc')}</option>
+          <option value="newest">{t('sort.newest')}</option>
+        </select>
+      </div>
+
+      {/* Result count + clear */}
+      <div className="flex items-center justify-between mb-6">
+        <p className="text-sm text-stone-400">{t('filters.results', { count: filtered.length })}</p>
+        {filtersActive && (
+          <button
+            onClick={resetFilters}
+            className="inline-flex items-center gap-1 text-sm text-rose-500 hover:text-rose-600"
+          >
+            <X className="w-3.5 h-3.5" />
+            {t('filters.clear')}
+          </button>
+        )}
+      </div>
+
+      {/* Empty state */}
+      {filtered.length === 0 && (
+        <div className="text-center py-16">
+          <p className="text-stone-500 mb-4">{t('filters.noResults')}</p>
+          <button
+            onClick={resetFilters}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-rose-500 hover:text-rose-600"
+          >
+            <X className="w-4 h-4" />
+            {t('filters.clear')}
+          </button>
+        </div>
+      )}
 
       {/* Products grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">

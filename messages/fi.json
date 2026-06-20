@@ -76,7 +76,42 @@
     "outOfStock": "Loppu varastosta",
     "from": "Alkaen",
     "notice": "Huomio",
-    "addAnyway": "Lisää silti"
+    "addAnyway": "Lisää silti",
+    "filters": {
+      "occasion": "Tilaisuus",
+      "color": "Väri",
+      "maxPrice": "Hinta",
+      "sort": "Järjestä",
+      "allOccasions": "Kaikki tilaisuudet",
+      "allColors": "Kaikki värit",
+      "anyPrice": "Kaikki hinnat",
+      "clear": "Tyhjennä suodattimet",
+      "results": "{count} tuotetta",
+      "noResults": "Ei tuotteita valituilla suodattimilla."
+    },
+    "sort": {
+      "popular": "Suosituimmat",
+      "priceAsc": "Hinta: alhaisin ensin",
+      "priceDesc": "Hinta: korkein ensin",
+      "newest": "Uutuudet"
+    },
+    "occasions": {
+      "love": "Rakkaus",
+      "birthday": "Syntymäpäivä",
+      "thanks": "Kiitos",
+      "wedding": "Häät",
+      "funeral": "Hautajaiset",
+      "sympathy": "Surunvalittelu",
+      "congratulations": "Onnittelut",
+      "seasonal": "Kausi"
+    },
+    "colors": {
+      "red": "Punainen",
+      "pink": "Vaaleanpunainen",
+      "white": "Valkoinen",
+      "yellow": "Keltainen",
+      "mixed": "Värikäs"
+    }
   },
   "product": {
     "details": "Tuotetiedot",
@@ -96,7 +131,13 @@
     "cancel": "Peruuta",
     "confirm": "Lisää ostoskoriin",
     "weddingBadge": "Häät",
-    "funeralBadge": "Muistokukat"
+    "funeralBadge": "Muistokukat",
+    "composition": "Kimpun sisältö",
+    "care": "Hoito-ohjeet",
+    "specsFlowers": "Kukkia",
+    "specsHeight": "Korkeus",
+    "specsColor": "Väri",
+    "specsOccasion": "Sopii tilaisuuteen"
   },
   "massage": {
     "title": "Päänahkahieronta",

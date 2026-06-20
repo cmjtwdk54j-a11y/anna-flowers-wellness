@@ -1,22 +1,19 @@
+import { prisma } from './prisma';
 import { DELIVERY_ZONES } from './utils';
 
-// Server-side source of truth for product prices.
-// These must match the PRODUCTS array in FlowerShopClient / ProductPageClient.
-const PRODUCT_PRICES: Record<string, { small: number; large: number }> = {
-  '1': { small: 35, large: 65 },
-  '2': { small: 85, large: 150 },
-  '3': { small: 28, large: 55 },
-  '4': { small: 22, large: 42 },
-  '5': { small: 45, large: 90 },
-  '6': { small: 95, large: 175 },
-  '7': { small: 25, large: 48 },
-  '8': { small: 50, large: 95 },
-};
-
-export function getProductPrice(productId: string, size: 'SMALL' | 'LARGE'): number | null {
-  const prices = PRODUCT_PRICES[productId];
-  if (!prices) return null;
-  return size === 'SMALL' ? prices.small : prices.large;
+// Server-side source of truth for product prices — read straight from the DB so
+// client-sent prices are never trusted.
+export async function getProductPrice(
+  productId: string,
+  size: 'SMALL' | 'LARGE'
+): Promise<number | null> {
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    select: { priceSmall: true, priceLarge: true },
+  });
+  if (!product) return null;
+  const price = size === 'LARGE' ? product.priceLarge : product.priceSmall;
+  return price === null ? null : Number(price);
 }
 
 export function calcDeliveryFee(deliveryType: string, city: string): number {

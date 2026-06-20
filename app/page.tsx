@@ -5,10 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Flower2, Hand, Truck, Star, ArrowRight, CheckCircle2 } from 'lucide-react';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
+import { getFeaturedProducts } from '@/lib/products';
 
 export default async function HomePage() {
   const locale = await getLocale();
   const t = await getTranslations('home');
+  const featuredProducts = await getFeaturedProducts(4);
 
   const whyUsItems = [
     { icon: Star, key: 'fresh', desc: 'freshDesc' },
@@ -180,7 +182,7 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <FeaturedProducts locale={locale} />
+      <FeaturedProducts locale={locale} products={featuredProducts} />
 
       {/* Why Us */}
       <section className="py-16 bg-white">

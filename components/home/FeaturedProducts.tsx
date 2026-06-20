@@ -5,41 +5,17 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { ShoppingCart, ArrowRight } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import type { CatalogProduct } from '@/lib/products';
 import { v4 as uuidv4 } from 'uuid';
 
-const FEATURED = [
-  {
-    id: '1', slug: 'romanttinen-ruusukukka',
-    name_fi: 'Romanttinen ruusukukka', name_en: 'Romantic Rose Bouquet',
-    priceSmall: 35,
-    imageUrl: 'https://images.unsplash.com/photo-1548266652-99cf27701ced?w=400&h=400&fit=crop',
-  },
-  {
-    id: '2', slug: 'haiden-valkoinen-kimppu',
-    name_fi: 'Häiden valkoinen kimppu', name_en: 'Wedding White Bouquet',
-    priceSmall: 85,
-    imageUrl: 'https://images.unsplash.com/photo-1519225421980-716e8e87cef2?w=400&h=400&fit=crop',
-  },
-  {
-    id: '3', slug: 'vaaleanpunainen-sekakimppu',
-    name_fi: 'Vaaleanpunainen sekakimppu', name_en: 'Pink Mixed Bouquet',
-    priceSmall: 28,
-    imageUrl: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=400&h=400&fit=crop',
-  },
-  {
-    id: '4', slug: 'kevainen-tulppaanikimppu',
-    name_fi: 'Kevään tulppaanit', name_en: 'Spring Tulip Bouquet',
-    priceSmall: 22,
-    imageUrl: 'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=400&h=400&fit=crop',
-  },
-];
-
-export default function FeaturedProducts({ locale }: { locale: string }) {
+export default function FeaturedProducts({ locale, products }: { locale: string; products: CatalogProduct[] }) {
   const t = useTranslations('home');
   const tFlowers = useTranslations('flowers');
   const { addItem, openCart } = useCart();
 
-  const handleAdd = (product: typeof FEATURED[0]) => {
+  if (products.length === 0) return null;
+
+  const handleAdd = (product: CatalogProduct) => {
     addItem({
       id: uuidv4(),
       productId: product.id,
@@ -67,7 +43,7 @@ export default function FeaturedProducts({ locale }: { locale: string }) {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          {FEATURED.map((product) => (
+          {products.map((product) => (
             <div
               key={product.id}
               className="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-rose-200 hover:shadow-lg transition-all flex flex-col"

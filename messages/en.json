@@ -76,7 +76,42 @@
     "outOfStock": "Out of Stock",
     "from": "From",
     "notice": "Notice",
-    "addAnyway": "Add anyway"
+    "addAnyway": "Add anyway",
+    "filters": {
+      "occasion": "Occasion",
+      "color": "Colour",
+      "maxPrice": "Price",
+      "sort": "Sort",
+      "allOccasions": "All occasions",
+      "allColors": "All colours",
+      "anyPrice": "Any price",
+      "clear": "Clear filters",
+      "results": "{count} products",
+      "noResults": "No products match the selected filters."
+    },
+    "sort": {
+      "popular": "Most popular",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "newest": "Newest"
+    },
+    "occasions": {
+      "love": "Love",
+      "birthday": "Birthday",
+      "thanks": "Thank you",
+      "wedding": "Wedding",
+      "funeral": "Funeral",
+      "sympathy": "Sympathy",
+      "congratulations": "Congratulations",
+      "seasonal": "Seasonal"
+    },
+    "colors": {
+      "red": "Red",
+      "pink": "Pink",
+      "white": "White",
+      "yellow": "Yellow",
+      "mixed": "Mixed"
+    }
   },
   "product": {
     "details": "Product Details",
@@ -96,7 +131,13 @@
     "cancel": "Cancel",
     "confirm": "Add to Cart",
     "weddingBadge": "Wedding",
-    "funeralBadge": "Memorial"
+    "funeralBadge": "Memorial",
+    "composition": "What's in the bouquet",
+    "care": "Care instructions",
+    "specsFlowers": "Flowers",
+    "specsHeight": "Height",
+    "specsColor": "Colour",
+    "specsOccasion": "Suitable for"
   },
   "massage": {
     "title": "Head Massage",

@@ -3,104 +3,18 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ShoppingCart, ChevronLeft, Minus, Plus, AlertCircle, Calendar, Clock } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { formatPrice, cn } from '@/lib/utils';
+import type { CatalogProduct } from '@/lib/products';
 import { v4 as uuidv4 } from 'uuid';
 
-const PRODUCTS: Record<string, {
-  id: string; slug: string; name_fi: string; name_en: string;
-  description_fi: string; description_en: string;
-  priceSmall: number; priceLarge: number | null;
-  imageUrl: string; imageUrls: string[];
-  category: string; isFuneral: boolean; isWedding: boolean;
-}> = {
-  'romanttinen-ruusukukka': {
-    id: '1', slug: 'romanttinen-ruusukukka',
-    name_fi: 'Romanttinen ruusukukka', name_en: 'Romantic Rose Bouquet',
-    description_fi: 'Kaunis romanttinen ruusukukka punaisista ruusuista. Sopii täydellisesti lahjaksi rakkaalle. Ruusut ovat tuoreita ja laadukkaita, kestäen vähintään 7–10 päivää oikeassa hoidossa.',
-    description_en: 'Beautiful romantic bouquet of red roses. Perfect as a gift for your loved one. Roses are fresh and high quality, lasting at least 7-10 days with proper care.',
-    priceSmall: 35, priceLarge: 65, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1548266652-99cf27701ced?w=600&h=600&fit=crop',
-    imageUrls: [
-      'https://images.unsplash.com/photo-1548266652-99cf27701ced?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600&h=600&fit=crop',
-    ],
-  },
-  'haiden-valkoinen-kimppu': {
-    id: '2', slug: 'haiden-valkoinen-kimppu',
-    name_fi: 'Häiden valkoinen kimppu', name_en: 'Wedding White Bouquet',
-    description_fi: 'Elegantti valkoinen häätarjoilu ruusuilla, pioneilla ja vihreydellä. Täydellinen valkoinen häätarjoilu erityiselle päivälle.',
-    description_en: 'Elegant white wedding bouquet with roses, peonies and greenery. Perfect white bridal bouquet for your special day.',
-    priceSmall: 85, priceLarge: 150, category: 'wedding', isFuneral: false, isWedding: true,
-    imageUrl: 'https://images.unsplash.com/photo-1519225421980-716e8e87cef2?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1519225421980-716e8e87cef2?w=600&h=600&fit=crop'],
-  },
-  'hautajaiskimppu-valkoinen': {
-    id: '5', slug: 'hautajaiskimppu-valkoinen',
-    name_fi: 'Hautajaisten valkoinen kimppu', name_en: 'Funeral White Bouquet',
-    description_fi: 'Arvokas ja kunnioittava valkoinen kimppu hautajaisiin. Valmistettu rakkaudella läheisesi muistoksi.',
-    description_en: 'Dignified and respectful white bouquet for funerals. Made with love in memory of your loved one.',
-    priceSmall: 45, priceLarge: 90, category: 'funeral', isFuneral: true, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1561059488-916d8cdb01c5?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1561059488-916d8cdb01c5?w=600&h=600&fit=crop'],
-  },
-  'vaaleanpunainen-sekakimppu': {
-    id: '3', slug: 'vaaleanpunainen-sekakimppu',
-    name_fi: 'Vaaleanpunainen sekakimppu', name_en: 'Pink Mixed Bouquet',
-    description_fi: 'Pirteä vaaleanpunainen sekakimppu kausiluonteisista kukista. Tuo iloa ja väriä jokaiseen tilaan.',
-    description_en: 'Cheerful pink mixed bouquet of seasonal flowers. Brings joy and colour to any space.',
-    priceSmall: 28, priceLarge: 55, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600&h=600&fit=crop'],
-  },
-  'kevainen-tulppaanikimppu': {
-    id: '4', slug: 'kevainen-tulppaanikimppu',
-    name_fi: 'Kevään tulppaanit', name_en: 'Spring Tulip Bouquet',
-    description_fi: 'Kirkkaat kevättulppaanit eri väreissä. Iloa jokaiseen kotiin – täydellinen kevään lahja.',
-    description_en: 'Bright spring tulips in various colours. Joy for every home – the perfect spring gift.',
-    priceSmall: 22, priceLarge: 42, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=600&h=600&fit=crop'],
-  },
-  'haiden-roosa-kimppu': {
-    id: '6', slug: 'haiden-roosa-kimppu',
-    name_fi: 'Häiden roosa kimppu', name_en: 'Wedding Pink Bouquet',
-    description_fi: 'Romanttinen vaaleanpunainen häätarjoilu pionien ja ruusujen kanssa. Täydellinen romanttiseen häätilaisuuteen.',
-    description_en: 'Romantic pink wedding bouquet with peonies and roses. Perfect for a romantic wedding ceremony.',
-    priceSmall: 95, priceLarge: 175, category: 'wedding', isFuneral: false, isWedding: true,
-    imageUrl: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600&h=600&fit=crop'],
-  },
-  'auringonkukkakimppu': {
-    id: '7', slug: 'auringonkukkakimppu',
-    name_fi: 'Auringonkukkakimppu', name_en: 'Sunflower Bouquet',
-    description_fi: 'Iloinen ja kirkas auringonkukkakimppu, joka tuo auringonpaisteen sisätiloihin. Pirteä kesälahja.',
-    description_en: 'Cheerful and bright sunflower bouquet that brings sunshine indoors. A lively summer gift.',
-    priceSmall: 25, priceLarge: 48, category: 'bouquets', isFuneral: false, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1469439870-4a45f0b2a284?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1469439870-4a45f0b2a284?w=600&h=600&fit=crop'],
-  },
-  'muistokimppu-punainen': {
-    id: '8', slug: 'muistokimppu-punainen',
-    name_fi: 'Muistokimppu punainen', name_en: 'Memorial Red Bouquet',
-    description_fi: 'Kaunis ja arvokas punainen muistokimppu hautajaisiin. Osoita kunnioituksesi läheiselle punaisilla kukilla.',
-    description_en: 'Beautiful and dignified red memorial bouquet. Express your respect with red flowers.',
-    priceSmall: 50, priceLarge: 95, category: 'funeral', isFuneral: true, isWedding: false,
-    imageUrl: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600&h=600&fit=crop',
-    imageUrls: ['https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600&h=600&fit=crop'],
-  },
-};
-
-export default function ProductPageClient({ slug }: { slug: string }) {
+export default function ProductPageClient({ product }: { product: CatalogProduct }) {
   const t = useTranslations('product');
   const tFlowers = useTranslations('flowers');
   const { addItem, openCart } = useCart();
 
-  const product = PRODUCTS[slug];
-  if (!product) notFound();
   const [selectedSize, setSelectedSize] = useState<'SMALL' | 'LARGE'>('SMALL');
   const [quantity, setQuantity] = useState(1);
   const [selectedDate, setSelectedDate] = useState('');
@@ -214,7 +128,50 @@ export default function ProductPageClient({ slug }: { slug: string }) {
           </div>
 
           <h1 className="text-2xl font-bold text-stone-800 mb-3">{product.name_fi}</h1>
-          <p className="text-stone-500 text-sm leading-relaxed mb-6">{product.description_fi}</p>
+          <p className="text-stone-500 text-sm leading-relaxed mb-5">{product.description_fi}</p>
+
+          {/* Specs */}
+          {(product.flowerCount !== null || product.heightCm !== null || product.color) && (
+            <div className="flex flex-wrap gap-2 mb-5">
+              {product.flowerCount !== null && (
+                <span className="text-xs bg-stone-100 text-stone-600 px-2.5 py-1 rounded-lg">
+                  {t('specsFlowers')}: {product.flowerCount}
+                </span>
+              )}
+              {product.heightCm !== null && (
+                <span className="text-xs bg-stone-100 text-stone-600 px-2.5 py-1 rounded-lg">
+                  {t('specsHeight')}: {product.heightCm} cm
+                </span>
+              )}
+              {product.color && (
+                <span className="text-xs bg-stone-100 text-stone-600 px-2.5 py-1 rounded-lg">
+                  {t('specsColor')}: {tFlowers(`colors.${product.color}` as any)}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Composition */}
+          {product.composition_fi && (
+            <div className="mb-5 p-4 bg-stone-50 rounded-xl">
+              <h2 className="text-sm font-semibold text-stone-700 mb-1">{t('composition')}</h2>
+              <p className="text-sm text-stone-500 leading-relaxed">{product.composition_fi}</p>
+            </div>
+          )}
+
+          {/* Occasions */}
+          {product.occasions.length > 0 && (
+            <div className="mb-6">
+              <p className="text-xs text-stone-400 mb-1.5">{t('specsOccasion')}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {product.occasions.map((o) => (
+                  <span key={o} className="text-xs bg-rose-50 text-rose-500 px-2 py-0.5 rounded-full">
+                    {tFlowers(`occasions.${o}` as any)}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Size selector */}
           <div className="mb-5">
@@ -339,6 +296,14 @@ export default function ProductPageClient({ slug }: { slug: string }) {
               {added ? t('added') : t('addToCart')}
             </button>
           </div>
+
+          {/* Care instructions */}
+          {product.careInfo_fi && (
+            <div className="mb-4 p-4 border border-stone-100 rounded-xl">
+              <h2 className="text-sm font-semibold text-stone-700 mb-1">{t('care')}</h2>
+              <p className="text-sm text-stone-500 leading-relaxed">{product.careInfo_fi}</p>
+            </div>
+          )}
 
           {/* Funeral confirmation */}
           {showFuneralNotice && (

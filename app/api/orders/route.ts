@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generateOrderNumber } from '@/lib/utils';
-import { getProductPrice, calcDeliveryFee } from '@/lib/prices';
+import { calcDeliveryFee } from '@/lib/prices';
 import { sendOrderConfirmationEmail, sendAdminOrderNotification } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Order must contain at least one item' }, { status: 400 });
     }
 
-    // Server-side price recalculation — ignore client-sent prices
+    // Server-side recalculation — ignore client-sent prices and names, read from DB
     let subtotal = 0;
     const validatedItems: Array<{
       productId: string; quantity: number; size: 'SMALL' | 'LARGE';
@@ -29,12 +29,29 @@ export async function POST(request: NextRequest) {
     }> = [];
 
     for (const item of items) {
-      const price = getProductPrice(String(item.productId), item.size as 'SMALL' | 'LARGE');
-      if (price === null) {
+      const size: 'SMALL' | 'LARGE' = item.size === 'LARGE' ? 'LARGE' : 'SMALL';
+      const quantity = Math.max(1, Math.floor(Number(item.quantity) || 0));
+      const product = await prisma.product.findUnique({
+        where: { id: String(item.productId) },
+        select: { name_fi: true, name_en: true, priceSmall: true, priceLarge: true },
+      });
+      if (!product) {
         return NextResponse.json({ error: `Unknown product: ${item.productId}` }, { status: 400 });
       }
-      subtotal += price * Number(item.quantity);
-      validatedItems.push({ ...item, price });
+      const rawPrice = size === 'LARGE' ? product.priceLarge : product.priceSmall;
+      if (rawPrice === null) {
+        return NextResponse.json({ error: `Size ${size} unavailable for product ${item.productId}` }, { status: 400 });
+      }
+      const price = Number(rawPrice);
+      subtotal += price * quantity;
+      validatedItems.push({
+        productId: String(item.productId),
+        quantity,
+        size,
+        price,
+        name_fi: product.name_fi,
+        name_en: product.name_en,
+      });
     }
 
     const deliveryFee = calcDeliveryFee(deliveryType, deliveryCity || '');

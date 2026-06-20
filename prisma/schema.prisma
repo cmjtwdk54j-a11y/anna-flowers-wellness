@@ -43,11 +43,20 @@ model Product {
   name_en        String
   description_fi String
   description_en String
+  composition_fi String?
+  composition_en String?
+  careInfo_fi    String?
+  careInfo_en    String?
   priceSmall     Decimal  @db.Decimal(10, 2)
   priceLarge     Decimal? @db.Decimal(10, 2)
   imageUrl       String
   imageUrls      String[] @default([])
   categoryId     String
+  occasions      String[] @default([])
+  color          String?
+  flowerCount    Int?
+  heightCm       Int?
+  popularity     Int      @default(0)
   inStock        Boolean  @default(true)
   isFeatured     Boolean  @default(false)
   isFuneral      Boolean  @default(false)
