@@ -4,9 +4,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { AdminCategory, AdminProduct } from '@/lib/admin/types';
 import Image from 'next/image';
+import { Upload, Loader2 } from 'lucide-react';
 
 const schema = z.object({
   slug: z.string().min(1, 'Pakollinen').regex(/^[a-z0-9-]+$/, 'Vain pieniä kirjaimia, numeroita ja viivoja'),
@@ -47,7 +48,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
   const [error, setError] = useState('');
 
   const {
-    register, handleSubmit, watch,
+    register, handleSubmit, watch, setValue,
     formState: { errors },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useForm<FormData>({
@@ -71,6 +72,29 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
   const imageUrl = watch('imageUrl');
   const isEdit = !!product;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setUploadError('');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (!res.ok) { setUploadError(data.error || 'Virhe'); return; }
+      setValue('imageUrl', data.url);
+    } catch {
+      setUploadError('Verkkovirhe');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const onSubmit = async (data: FormData) => {
     setSaving(true);
@@ -189,7 +213,26 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
         <h2 className="text-sm font-semibold text-stone-700 mb-4">Kuvat</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <Field label="Pääkuvan URL *" name="imageUrl" placeholder="https://images.unsplash.com/..." />
+            <label className="block text-xs font-medium text-stone-600 mb-1">Pääkuva *</label>
+            <div className="flex gap-2">
+              <input
+                {...register('imageUrl')}
+                placeholder="https://... tai lataa tiedosto →"
+                className="flex-1 border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="flex items-center gap-1.5 px-3 py-2 border border-stone-200 rounded-lg text-sm text-stone-600 hover:bg-stone-50 disabled:opacity-50 transition-colors whitespace-nowrap"
+              >
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                {uploading ? 'Ladataan...' : 'Lataa kuva'}
+              </button>
+              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+            </div>
+            {uploadError && <p className="text-xs text-red-500 mt-1">{uploadError}</p>}
+            {errors.imageUrl && <p className="text-xs text-red-500 mt-1">{errors.imageUrl.message}</p>}
             {imageUrl && (
               <div className="mt-2 w-24 h-24 rounded-lg overflow-hidden border border-stone-200">
                 <Image src={imageUrl} alt="Esikatselu" width={96} height={96} className="w-full h-full object-cover" />
