@@ -3,15 +3,17 @@ import { prisma } from '@/lib/prisma';
 import { generateOrderNumber } from '@/lib/utils';
 import { calcDeliveryFee } from '@/lib/prices';
 import { sendOrderConfirmationEmail, sendAdminOrderNotification } from '@/lib/email';
+import { ADDONS } from '@/lib/addons';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
       customerName, customerEmail, customerPhone,
+      recipientName, recipientPhone, cardMessage,
       deliveryType, deliveryAddress, deliveryCity, deliveryNote,
       scheduledAt, paymentMethod, giftCardCode, giftCardDiscount,
-      notes, items,
+      notes, items, addons: rawAddons,
     } = body;
 
     if (!customerName || !customerEmail || !customerPhone) {
@@ -54,16 +56,27 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Validate addons server-side — only known ids and their prices
+    const selectedAddonIds: string[] = Array.isArray(rawAddons) ? rawAddons.map(String) : [];
+    const validatedAddons = selectedAddonIds
+      .map((id) => ADDONS.find((a) => a.id === id))
+      .filter((a): a is NonNullable<typeof a> => !!a);
+    const addonsTotal = validatedAddons.reduce((sum, a) => sum + a.price, 0);
+
     const deliveryFee = calcDeliveryFee(deliveryType, deliveryCity || '');
     const discount = giftCardDiscount ? parseFloat(String(giftCardDiscount)) : 0;
-    const total = Math.max(0, subtotal + deliveryFee - discount);
+    const total = Math.max(0, subtotal + addonsTotal + deliveryFee - discount);
 
     const order = await prisma.order.create({
       data: {
         orderNumber: generateOrderNumber(),
         customerName, customerEmail, customerPhone,
+        recipientName: recipientName || null,
+        recipientPhone: recipientPhone || null,
+        cardMessage: cardMessage || null,
         deliveryType, deliveryAddress, deliveryCity, deliveryNote,
         scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
+        addons: validatedAddons.length > 0 ? validatedAddons : undefined,
         paymentMethod,
         giftCardCode: giftCardCode || null,
         giftCardDiscount: discount || null,

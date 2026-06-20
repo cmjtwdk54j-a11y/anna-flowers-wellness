@@ -101,9 +101,12 @@ model Order {
   customerName     String
   customerEmail    String
   customerPhone    String
+  recipientName    String?
+  recipientPhone   String?
+  cardMessage      String?
   paymentMethod    String
   paymentStatus    PaymentStatus @default(PENDING)
-  stripeSessionId  String?
+  addons           Json?
   giftCardCode     String?
   giftCardDiscount Decimal?      @db.Decimal(10, 2)
   notes            String?

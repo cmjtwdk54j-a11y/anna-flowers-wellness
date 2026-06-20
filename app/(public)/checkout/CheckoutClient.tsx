@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { formatPrice, DELIVERY_ZONES, cn } from '@/lib/utils';
+import { ADDONS } from '@/lib/addons';
 
 type PaymentMethod = 'card' | 'mobilepay' | 'edenred';
 type DeliveryType = 'HOME' | 'SCHOOL' | 'CITY_CENTER' | 'PICKUP';
@@ -20,6 +21,8 @@ export default function CheckoutClient() {
   const { state, subtotal, clearCart } = useCart();
 
   const [customerInfo, setCustomerInfo] = useState({ name: '', email: '', phone: '' });
+  const [recipient, setRecipient] = useState({ sameAsBuyer: true, name: '', phone: '' });
+  const [cardMessage, setCardMessage] = useState('');
   const [deliveryInfo, setDeliveryInfo] = useState({
     type: 'HOME' as DeliveryType,
     address: '', city: '', note: '',
@@ -31,7 +34,8 @@ export default function CheckoutClient() {
   const [giftCardError, setGiftCardError] = useState('');
   const [loading, setLoading] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
-  const [stripeError, setStripeError] = useState('');
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [orderError, setOrderError] = useState('');
 
   const selectedZone = DELIVERY_ZONES.find((z) => z.city === deliveryInfo.city);
   const deliveryFee =
@@ -39,7 +43,11 @@ export default function CheckoutClient() {
     : deliveryInfo.type === 'CITY_CENTER' ? 0
     : (selectedZone ? selectedZone.priceOutside : 0);
 
-  const total = Math.max(0, subtotal + deliveryFee - giftCardDiscount);
+  const addonsTotal = ADDONS
+    .filter((a) => selectedAddons.includes(a.id))
+    .reduce((sum, a) => sum + a.price, 0);
+
+  const total = Math.max(0, subtotal + addonsTotal + deliveryFee - giftCardDiscount);
 
   const availableTimes = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
   const today = new Date().toISOString().split('T')[0];
@@ -68,6 +76,13 @@ export default function CheckoutClient() {
         customerName: customerInfo.name,
         customerEmail: customerInfo.email,
         customerPhone: customerInfo.phone,
+        recipientName: deliveryInfo.type === 'PICKUP'
+          ? null
+          : (recipient.sameAsBuyer ? customerInfo.name : recipient.name),
+        recipientPhone: deliveryInfo.type === 'PICKUP'
+          ? null
+          : (recipient.sameAsBuyer ? customerInfo.phone : recipient.phone),
+        cardMessage: cardMessage || null,
         deliveryType: deliveryInfo.type,
         deliveryAddress: deliveryInfo.address,
         deliveryCity: deliveryInfo.city,
@@ -75,6 +90,7 @@ export default function CheckoutClient() {
         scheduledAt: deliveryInfo.scheduleDate
           ? new Date(`${deliveryInfo.scheduleDate}T${deliveryInfo.scheduleTime || '12:00'}`).toISOString()
           : null,
+        addons: selectedAddons,
         paymentMethod,
         giftCardCode: giftCardCode || null,
         giftCardDiscount: giftCardDiscount || null,
@@ -92,51 +108,25 @@ export default function CheckoutClient() {
         })),
       };
 
-      if (paymentMethod === 'card') {
-        let res: Response;
-        try {
-          res = await fetch('/api/checkout/stripe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderPayload),
-          });
-        } catch {
-          setStripeError(t('networkError'));
-          return;
-        }
-        if (!res.ok) {
-          setStripeError(t('stripeError'));
-          return;
-        }
-        const { url } = await res.json();
-        if (url) {
-          window.location.href = url;
-          return;
-        } else {
-          setStripeError(t('stripeError'));
-          return;
-        }
-      } else {
-        let res: Response;
-        try {
-          res = await fetch('/api/orders', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderPayload),
-          });
-        } catch {
-          setStripeError(t('networkError'));
-          return;
-        }
-        if (!res.ok) {
-          setStripeError(t('stripeError'));
-          return;
-        }
-        clearCart();
-        setOrderPlaced(true);
+      let res: Response;
+      try {
+        res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload),
+        });
+      } catch {
+        setOrderError(t('networkError'));
+        return;
       }
+      if (!res.ok) {
+        setOrderError(t('orderError'));
+        return;
+      }
+      clearCart();
+      setOrderPlaced(true);
     } catch {
-      setStripeError(t('stripeError'));
+      setOrderError(t('orderError'));
     } finally {
       setLoading(false);
     }
@@ -267,6 +257,39 @@ export default function CheckoutClient() {
                 </div>
               )}
 
+              {/* Recipient */}
+              {deliveryInfo.type !== 'PICKUP' && (
+                <div className="mt-4 pt-4 border-t border-stone-100">
+                  <label className="flex items-center gap-2.5 cursor-pointer mb-3">
+                    <input
+                      type="checkbox"
+                      checked={!recipient.sameAsBuyer}
+                      onChange={(e) => setRecipient({ ...recipient, sameAsBuyer: !e.target.checked })}
+                      className="rounded border-stone-300 text-rose-500 focus:ring-rose-400"
+                    />
+                    <span className="text-sm font-medium text-stone-700">{t('recipientOther')}</span>
+                  </label>
+                  {!recipient.sameAsBuyer && (
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <input
+                        type="text" required
+                        value={recipient.name}
+                        onChange={(e) => setRecipient({ ...recipient, name: e.target.value })}
+                        placeholder={`${t('recipientName')} *`}
+                        className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                      />
+                      <input
+                        type="tel" required
+                        value={recipient.phone}
+                        onChange={(e) => setRecipient({ ...recipient, phone: e.target.value })}
+                        placeholder={`${t('recipientPhone')} *`}
+                        className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Pre-order scheduling */}
               <div className="mt-4 grid sm:grid-cols-2 gap-3">
                 <div>
@@ -277,6 +300,7 @@ export default function CheckoutClient() {
                   <input
                     type="date"
                     min={today}
+                    required={deliveryInfo.type !== 'PICKUP'}
                     value={deliveryInfo.scheduleDate}
                     onChange={(e) => setDeliveryInfo({ ...deliveryInfo, scheduleDate: e.target.value })}
                     className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
@@ -300,6 +324,21 @@ export default function CheckoutClient() {
                 </div>
               </div>
 
+              <p className="text-xs text-stone-400 mt-2">{t('cutoffHint')}</p>
+
+              {/* Card message */}
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-stone-700 mb-1.5">{t('cardMessage')}</label>
+                <textarea
+                  rows={3}
+                  maxLength={300}
+                  value={cardMessage}
+                  onChange={(e) => setCardMessage(e.target.value)}
+                  placeholder={t('cardMessagePlaceholder')}
+                  className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400 resize-none"
+                />
+              </div>
+
               <textarea
                 rows={2}
                 value={deliveryInfo.note}
@@ -307,6 +346,43 @@ export default function CheckoutClient() {
                 placeholder={t('notes')}
                 className="mt-3 w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400 resize-none"
               />
+            </div>
+
+            {/* Addons / upsell */}
+            <div className="bg-white rounded-2xl border border-stone-100 p-6">
+              <h2 className="font-semibold text-stone-800 mb-1">{t('addonsTitle')}</h2>
+              <p className="text-xs text-stone-400 mb-4">{t('addonsSubtitle')}</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {ADDONS.map((addon) => {
+                  const active = selectedAddons.includes(addon.id);
+                  return (
+                    <button
+                      key={addon.id}
+                      type="button"
+                      onClick={() =>
+                        setSelectedAddons((prev) =>
+                          active ? prev.filter((id) => id !== addon.id) : [...prev, addon.id]
+                        )
+                      }
+                      className={cn(
+                        'flex flex-col items-center gap-1.5 py-4 px-3 rounded-xl border text-center transition-colors',
+                        active
+                          ? 'border-rose-400 bg-rose-50 text-rose-600'
+                          : 'border-stone-200 text-stone-600 hover:border-rose-200'
+                      )}
+                    >
+                      <span className="text-2xl">{addon.emoji}</span>
+                      <span className="text-xs font-medium leading-tight">{addon.name_en}</span>
+                      <span className="text-xs text-stone-400">+{formatPrice(addon.price)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedAddons.length > 0 && (
+                <p className="text-xs text-emerald-600 mt-3">
+                  {t('addonsSelected', { count: selectedAddons.length })}
+                </p>
+              )}
             </div>
 
             {/* Payment */}
@@ -416,6 +492,12 @@ export default function CheckoutClient() {
                   <span className="text-stone-500">{tCart('subtotal')}</span>
                   <span className="text-stone-700">{formatPrice(subtotal)}</span>
                 </div>
+                {addonsTotal > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-stone-500">{t('addonsTitle')}</span>
+                    <span className="text-stone-700">+{formatPrice(addonsTotal)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm">
                   <span className="text-stone-500">{t('deliveryFee')}</span>
                   <span className="text-stone-700">
@@ -447,12 +529,9 @@ export default function CheckoutClient() {
                 )}
               </button>
 
-              {stripeError && (
-                <p className="text-xs text-red-500 text-center mt-2">{stripeError}</p>
+              {orderError && (
+                <p className="text-xs text-red-500 text-center mt-2">{orderError}</p>
               )}
-              <p className="text-xs text-stone-400 text-center mt-3">
-                {t('stripeNote')}
-              </p>
             </div>
           </div>
         </div>
