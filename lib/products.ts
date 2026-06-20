@@ -63,28 +63,43 @@ function serializeProduct(p: ProductWithCategory): CatalogProduct {
 }
 
 export async function getProducts(): Promise<CatalogProduct[]> {
-  const products = await prisma.product.findMany({
-    where: { inStock: true },
-    include: { category: true },
-    orderBy: [{ popularity: 'desc' }, { createdAt: 'desc' }],
-  });
-  return products.map(serializeProduct);
+  try {
+    const products = await prisma.product.findMany({
+      where: { inStock: true },
+      include: { category: true },
+      orderBy: [{ popularity: 'desc' }, { createdAt: 'desc' }],
+    });
+    return products.map(serializeProduct);
+  } catch (err) {
+    console.error('getProducts failed:', err);
+    return [];
+  }
 }
 
 export async function getFeaturedProducts(limit = 4): Promise<CatalogProduct[]> {
-  const products = await prisma.product.findMany({
-    where: { inStock: true, isFeatured: true },
-    include: { category: true },
-    orderBy: [{ popularity: 'desc' }, { createdAt: 'desc' }],
-    take: limit,
-  });
-  return products.map(serializeProduct);
+  try {
+    const products = await prisma.product.findMany({
+      where: { inStock: true, isFeatured: true },
+      include: { category: true },
+      orderBy: [{ popularity: 'desc' }, { createdAt: 'desc' }],
+      take: limit,
+    });
+    return products.map(serializeProduct);
+  } catch (err) {
+    console.error('getFeaturedProducts failed:', err);
+    return [];
+  }
 }
 
 export async function getProductBySlug(slug: string): Promise<CatalogProduct | null> {
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: { category: true },
-  });
-  return product ? serializeProduct(product) : null;
+  try {
+    const product = await prisma.product.findUnique({
+      where: { slug },
+      include: { category: true },
+    });
+    return product ? serializeProduct(product) : null;
+  } catch (err) {
+    console.error('getProductBySlug failed:', err);
+    return null;
+  }
 }
