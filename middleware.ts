@@ -46,5 +46,8 @@ async function verifySessionToken(token: string): Promise<boolean> {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  matcher: [
+    '/admin/((?!login$).*)',
+    '/api/admin/((?!auth/).*)',
+  ],
 };
