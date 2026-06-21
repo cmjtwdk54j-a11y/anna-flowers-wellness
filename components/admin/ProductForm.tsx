@@ -82,12 +82,33 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
     setUploading(true);
     setUploadError('');
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
-      const data = await res.json();
-      if (!res.ok) { setUploadError(data.error || 'Virhe'); return; }
-      setValue('imageUrl', data.url);
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      let url: string;
+
+      if (cloudName && uploadPreset) {
+        // Cloudinary direct upload (no server needed)
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', uploadPreset);
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: 'POST', body: fd,
+        });
+        const data = await res.json();
+        if (!res.ok || !data.secure_url) { setUploadError('Cloudinary-virhe: ' + (data.error?.message || 'tuntematon')); return; }
+        url = data.secure_url;
+      } else {
+        // Vercel Blob fallback
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) { setUploadError(data.error || 'Virhe'); return; }
+        url = data.url;
+      }
+
+      setValue('imageUrl', url);
     } catch {
       setUploadError('Verkkovirhe');
     } finally {
