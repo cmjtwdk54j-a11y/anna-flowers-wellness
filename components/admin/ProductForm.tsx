@@ -211,39 +211,76 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
       {/* Kuvat */}
       <section className="bg-white border border-stone-200 rounded-xl p-5">
         <h2 className="text-sm font-semibold text-stone-700 mb-4">Kuvat</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="space-y-4">
+          {/* Upload zone */}
           <div>
-            <label className="block text-xs font-medium text-stone-600 mb-1">Pääkuva *</label>
-            <div className="flex gap-2">
-              <input
-                {...register('imageUrl')}
-                placeholder="https://... tai lataa tiedosto →"
-                className="flex-1 border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="flex items-center gap-1.5 px-3 py-2 border border-stone-200 rounded-lg text-sm text-stone-600 hover:bg-stone-50 disabled:opacity-50 transition-colors whitespace-nowrap"
-              >
-                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                {uploading ? 'Ladataan...' : 'Lataa kuva'}
-              </button>
+            <label className="block text-xs font-medium text-stone-600 mb-2">Pääkuva *</label>
+            <div
+              onClick={() => !uploading && fileInputRef.current?.click()}
+              className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
+                uploading ? 'border-indigo-300 bg-indigo-50' : 'border-stone-200 hover:border-indigo-300 hover:bg-indigo-50/40'
+              }`}
+            >
               <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+              {imageUrl ? (
+                <div className="flex items-center gap-4">
+                  <div className="w-20 h-20 rounded-lg overflow-hidden border border-stone-200 flex-shrink-0">
+                    <Image src={imageUrl} alt="Esikatselu" width={80} height={80} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-stone-700">Kuva valittu</p>
+                    <p className="text-xs text-stone-400 mt-0.5 break-all line-clamp-2">{imageUrl}</p>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                      className="text-xs text-indigo-600 hover:underline mt-1"
+                    >
+                      Vaihda kuva
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2">
+                  {uploading ? (
+                    <>
+                      <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+                      <p className="text-sm text-indigo-600">Ladataan...</p>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-8 h-8 text-stone-300" />
+                      <p className="text-sm font-medium text-stone-600">Lataa kuva tietokoneelta</p>
+                      <p className="text-xs text-stone-400">JPG, PNG, WebP · max 5 MB</p>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
-            {uploadError && <p className="text-xs text-red-500 mt-1">{uploadError}</p>}
-            {errors.imageUrl && <p className="text-xs text-red-500 mt-1">{errors.imageUrl.message}</p>}
-            {imageUrl && (
-              <div className="mt-2 w-24 h-24 rounded-lg overflow-hidden border border-stone-200">
-                <Image src={imageUrl} alt="Esikatselu" width={96} height={96} className="w-full h-full object-cover" />
-              </div>
+            {uploadError && (
+              <p className="text-xs text-red-500 mt-1.5">
+                {uploadError.includes('Blob Storage') ? (
+                  <>Kuvanlataus ei toimi — lisää <strong>Vercel Blob Storage</strong> projektiisi Vercel-hallintapaneelista.</>
+                ) : uploadError}
+              </p>
             )}
+            {errors.imageUrl && <p className="text-xs text-red-500 mt-1">{errors.imageUrl.message}</p>}
           </div>
+
+          {/* Manual URL fallback */}
+          <div>
+            <label className="block text-xs font-medium text-stone-500 mb-1">tai syötä kuvan URL käsin</label>
+            <input
+              {...register('imageUrl')}
+              placeholder="https://..."
+              className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
+          </div>
+
           <div>
             <label className="block text-xs font-medium text-stone-600 mb-1">Lisäkuvien URL:t (yksi per rivi)</label>
             <textarea
               {...register('imageUrls')}
-              rows={4}
+              rows={3}
               placeholder="https://..."
               className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
             />

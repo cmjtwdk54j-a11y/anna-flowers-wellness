@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { put } from '@vercel/blob';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json(
+        { error: 'Kuvanlataus ei ole käytössä. Lisää Vercel Blob Storage projektiin.' },
+        { status: 503 }
+      );
+    }
+
+    const { put } = await import('@vercel/blob');
+
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
 

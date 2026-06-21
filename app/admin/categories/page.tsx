@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, Check, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, X, Database } from 'lucide-react';
 import type { AdminCategory } from '@/lib/admin/types';
 
 interface EditState {
@@ -20,6 +20,8 @@ export default function CategoriesPage() {
   const [edit, setEdit] = useState<EditState | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [seeding, setSeeding] = useState(false);
+  const [seedMsg, setSeedMsg] = useState('');
 
   const fetchCats = async () => {
     setLoading(true);
@@ -29,6 +31,21 @@ export default function CategoriesPage() {
   };
 
   useEffect(() => { fetchCats(); }, []);
+
+  const handleSeed = async () => {
+    if (!confirm('Lisätäänkö oletuskategoriat ja 4 esimerkkituotetta?')) return;
+    setSeeding(true);
+    setSeedMsg('');
+    const res = await fetch('/api/admin/seed', { method: 'POST' });
+    const d = await res.json();
+    if (res.ok) {
+      setSeedMsg(d.message);
+      await fetchCats();
+    } else {
+      setSeedMsg('Virhe: ' + (d.error || 'tuntematon'));
+    }
+    setSeeding(false);
+  };
 
   const handleSave = async () => {
     if (!edit) return;
@@ -76,14 +93,32 @@ export default function CategoriesPage() {
           <h1 className="text-xl font-bold text-stone-800">Kategoriat</h1>
           <p className="text-sm text-stone-400 mt-0.5">{categories.length} kategoriaa</p>
         </div>
-        <button
-          onClick={() => { setEdit(EMPTY_EDIT); setError(''); }}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Lisää kategoria
-        </button>
+        <div className="flex items-center gap-2">
+          {categories.length === 0 && (
+            <button
+              onClick={handleSeed}
+              disabled={seeding}
+              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
+            >
+              <Database className="w-4 h-4" />
+              {seeding ? 'Lisätään...' : 'Lisää esimerkkitiedot'}
+            </button>
+          )}
+          <button
+            onClick={() => { setEdit(EMPTY_EDIT); setError(''); }}
+            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Lisää kategoria
+          </button>
+        </div>
       </div>
+
+      {seedMsg && (
+        <div className={`text-sm px-4 py-3 rounded-lg border ${seedMsg.startsWith('Virhe') ? 'bg-red-50 text-red-700 border-red-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'}`}>
+          {seedMsg}
+        </div>
+      )}
 
       {/* New/Edit form */}
       {edit !== null && (
