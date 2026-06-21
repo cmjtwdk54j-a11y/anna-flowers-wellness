@@ -8,21 +8,23 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-
-const NAV_ITEMS = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { href: '/admin/products', label: 'Tuotteet', icon: Package },
-  { href: '/admin/orders', label: 'Tilaukset', icon: ShoppingBag },
-  { href: '/admin/promo-codes', label: 'Promokoodit', icon: Tag },
-  { href: '/admin/categories', label: 'Kategoriat', icon: FolderTree },
-  { href: '/admin/analytics', label: 'Analytiikka', icon: BarChart2 },
-  { href: '/admin/settings', label: 'Asetukset', icon: Settings },
-];
+import { useAdminLang } from '@/components/admin/AdminLangContext';
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { lang, setLang, t } = useAdminLang();
+
+  const NAV_ITEMS = [
+    { href: '/admin', label: t.nav.dashboard, icon: LayoutDashboard, exact: true },
+    { href: '/admin/products', label: t.nav.products, icon: Package },
+    { href: '/admin/orders', label: t.nav.orders, icon: ShoppingBag },
+    { href: '/admin/promo-codes', label: t.nav.promoCodes, icon: Tag },
+    { href: '/admin/categories', label: t.nav.categories, icon: FolderTree },
+    { href: '/admin/analytics', label: t.nav.analytics, icon: BarChart2 },
+    { href: '/admin/settings', label: t.nav.settings, icon: Settings },
+  ];
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname.startsWith(href);
@@ -33,16 +35,46 @@ export default function Sidebar() {
     router.refresh();
   };
 
+  const LangToggle = () => (
+    <div className="flex items-center gap-1 bg-stone-800 rounded-lg p-0.5">
+      <button
+        onClick={() => setLang('fi')}
+        className={cn(
+          'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all',
+          lang === 'fi'
+            ? 'bg-stone-600 text-white shadow-sm'
+            : 'text-stone-400 hover:text-stone-200'
+        )}
+      >
+        <span>🇫🇮</span> FI
+      </button>
+      <button
+        onClick={() => setLang('en')}
+        className={cn(
+          'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all',
+          lang === 'en'
+            ? 'bg-stone-600 text-white shadow-sm'
+            : 'text-stone-400 hover:text-stone-200'
+        )}
+      >
+        <span>🇬🇧</span> EN
+      </button>
+    </div>
+  );
+
   const NavContent = () => (
     <>
-      <div className="flex items-center gap-2.5 px-4 h-16 border-b border-stone-700/50">
-        <div className="w-7 h-7 bg-rose-500 rounded-lg flex items-center justify-center flex-shrink-0">
-          <Flower2 className="w-4 h-4 text-white" />
+      <div className="flex items-center justify-between px-4 h-16 border-b border-stone-700/50">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 bg-rose-500 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Flower2 className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <p className="text-white font-semibold text-sm leading-none">Aavafloristi</p>
+            <p className="text-stone-400 text-xs mt-0.5">Admin</p>
+          </div>
         </div>
-        <div>
-          <p className="text-white font-semibold text-sm leading-none">Aavafloristi</p>
-          <p className="text-stone-400 text-xs mt-0.5">Admin</p>
-        </div>
+        <LangToggle />
       </div>
 
       <nav className="flex-1 px-2 py-4 overflow-y-auto">
@@ -73,7 +105,7 @@ export default function Sidebar() {
           className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-stone-300 hover:bg-stone-700/60 hover:text-white transition-colors"
         >
           <LogOut className="w-4 h-4" />
-          Kirjaudu ulos
+          {t.nav.logout}
         </button>
       </div>
     </>
@@ -94,9 +126,12 @@ export default function Sidebar() {
           </div>
           <span className="text-white font-semibold text-sm">Admin</span>
         </div>
-        <button onClick={() => setMobileOpen(true)} className="text-stone-300 hover:text-white p-1.5">
-          <Menu className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <LangToggle />
+          <button onClick={() => setMobileOpen(true)} className="text-stone-300 hover:text-white p-1.5">
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       {/* Mobile drawer */}
