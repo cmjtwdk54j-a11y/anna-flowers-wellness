@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Save } from 'lucide-react';
+import { Save, Trash2 } from 'lucide-react';
 import type { StoreSettingsData } from '@/lib/admin/types';
 import { useAdminLang } from '@/components/admin/AdminLangContext';
 
@@ -26,6 +26,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+  const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
     fetch('/api/admin/settings')
@@ -123,6 +124,51 @@ export default function SettingsPage() {
           <F label={lang === 'fi' ? 'Arkisin' : 'Weekdays'} field="weekdays" placeholder="Ma–Pe: 9:00–18:00" />
           <F label={lang === 'fi' ? 'Lauantai' : 'Saturday'} field="saturday" placeholder="La: 10:00–16:00" />
           <F label={lang === 'fi' ? 'Sunnuntai' : 'Sunday'} field="sunday" placeholder="Su: Suljettu" />
+        </div>
+      </section>
+
+      <section className="bg-white border border-red-100 rounded-xl p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-red-700">
+          {lang === 'fi' ? 'Vaaravyöhyke' : 'Danger zone'}
+        </h2>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-stone-700">
+              {lang === 'fi' ? 'Poista kaikki testitilaukset' : 'Delete all test orders'}
+            </p>
+            <p className="text-xs text-stone-400 mt-0.5">
+              {lang === 'fi'
+                ? 'Poistaa kaikki tilaukset pysyvästi. Käytä ennen asiakkaalle luovuttamista.'
+                : 'Permanently deletes all orders. Use before handing over to the client.'}
+            </p>
+          </div>
+          <button
+            type="button"
+            disabled={resetting}
+            onClick={async () => {
+              const confirmed = window.confirm(
+                lang === 'fi'
+                  ? 'Haluatko varmasti poistaa KAIKKI tilaukset? Tätä ei voi peruuttaa.'
+                  : 'Are you sure you want to delete ALL orders? This cannot be undone.'
+              );
+              if (!confirmed) return;
+              setResetting(true);
+              const res = await fetch('/api/admin/reset-orders', { method: 'DELETE' });
+              const data = await res.json();
+              setResetting(false);
+              if (res.ok) {
+                alert(lang === 'fi' ? `Poistettu ${data.deleted} tilausta.` : `Deleted ${data.deleted} orders.`);
+              } else {
+                alert(lang === 'fi' ? 'Virhe poistamisessa.' : 'Error deleting orders.');
+              }
+            }}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap"
+          >
+            <Trash2 className="w-4 h-4" />
+            {resetting
+              ? (lang === 'fi' ? 'Poistetaan...' : 'Deleting...')
+              : (lang === 'fi' ? 'Tyhjennä tilaukset' : 'Clear orders')}
+          </button>
         </div>
       </section>
 
