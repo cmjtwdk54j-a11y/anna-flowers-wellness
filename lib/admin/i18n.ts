@@ -229,4 +229,7 @@ export const adminT = {
   },
 } as const;
 
-export type AdminTranslations = typeof adminT.fi;
+type Stringify<T> = {
+  readonly [K in keyof T]: T[K] extends object ? Stringify<T[K]> : string;
+};
+export type AdminTranslations = Stringify<typeof adminT.fi>;
