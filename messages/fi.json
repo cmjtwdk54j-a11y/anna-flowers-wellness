@@ -377,6 +377,7 @@
     "saturday": "La:",
     "sunday": "Su:",
     "parking": "Pysäköinti:",
-    "parkingDesc": "1 paikka (3h) + 2 paikkaa (2h)"
+    "parkingDesc": "1 paikka (3h) + 2 paikkaa (2h)",
+    "faq": "UKK"
   }
 }

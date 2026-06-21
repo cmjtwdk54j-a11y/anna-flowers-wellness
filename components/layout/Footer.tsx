@@ -59,6 +59,7 @@ export default function Footer() {
                 { href: '/gift-cards', label: t('giftCards') },
                 { href: '/delivery', label: t('delivery') },
                 { href: '/contact', label: t('contact') },
+                { href: '/faq', label: tFooter('faq') },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
