@@ -16,12 +16,12 @@ async function getDashboardStats(): Promise<DashboardStats | null> {
     const startOf30Days = new Date(startOfDay);
     startOf30Days.setDate(startOfDay.getDate() - 29);
 
-    const [todayOrders, weekOrders, monthOrders, allOrders, recentOrders, ordersByStatus, topItems] =
+    const [revenueRows, recentOrders, ordersByStatus, topItems] =
       await Promise.all([
-        prisma.order.findMany({ where: { createdAt: { gte: startOfDay }, paymentStatus: 'PAID' } }),
-        prisma.order.findMany({ where: { createdAt: { gte: startOfWeek }, paymentStatus: 'PAID' } }),
-        prisma.order.findMany({ where: { createdAt: { gte: startOfMonth }, paymentStatus: 'PAID' } }),
-        prisma.order.findMany({ where: { paymentStatus: 'PAID' } }),
+        prisma.order.findMany({
+          where: { paymentStatus: 'PAID' },
+          select: { createdAt: true, total: true, status: true },
+        }),
         prisma.order.findMany({ orderBy: { createdAt: 'desc' }, take: 8 }),
         prisma.order.groupBy({ by: ['status'], _count: { id: true } }),
         prisma.orderItem.groupBy({
@@ -32,26 +32,34 @@ async function getDashboardStats(): Promise<DashboardStats | null> {
         }),
       ]);
 
-    const sum = (orders: { total: unknown }[]) =>
-      orders.reduce((acc, o) => acc + Number(o.total), 0);
+    const sum = (rows: { createdAt: Date; total: unknown }[], from: Date) =>
+      rows.filter(o => o.createdAt >= from).reduce((acc, o) => acc + Number(o.total), 0);
+
+    const todayRevenue = sum(revenueRows, startOfDay);
+    const weekRevenue = sum(revenueRows, startOfWeek);
+    const monthRevenue = sum(revenueRows, startOfMonth);
+    const allRevenue = revenueRows.reduce((acc, o) => acc + Number(o.total), 0);
 
     const statusCounts: Record<string, number> = {};
     ordersByStatus.forEach((g) => { statusCounts[g.status] = g._count.id; });
 
+    const last30Orders = await prisma.order.findMany({
+      where: { createdAt: { gte: startOf30Days }, paymentStatus: 'PAID' },
+      select: { createdAt: true, total: true },
+    });
+    const dayMap = new Map<string, { revenue: number; orders: number }>();
+    for (const o of last30Orders) {
+      const day = o.createdAt.toISOString().slice(0, 10);
+      const prev = dayMap.get(day) ?? { revenue: 0, orders: 0 };
+      dayMap.set(day, { revenue: prev.revenue + Number(o.total), orders: prev.orders + 1 });
+    }
     const salesByDay: DashboardStats['salesByDay'] = [];
     for (let i = 29; i >= 0; i--) {
       const d = new Date(startOfDay);
       d.setDate(d.getDate() - i);
-      const next = new Date(d);
-      next.setDate(d.getDate() + 1);
-      const dayOrders = await prisma.order.findMany({
-        where: { createdAt: { gte: d, lt: next }, paymentStatus: 'PAID' },
-      });
-      salesByDay.push({
-        date: d.toISOString().slice(0, 10),
-        revenue: dayOrders.reduce((a, o) => a + Number(o.total), 0),
-        orders: dayOrders.length,
-      });
+      const day = d.toISOString().slice(0, 10);
+      const data = dayMap.get(day) ?? { revenue: 0, orders: 0 };
+      salesByDay.push({ date: day, ...data });
     }
 
     const alerts: DashboardStats['alerts'] = [];
@@ -59,9 +67,9 @@ async function getDashboardStats(): Promise<DashboardStats | null> {
     if (outOfStock > 0) alerts.push({ type: 'warning', message: `${outOfStock} tuotetta loppu varastosta` });
 
     return {
-      revenue: { today: sum(todayOrders), week: sum(weekOrders), month: sum(monthOrders) },
+      revenue: { today: todayRevenue, week: weekRevenue, month: monthRevenue },
       orders: {
-        total: allOrders.length,
+        total: revenueRows.length,
         pending: statusCounts['PENDING'] || 0,
         confirmed: statusCounts['CONFIRMED'] || 0,
         processing: statusCounts['PROCESSING'] || 0,
@@ -69,7 +77,7 @@ async function getDashboardStats(): Promise<DashboardStats | null> {
         delivered: statusCounts['DELIVERED'] || 0,
         cancelled: statusCounts['CANCELLED'] || 0,
       },
-      avgOrderValue: allOrders.length > 0 ? sum(allOrders) / allOrders.length : 0,
+      avgOrderValue: revenueRows.length > 0 ? allRevenue / revenueRows.length : 0,
       topProducts: topItems.map((t) => ({
         id: t.productId,
         name: t.name_fi,

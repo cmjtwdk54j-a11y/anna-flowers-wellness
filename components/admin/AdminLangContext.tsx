@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { adminT, type AdminLang, type AdminTranslations } from '@/lib/admin/i18n';
 
 interface AdminLangContextValue {
@@ -16,12 +16,11 @@ const AdminLangContext = createContext<AdminLangContextValue>({
 });
 
 export function AdminLangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<AdminLang>('fi');
-
-  useEffect(() => {
-    const saved = localStorage.getItem('admin-lang') as AdminLang | null;
-    if (saved === 'fi' || saved === 'en') setLangState(saved);
-  }, []);
+  const [lang, setLangState] = useState<AdminLang>(() => {
+    if (typeof window === 'undefined') return 'fi';
+    const saved = localStorage.getItem('admin-lang');
+    return saved === 'fi' || saved === 'en' ? saved : 'fi';
+  });
 
   const setLang = (l: AdminLang) => {
     setLangState(l);
