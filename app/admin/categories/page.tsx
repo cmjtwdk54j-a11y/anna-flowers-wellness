@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, Pencil, Trash2, Check, X, Database } from 'lucide-react';
 import type { AdminCategory } from '@/lib/admin/types';
+import { useAdminLang } from '@/components/admin/AdminLangContext';
 
 interface EditState {
   id: string | null;
@@ -15,6 +16,7 @@ interface EditState {
 const EMPTY_EDIT: EditState = { id: null, slug: '', name_fi: '', name_en: '', sortOrder: 0 };
 
 export default function CategoriesPage() {
+  const { lang, t } = useAdminLang();
   const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState<EditState | null>(null);
@@ -33,7 +35,7 @@ export default function CategoriesPage() {
   useEffect(() => { fetchCats(); }, []);
 
   const handleSeed = async () => {
-    if (!confirm('Lisätäänkö oletuskategoriat ja 4 esimerkkituotetta?')) return;
+    if (!confirm(t.categories.confirmSeed)) return;
     setSeeding(true);
     setSeedMsg('');
     const res = await fetch('/api/admin/seed', { method: 'POST' });
@@ -90,8 +92,8 @@ export default function CategoriesPage() {
     <div className="p-6 lg:p-8 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-stone-800">Kategoriat</h1>
-          <p className="text-sm text-stone-400 mt-0.5">{categories.length} kategoriaa</p>
+          <h1 className="text-xl font-bold text-stone-800">{t.categories.title}</h1>
+          <p className="text-sm text-stone-400 mt-0.5">{categories.length} {lang === 'fi' ? 'kategoriaa' : 'categories'}</p>
         </div>
         <div className="flex items-center gap-2">
           {categories.length === 0 && (
@@ -101,7 +103,7 @@ export default function CategoriesPage() {
               className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
             >
               <Database className="w-4 h-4" />
-              {seeding ? 'Lisätään...' : 'Lisää esimerkkitiedot'}
+              {seeding ? t.categories.seeding : t.categories.seedBtn}
             </button>
           )}
           <button
@@ -109,7 +111,7 @@ export default function CategoriesPage() {
             className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
           >
             <Plus className="w-4 h-4" />
-            Lisää kategoria
+            {t.categories.new}
           </button>
         </div>
       </div>
@@ -188,17 +190,17 @@ export default function CategoriesPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-xs text-stone-400 uppercase tracking-wide bg-stone-50 border-b border-stone-200">
-              <th className="px-5 py-3 text-left font-medium">Slug</th>
-              <th className="px-5 py-3 text-left font-medium">Nimi FI</th>
-              <th className="px-5 py-3 text-left font-medium">Nimi EN</th>
-              <th className="px-5 py-3 text-left font-medium">Tuotteita</th>
-              <th className="px-5 py-3 text-left font-medium">Järjestys</th>
+              <th className="px-5 py-3 text-left font-medium">{t.categories.slug}</th>
+              <th className="px-5 py-3 text-left font-medium">{t.categories.nameFi}</th>
+              <th className="px-5 py-3 text-left font-medium">{t.categories.nameEn}</th>
+              <th className="px-5 py-3 text-left font-medium">{t.categories.products}</th>
+              <th className="px-5 py-3 text-left font-medium">{t.categories.order}</th>
               <th className="px-5 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-stone-100">
-            {loading && <tr><td colSpan={6} className="px-5 py-8 text-center text-stone-400">Ladataan...</td></tr>}
-            {!loading && categories.length === 0 && <tr><td colSpan={6} className="px-5 py-8 text-center text-stone-400">Ei kategorioita</td></tr>}
+            {loading && <tr><td colSpan={6} className="px-5 py-8 text-center text-stone-400">{t.common.loading}</td></tr>}
+            {!loading && categories.length === 0 && <tr><td colSpan={6} className="px-5 py-8 text-center text-stone-400">{lang === 'fi' ? 'Ei kategorioita' : 'No categories'}</td></tr>}
             {!loading && categories.map((c) => (
               <tr key={c.id} className="hover:bg-stone-50">
                 <td className="px-5 py-3 font-mono text-xs text-stone-500">{c.slug}</td>

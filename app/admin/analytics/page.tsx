@@ -3,17 +3,7 @@
 import { useEffect, useState } from 'react';
 import SalesChart from '@/components/admin/SalesChart';
 import type { SalesAnalytics } from '@/lib/admin/types';
-
-const PERIODS = [
-  { value: 'today', label: 'Tänään' },
-  { value: '7d', label: '7 päivää' },
-  { value: '30d', label: '30 päivää' },
-  { value: 'month', label: 'Tämä kuukausi' },
-];
-
-function fmt(v: number) {
-  return v.toLocaleString('fi-FI', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-}
+import { useAdminLang } from '@/components/admin/AdminLangContext';
 
 function pctChange(current: number, previous: number) {
   if (previous === 0) return current > 0 ? '+∞' : '0';
@@ -22,10 +12,18 @@ function pctChange(current: number, previous: number) {
 }
 
 export default function AnalyticsPage() {
+  const { lang, t } = useAdminLang();
   const [period, setPeriod] = useState('30d');
   const [data, setData] = useState<SalesAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<'revenue' | 'orders'>('revenue');
+
+  const fmt = (v: number) =>
+    v.toLocaleString(lang === 'fi' ? 'fi-FI' : 'en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+  const PERIODS = lang === 'fi'
+    ? [{ value: 'today', label: 'Tänään' }, { value: '7d', label: '7 päivää' }, { value: '30d', label: '30 päivää' }, { value: 'month', label: 'Tämä kuukausi' }]
+    : [{ value: 'today', label: 'Today' }, { value: '7d', label: '7 days' }, { value: '30d', label: '30 days' }, { value: 'month', label: 'This month' }];
 
   useEffect(() => {
     setLoading(true);
@@ -39,8 +37,10 @@ export default function AnalyticsPage() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-bold text-stone-800">Analytiikka</h1>
-          <p className="text-sm text-stone-400 mt-0.5">Myynnin kehitys ja raportit</p>
+          <h1 className="text-xl font-bold text-stone-800">{t.analytics.title}</h1>
+          <p className="text-sm text-stone-400 mt-0.5">
+            {lang === 'fi' ? 'Myynnin kehitys ja raportit' : 'Sales trends and reports'}
+          </p>
         </div>
         <div className="flex gap-1.5 bg-stone-100 p-1 rounded-xl">
           {PERIODS.map((p) => (
@@ -58,60 +58,61 @@ export default function AnalyticsPage() {
       </div>
 
       {loading && (
-        <div className="text-sm text-stone-400 py-10 text-center">Ladataan analytiikkaa...</div>
+        <div className="text-sm text-stone-400 py-10 text-center">{t.common.loading}</div>
       )}
 
       {!loading && data && (
         <>
-          {/* KPI row */}
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
             <div className="bg-white border border-stone-200 rounded-xl p-5">
-              <p className="text-xs text-stone-400 uppercase tracking-wide">Myynti</p>
+              <p className="text-xs text-stone-400 uppercase tracking-wide">{lang === 'fi' ? 'Myynti' : 'Revenue'}</p>
               <p className="text-2xl font-bold text-stone-800 mt-1">{fmt(data.currentRevenue)}</p>
               <p className={`text-xs font-medium mt-1 ${data.currentRevenue >= data.previousRevenue ? 'text-emerald-600' : 'text-red-500'}`}>
-                {pctChange(data.currentRevenue, data.previousRevenue)} edelliseen jaksoon
+                {pctChange(data.currentRevenue, data.previousRevenue)} {lang === 'fi' ? 'edelliseen jaksoon' : 'vs previous period'}
               </p>
             </div>
             <div className="bg-white border border-stone-200 rounded-xl p-5">
-              <p className="text-xs text-stone-400 uppercase tracking-wide">Tilauksia</p>
+              <p className="text-xs text-stone-400 uppercase tracking-wide">{lang === 'fi' ? 'Tilauksia' : 'Orders'}</p>
               <p className="text-2xl font-bold text-stone-800 mt-1">{data.totalOrders}</p>
             </div>
             <div className="bg-white border border-stone-200 rounded-xl p-5">
-              <p className="text-xs text-stone-400 uppercase tracking-wide">Keskim. tilaus</p>
+              <p className="text-xs text-stone-400 uppercase tracking-wide">{lang === 'fi' ? 'Keskim. tilaus' : 'Avg. order'}</p>
               <p className="text-2xl font-bold text-stone-800 mt-1">
                 {data.totalOrders > 0 ? fmt(data.currentRevenue / data.totalOrders) : '—'}
               </p>
             </div>
             <div className="bg-white border border-stone-200 rounded-xl p-5">
-              <p className="text-xs text-stone-400 uppercase tracking-wide">Peruutettu</p>
+              <p className="text-xs text-stone-400 uppercase tracking-wide">{lang === 'fi' ? 'Peruutettu' : 'Cancelled'}</p>
               <p className="text-2xl font-bold text-stone-800 mt-1">{data.cancelledCount}</p>
             </div>
           </div>
 
-          {/* Chart */}
           <div className="bg-white border border-stone-200 rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-stone-700">Myyntikehitys</h2>
+              <h2 className="text-sm font-semibold text-stone-700">
+                {lang === 'fi' ? 'Myyntikehitys' : 'Sales trend'}
+              </h2>
               <div className="flex gap-1 bg-stone-100 p-0.5 rounded-lg">
                 <button
                   onClick={() => setMode('revenue')}
                   className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${mode === 'revenue' ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500'}`}
-                >Myynti (€)</button>
+                >{lang === 'fi' ? 'Myynti (€)' : 'Revenue (€)'}</button>
                 <button
                   onClick={() => setMode('orders')}
                   className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${mode === 'orders' ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500'}`}
-                >Tilaukset</button>
+                >{lang === 'fi' ? 'Tilaukset' : 'Orders'}</button>
               </div>
             </div>
             <SalesChart data={data.salesByDay} mode={mode} height={220} />
           </div>
 
           <div className="grid lg:grid-cols-2 gap-5">
-            {/* Top products */}
             <div className="bg-white border border-stone-200 rounded-xl p-5">
-              <h2 className="text-sm font-semibold text-stone-700 mb-4">Top tuotteet</h2>
+              <h2 className="text-sm font-semibold text-stone-700 mb-4">
+                {lang === 'fi' ? 'Top tuotteet' : 'Top products'}
+              </h2>
               {data.topProducts.length === 0
-                ? <p className="text-sm text-stone-400">Ei dataa</p>
+                ? <p className="text-sm text-stone-400">{lang === 'fi' ? 'Ei dataa' : 'No data'}</p>
                 : (
                   <div className="space-y-3">
                     {data.topProducts.map((p, i) => (
@@ -129,7 +130,7 @@ export default function AnalyticsPage() {
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="text-xs font-semibold text-stone-700">{p.count} kpl</p>
+                          <p className="text-xs font-semibold text-stone-700">{p.count} {lang === 'fi' ? 'kpl' : 'pcs'}</p>
                           <p className="text-xs text-stone-400">{fmt(p.revenue)}</p>
                         </div>
                       </div>
@@ -139,11 +140,12 @@ export default function AnalyticsPage() {
               }
             </div>
 
-            {/* Top categories */}
             <div className="bg-white border border-stone-200 rounded-xl p-5">
-              <h2 className="text-sm font-semibold text-stone-700 mb-4">Top kategoriat</h2>
+              <h2 className="text-sm font-semibold text-stone-700 mb-4">
+                {lang === 'fi' ? 'Top kategoriat' : 'Top categories'}
+              </h2>
               {data.topCategories.length === 0
-                ? <p className="text-sm text-stone-400">Ei dataa</p>
+                ? <p className="text-sm text-stone-400">{lang === 'fi' ? 'Ei dataa' : 'No data'}</p>
                 : (
                   <div className="space-y-3">
                     {data.topCategories.map((c, i) => (
@@ -156,7 +158,7 @@ export default function AnalyticsPage() {
                         </div>
                         <div className="text-right flex-shrink-0 ml-3">
                           <p className="text-xs font-semibold text-stone-700">{fmt(c.revenue)}</p>
-                          <p className="text-xs text-stone-400">{c.count} kpl</p>
+                          <p className="text-xs text-stone-400">{c.count} {lang === 'fi' ? 'kpl' : 'pcs'}</p>
                         </div>
                       </div>
                     ))}
@@ -170,7 +172,7 @@ export default function AnalyticsPage() {
 
       {!loading && !data && (
         <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm px-4 py-3 rounded-xl">
-          Analytiikan haku epäonnistui. Varmista tietokantayhteys.
+          {lang === 'fi' ? 'Analytiikan haku epäonnistui. Varmista tietokantayhteys.' : 'Failed to load analytics. Check database connection.'}
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Save } from 'lucide-react';
 import type { StoreSettingsData } from '@/lib/admin/types';
+import { useAdminLang } from '@/components/admin/AdminLangContext';
 
 const DEFAULT: StoreSettingsData = {
   storeName: 'Aavafloristi',
@@ -20,6 +21,7 @@ const DEFAULT: StoreSettingsData = {
 };
 
 export default function SettingsPage() {
+  const { lang, t } = useAdminLang();
   const [settings, setSettings] = useState<StoreSettingsData>(DEFAULT);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -41,16 +43,15 @@ export default function SettingsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(settings),
     });
-    setMsg(res.ok ? 'Tallennettu!' : 'Tallennus epäonnistui');
+    setMsg(res.ok
+      ? (lang === 'fi' ? 'Tallennettu!' : 'Saved!')
+      : (lang === 'fi' ? 'Tallennus epäonnistui' : 'Save failed'));
     setSaving(false);
     if (res.ok) setTimeout(() => setMsg(''), 3000);
   };
 
   const F = ({ label, field, type = 'text', placeholder }: {
-    label: string;
-    field: keyof StoreSettingsData;
-    type?: string;
-    placeholder?: string;
+    label: string; field: keyof StoreSettingsData; type?: string; placeholder?: string;
   }) => (
     <div>
       <label className="block text-xs font-medium text-stone-600 mb-1">{label}</label>
@@ -64,65 +65,75 @@ export default function SettingsPage() {
     </div>
   );
 
-  if (loading) return <div className="p-6 lg:p-8 text-sm text-stone-400">Ladataan asetuksia...</div>;
+  if (loading) return (
+    <div className="p-6 lg:p-8 text-sm text-stone-400">{t.common.loading}</div>
+  );
 
   return (
     <form onSubmit={handleSave} className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-stone-800">Asetukset</h1>
-          <p className="text-sm text-stone-400 mt-0.5">Myymälän perustiedot ja konfiguraatio</p>
+          <h1 className="text-xl font-bold text-stone-800">{t.settings.title}</h1>
+          <p className="text-sm text-stone-400 mt-0.5">
+            {lang === 'fi' ? 'Myymälän perustiedot ja konfiguraatio' : 'Store information and configuration'}
+          </p>
         </div>
         <div className="flex items-center gap-3">
-          {msg && <span className={`text-xs font-medium ${msg.includes('epäonnistui') ? 'text-red-500' : 'text-emerald-600'}`}>{msg}</span>}
+          {msg && <span className={`text-xs font-medium ${msg.includes('epäonnistui') || msg.includes('failed') ? 'text-red-500' : 'text-emerald-600'}`}>{msg}</span>}
           <button
             type="submit"
             disabled={saving}
             className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
           >
             <Save className="w-4 h-4" />
-            {saving ? 'Tallennetaan...' : 'Tallenna'}
+            {saving ? t.common.saving : t.common.save}
           </button>
         </div>
       </div>
 
-      {/* Store info */}
       <section className="bg-white border border-stone-200 rounded-xl p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-stone-700">Myymälän tiedot</h2>
+        <h2 className="text-sm font-semibold text-stone-700">
+          {lang === 'fi' ? 'Myymälän tiedot' : 'Store details'}
+        </h2>
         <div className="grid sm:grid-cols-2 gap-4">
-          <F label="Myymälän nimi" field="storeName" placeholder="Aavafloristi" />
-          <F label="Sähköposti" field="email" type="email" placeholder="info@aavafloristi.fi" />
-          <F label="Puhelin" field="phone" placeholder="+358 40 123 4567" />
-          <F label="Osoite" field="address" placeholder="Puistolantori 1, 00760 Helsinki" />
+          <F label={lang === 'fi' ? 'Myymälän nimi' : 'Store name'} field="storeName" placeholder="Aavafloristi" />
+          <F label={lang === 'fi' ? 'Sähköposti' : 'Email'} field="email" type="email" placeholder="info@aavafloristi.fi" />
+          <F label={lang === 'fi' ? 'Puhelin' : 'Phone'} field="phone" placeholder="+358 40 123 4567" />
+          <F label={lang === 'fi' ? 'Osoite' : 'Address'} field="address" placeholder="Puistolantori 1, 00760 Helsinki" />
           <F label="Instagram" field="instagram" placeholder="@aavafloristi" />
           <F label="Telegram" field="telegram" placeholder="@aavafloristi" />
         </div>
       </section>
 
-      {/* Delivery */}
       <section className="bg-white border border-stone-200 rounded-xl p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-stone-700">Toimitus</h2>
+        <h2 className="text-sm font-semibold text-stone-700">
+          {lang === 'fi' ? 'Toimitus' : 'Delivery'}
+        </h2>
         <div className="grid sm:grid-cols-2 gap-4">
-          <F label="Toimitusmaksu (€)" field="deliveryFee" type="number" placeholder="9.90" />
-          <F label="Minimitilaus (€)" field="minOrderAmount" type="number" placeholder="0" />
+          <F label={lang === 'fi' ? 'Toimitusmaksu (€)' : 'Delivery fee (€)'} field="deliveryFee" type="number" placeholder="9.90" />
+          <F label={lang === 'fi' ? 'Minimitilaus (€)' : 'Min. order (€)'} field="minOrderAmount" type="number" placeholder="0" />
         </div>
       </section>
 
-      {/* Hours */}
       <section className="bg-white border border-stone-200 rounded-xl p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-stone-700">Aukioloajat</h2>
+        <h2 className="text-sm font-semibold text-stone-700">
+          {lang === 'fi' ? 'Aukioloajat' : 'Opening hours'}
+        </h2>
         <div className="grid sm:grid-cols-3 gap-4">
-          <F label="Arkisin" field="weekdays" placeholder="Ma–Pe: 9:00–18:00" />
-          <F label="Lauantai" field="saturday" placeholder="La: 10:00–16:00" />
-          <F label="Sunnuntai" field="sunday" placeholder="Su: Suljettu" />
+          <F label={lang === 'fi' ? 'Arkisin' : 'Weekdays'} field="weekdays" placeholder="Ma–Pe: 9:00–18:00" />
+          <F label={lang === 'fi' ? 'Lauantai' : 'Saturday'} field="saturday" placeholder="La: 10:00–16:00" />
+          <F label={lang === 'fi' ? 'Sunnuntai' : 'Sunday'} field="sunday" placeholder="Su: Suljettu" />
         </div>
       </section>
 
-      {/* Notifications */}
       <section className="bg-white border border-stone-200 rounded-xl p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-stone-700">Ilmoitukset</h2>
+        <h2 className="text-sm font-semibold text-stone-700">
+          {lang === 'fi' ? 'Ilmoitukset' : 'Notifications'}
+        </h2>
         <div>
-          <label className="block text-xs font-medium text-stone-600 mb-1">Tilausvahvistusteksti</label>
+          <label className="block text-xs font-medium text-stone-600 mb-1">
+            {lang === 'fi' ? 'Tilausvahvistusteksti' : 'Order confirmation text'}
+          </label>
           <textarea
             value={settings.confirmationText}
             onChange={(e) => setSettings({ ...settings, confirmationText: e.target.value })}
