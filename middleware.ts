@@ -47,6 +47,7 @@ async function verifySessionToken(token: string): Promise<boolean> {
 
 export const config = {
   matcher: [
+    '/admin',
     '/admin/((?!login$).*)',
     '/api/admin/((?!auth/).*)',
   ],
