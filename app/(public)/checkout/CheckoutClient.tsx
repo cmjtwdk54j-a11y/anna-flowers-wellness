@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
@@ -137,7 +137,7 @@ export default function CheckoutClient() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <ShoppingBag className="w-16 h-16 text-stone-200 mx-auto mb-4" />
         <h2 className="text-xl font-semibold text-stone-700 mb-2">{tCart('empty')}</h2>
-        <Link href="/flowers" className="text-rose-500 hover:text-rose-600 font-medium">
+        <Link href="/flowers" className="text-burgundy hover:text-burgundy font-medium">
           {tCart('continue')} →
         </Link>
       </div>
@@ -155,7 +155,7 @@ export default function CheckoutClient() {
           {t('confirmationSentTo')} <strong>{customerInfo.email}</strong>.
         </p>
         <div className="flex gap-3 justify-center">
-          <Link href="/flowers" className="px-5 py-2.5 bg-rose-500 text-white rounded-xl font-medium hover:bg-rose-600 transition-colors">
+          <Link href="/flowers" className="px-5 py-2.5 bg-burgundy text-white rounded-full font-medium hover:bg-rose-600 transition-colors">
             {tCart('continue')}
           </Link>
           <Link href="/" className="px-5 py-2.5 border border-stone-200 text-stone-600 rounded-xl hover:bg-stone-50 transition-colors">
@@ -183,7 +183,7 @@ export default function CheckoutClient() {
                   value={customerInfo.name}
                   onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
                   placeholder={t('name') + ' *'}
-                  className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                  className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                 />
                 <div className="grid sm:grid-cols-2 gap-3">
                   <input
@@ -191,14 +191,14 @@ export default function CheckoutClient() {
                     value={customerInfo.email}
                     onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
                     placeholder={t('email') + ' *'}
-                    className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                    className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                   />
                   <input
                     type="tel" required
                     value={customerInfo.phone}
                     onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
                     placeholder={t('phone') + ' *'}
-                    className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                    className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                   />
                 </div>
               </div>
@@ -223,8 +223,8 @@ export default function CheckoutClient() {
                     className={cn(
                       'flex flex-col items-center gap-1 py-3 px-2 rounded-xl border text-xs font-medium transition-colors',
                       deliveryInfo.type === type
-                        ? 'border-rose-400 bg-rose-50 text-rose-500'
-                        : 'border-stone-200 text-stone-500 hover:border-rose-200'
+                        ? 'border-rose-400 bg-soft-pink text-burgundy'
+                        : 'border-stone-200 text-stone-500 hover:border-accent-pink/60'
                     )}
                   >
                     <Icon className="w-4 h-4" />
@@ -241,13 +241,13 @@ export default function CheckoutClient() {
                     value={deliveryInfo.address}
                     onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })}
                     placeholder={`${t('address')} *`}
-                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                   />
                   <select
                     required
                     value={deliveryInfo.city}
                     onChange={(e) => setDeliveryInfo({ ...deliveryInfo, city: e.target.value })}
-                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                   >
                     <option value="">{t('city')} *</option>
                     {DELIVERY_ZONES.map((z) => (
@@ -265,7 +265,7 @@ export default function CheckoutClient() {
                       type="checkbox"
                       checked={!recipient.sameAsBuyer}
                       onChange={(e) => setRecipient({ ...recipient, sameAsBuyer: !e.target.checked })}
-                      className="rounded border-stone-300 text-rose-500 focus:ring-rose-400"
+                      className="rounded border-stone-300 text-burgundy focus:ring-accent-pink"
                     />
                     <span className="text-sm font-medium text-stone-700">{t('recipientOther')}</span>
                   </label>
@@ -276,14 +276,14 @@ export default function CheckoutClient() {
                         value={recipient.name}
                         onChange={(e) => setRecipient({ ...recipient, name: e.target.value })}
                         placeholder={`${t('recipientName')} *`}
-                        className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                        className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                       />
                       <input
                         type="tel" required
                         value={recipient.phone}
                         onChange={(e) => setRecipient({ ...recipient, phone: e.target.value })}
                         placeholder={`${t('recipientPhone')} *`}
-                        className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                        className="border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                       />
                     </div>
                   )}
@@ -303,7 +303,7 @@ export default function CheckoutClient() {
                     required={deliveryInfo.type !== 'PICKUP'}
                     value={deliveryInfo.scheduleDate}
                     onChange={(e) => setDeliveryInfo({ ...deliveryInfo, scheduleDate: e.target.value })}
-                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                   />
                 </div>
                 <div>
@@ -314,7 +314,7 @@ export default function CheckoutClient() {
                   <select
                     value={deliveryInfo.scheduleTime}
                     onChange={(e) => setDeliveryInfo({ ...deliveryInfo, scheduleTime: e.target.value })}
-                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400"
+                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink"
                   >
                     <option value="">{t('selectTime')}</option>
                     {availableTimes.map((time) => (
@@ -335,7 +335,7 @@ export default function CheckoutClient() {
                   value={cardMessage}
                   onChange={(e) => setCardMessage(e.target.value)}
                   placeholder={t('cardMessagePlaceholder')}
-                  className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400 resize-none"
+                  className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink resize-none"
                 />
               </div>
 
@@ -344,7 +344,7 @@ export default function CheckoutClient() {
                 value={deliveryInfo.note}
                 onChange={(e) => setDeliveryInfo({ ...deliveryInfo, note: e.target.value })}
                 placeholder={t('notes')}
-                className="mt-3 w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400 resize-none"
+                className="mt-3 w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink resize-none"
               />
             </div>
 
@@ -367,8 +367,8 @@ export default function CheckoutClient() {
                       className={cn(
                         'flex flex-col items-center gap-1.5 py-4 px-3 rounded-xl border text-center transition-colors',
                         active
-                          ? 'border-rose-400 bg-rose-50 text-rose-600'
-                          : 'border-stone-200 text-stone-600 hover:border-rose-200'
+                          ? 'border-rose-400 bg-soft-pink text-burgundy'
+                          : 'border-stone-200 text-stone-600 hover:border-accent-pink/60'
                       )}
                     >
                       <span className="text-2xl">{addon.emoji}</span>
@@ -400,8 +400,8 @@ export default function CheckoutClient() {
                     className={cn(
                       'flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-colors',
                       paymentMethod === id
-                        ? 'border-rose-400 bg-rose-50'
-                        : 'border-stone-200 hover:border-rose-200'
+                        ? 'border-rose-400 bg-soft-pink'
+                        : 'border-stone-200 hover:border-accent-pink/60'
                     )}
                   >
                     <input
@@ -410,15 +410,15 @@ export default function CheckoutClient() {
                       value={id}
                       checked={paymentMethod === id}
                       onChange={() => setPaymentMethod(id)}
-                      className="text-rose-500"
+                      className="text-burgundy"
                     />
-                    <Icon className={cn('w-5 h-5', paymentMethod === id ? 'text-rose-400' : 'text-stone-400')} />
+                    <Icon className={cn('w-5 h-5', paymentMethod === id ? 'text-accent-pink' : 'text-stone-400')} />
                     <div className="flex-1">
                       <p className="text-sm font-medium text-stone-800">{label}</p>
                       <p className="text-xs text-stone-400">{desc}</p>
                     </div>
                     {id === 'mobilepay' && (
-                      <span className="text-xs bg-amber-100 text-amber-600 px-2 py-0.5 rounded-full">{t('soon')}</span>
+                      <span className="text-xs bg-soft-pink text-burgundy px-2 py-0.5 rounded-full">{t('soon')}</span>
                     )}
                   </label>
                 ))}
@@ -436,7 +436,7 @@ export default function CheckoutClient() {
                     value={giftCardCode}
                     onChange={(e) => setGiftCardCode(e.target.value.toUpperCase())}
                     placeholder={t('giftCardCode')}
-                    className="flex-1 border border-stone-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-rose-400"
+                    className="flex-1 border border-stone-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-accent-pink"
                   />
                   <button
                     type="button"
@@ -520,7 +520,7 @@ export default function CheckoutClient() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-rose-300 text-white font-medium py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-burgundy hover:bg-burgundy/90 disabled:bg-burgundy/40 text-white font-medium py-3.5 rounded-full transition-colors flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> {t('processing')}</>

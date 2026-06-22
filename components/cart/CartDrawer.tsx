@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -32,7 +32,7 @@ export default function CartDrawer({ locale }: { locale: string }) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-100">
           <h2 className="font-semibold text-stone-800 flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-rose-400" />
+            <ShoppingBag className="w-5 h-5 text-accent-pink" />
             {t('title')}
           </h2>
           <button
@@ -53,7 +53,7 @@ export default function CartDrawer({ locale }: { locale: string }) {
               <Link
                 href="/flowers"
                 onClick={closeCart}
-                className="mt-4 text-sm text-rose-500 hover:text-rose-600 font-medium"
+                className="mt-4 text-sm text-burgundy hover:text-burgundy font-medium"
               >
                 {t('continue')} →
               </Link>
@@ -79,14 +79,14 @@ export default function CartDrawer({ locale }: { locale: string }) {
                       {item.size === 'SMALL' ? t('sizeSmall') : t('sizeLarge')} · {formatPrice(item.price)}
                     </p>
                     {item.scheduledDate && (
-                      <p className="text-xs text-rose-400 mt-0.5">
+                      <p className="text-xs text-accent-pink mt-0.5">
                         {item.scheduledDate} {item.scheduledTime}
                       </p>
                     )}
                     <div className="flex items-center gap-2 mt-2">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="w-6 h-6 rounded-full border border-stone-200 flex items-center justify-center text-stone-500 hover:border-rose-300 hover:text-rose-500 transition-colors"
+                        className="w-6 h-6 rounded-full border border-stone-200 flex items-center justify-center text-stone-500 hover:border-accent-pink hover:text-burgundy transition-colors"
                       >
                         <Minus className="w-3 h-3" />
                       </button>
@@ -95,7 +95,7 @@ export default function CartDrawer({ locale }: { locale: string }) {
                       </span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="w-6 h-6 rounded-full border border-stone-200 flex items-center justify-center text-stone-500 hover:border-rose-300 hover:text-rose-500 transition-colors"
+                        className="w-6 h-6 rounded-full border border-stone-200 flex items-center justify-center text-stone-500 hover:border-accent-pink hover:text-burgundy transition-colors"
                       >
                         <Plus className="w-3 h-3" />
                       </button>
@@ -130,7 +130,7 @@ export default function CartDrawer({ locale }: { locale: string }) {
             <Link
               href="/checkout"
               onClick={closeCart}
-              className="block w-full bg-rose-500 hover:bg-rose-600 text-white text-sm font-medium text-center py-3 rounded-xl transition-colors"
+              className="block w-full bg-burgundy hover:bg-burgundy/90 text-white text-sm font-medium text-center py-3 rounded-full transition-colors"
             >
               {t('checkout')}
             </Link>

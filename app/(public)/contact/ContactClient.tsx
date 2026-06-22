@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -55,7 +55,7 @@ export default function ContactClient() {
         />
         {/* Overlay badge */}
         <div className="absolute bottom-4 left-4 bg-white rounded-xl shadow-lg px-4 py-2.5 flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-rose-500 flex-shrink-0" />
+          <MapPin className="w-4 h-4 text-burgundy flex-shrink-0" />
           <span className="text-sm font-medium text-stone-700">Puistolantori 1, 00760 Helsinki</span>
         </div>
         <a
@@ -75,8 +75,8 @@ export default function ContactClient() {
             <div>
               <div className="space-y-6 mb-8">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-5 h-5 text-rose-400" />
+                  <div className="w-10 h-10 bg-soft-pink rounded-xl flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-5 h-5 text-accent-pink" />
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-stone-400 uppercase tracking-wide mb-0.5">
@@ -87,28 +87,28 @@ export default function ContactClient() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-5 h-5 text-rose-400" />
+                  <div className="w-10 h-10 bg-soft-pink rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-5 h-5 text-accent-pink" />
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-stone-400 uppercase tracking-wide mb-0.5">
                       {t('phone')}
                     </p>
-                    <a href={`tel:${BUSINESS_INFO.phone}`} className="text-stone-700 hover:text-rose-500 transition-colors">
+                    <a href={`tel:${BUSINESS_INFO.phone}`} className="text-stone-700 hover:text-burgundy transition-colors">
                       {BUSINESS_INFO.phone}
                     </a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-5 h-5 text-rose-400" />
+                  <div className="w-10 h-10 bg-soft-pink rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-5 h-5 text-accent-pink" />
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-stone-400 uppercase tracking-wide mb-0.5">
                       {t('email')}
                     </p>
-                    <a href={`mailto:${BUSINESS_INFO.email}`} className="text-stone-700 hover:text-rose-500 transition-colors">
+                    <a href={`mailto:${BUSINESS_INFO.email}`} className="text-stone-700 hover:text-burgundy transition-colors">
                       {BUSINESS_INFO.email}
                     </a>
                   </div>
@@ -119,7 +119,7 @@ export default function ContactClient() {
                   href={`https://wa.me/${BUSINESS_INFO.whatsapp.replace(/[\s+]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-xl transition-colors w-fit"
+                  className="flex items-center gap-3 bg-burgundy hover:bg-burgundy/90 text-white px-5 py-3 rounded-full transition-colors w-fit"
                 >
                   <MessageCircle className="w-5 h-5" />
                   <span className="font-medium">WhatsApp: {BUSINESS_INFO.whatsapp}</span>
@@ -129,7 +129,7 @@ export default function ContactClient() {
               {/* Opening hours */}
               <div className="bg-stone-50 rounded-2xl p-5 mb-6">
                 <h3 className="font-semibold text-stone-800 flex items-center gap-2 mb-4">
-                  <Clock className="w-4 h-4 text-rose-400" />
+                  <Clock className="w-4 h-4 text-accent-pink" />
                   {t('openingHours')}
                 </h3>
                 <ul className="space-y-2">
@@ -149,18 +149,18 @@ export default function ContactClient() {
               </div>
 
               {/* Parking */}
-              <div className="bg-amber-50 rounded-2xl p-5">
+              <div className="bg-soft-pink rounded-2xl p-5">
                 <h3 className="font-semibold text-stone-800 flex items-center gap-2 mb-3">
-                  <Car className="w-4 h-4 text-amber-500" />
+                  <Car className="w-4 h-4 text-gold" />
                   {t('parking.title')}
                 </h3>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-gold flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-stone-600">{t('parking.spot1')}</p>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-gold flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-stone-600">{t('parking.spot2')}</p>
                   </li>
                 </ul>
@@ -177,7 +177,7 @@ export default function ContactClient() {
                     <CheckCircle2 className="w-10 h-10 text-emerald-400 mb-3" />
                     <p className="text-stone-700 font-medium">{t('sent')}</p>
                     <p className="text-stone-400 text-sm mt-1">{t('sentDesc')}</p>
-                    <button onClick={() => { setSent(false); setForm({ name: '', email: '', message: '' }); }} className="mt-4 text-sm text-rose-500 hover:text-rose-600">
+                    <button onClick={() => { setSent(false); setForm({ name: '', email: '', message: '' }); }} className="mt-4 text-sm text-burgundy hover:text-burgundy">
                       {t('newMessage')}
                     </button>
                   </div>
@@ -188,21 +188,21 @@ export default function ContactClient() {
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       placeholder={t('name')}
-                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400 bg-white"
+                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink bg-white"
                     />
                     <input
                       type="email" required
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
                       placeholder={t('yourEmail')}
-                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400 bg-white"
+                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink bg-white"
                     />
                     <textarea
                       rows={4} required
                       value={form.message}
                       onChange={(e) => setForm({ ...form, message: e.target.value })}
                       placeholder={t('message')}
-                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-rose-400 bg-white resize-none"
+                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink bg-white resize-none"
                     />
                     {sendError && (
                       <p className="text-xs text-red-500">{sendError}</p>
@@ -210,7 +210,7 @@ export default function ContactClient() {
                     <button
                       type="submit"
                       disabled={sending}
-                      className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-rose-300 text-white font-medium py-3 rounded-xl transition-colors"
+                      className="w-full bg-burgundy hover:bg-burgundy/90 disabled:bg-burgundy/40 text-white font-medium py-3 rounded-full transition-colors"
                     >
                       {sending ? t('sending') : t('send')}
                     </button>

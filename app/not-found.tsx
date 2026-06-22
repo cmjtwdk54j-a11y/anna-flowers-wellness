@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { Flower2 } from 'lucide-react';
 
 export default function NotFound() {
@@ -6,8 +6,8 @@ export default function NotFound() {
     <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
       <div className="text-center">
         <div className="flex justify-center mb-6">
-          <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center">
-            <Flower2 className="w-10 h-10 text-rose-400" />
+          <div className="w-20 h-20 bg-soft-pink rounded-full flex items-center justify-center">
+            <Flower2 className="w-10 h-10 text-accent-pink" />
           </div>
         </div>
         <h1 className="text-7xl font-bold text-stone-800 mb-3">404</h1>
@@ -18,7 +18,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/"
-            className="inline-flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-medium px-6 py-3 rounded-full transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-burgundy hover:bg-burgundy/90 text-white font-medium px-6 py-3 rounded-full transition-colors"
           >
             Takaisin etusivulle
           </Link>

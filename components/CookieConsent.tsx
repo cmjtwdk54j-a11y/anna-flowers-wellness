@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -30,15 +30,15 @@ export default function CookieConsent() {
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom duration-300">
       <div className="max-w-4xl mx-auto bg-white border border-stone-200 rounded-2xl shadow-xl p-5">
         <div className="flex items-start gap-4">
-          <div className="w-9 h-9 bg-rose-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-            <Cookie className="w-5 h-5 text-rose-500" />
+          <div className="w-9 h-9 bg-soft-pink rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+            <Cookie className="w-5 h-5 text-burgundy" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-stone-800 mb-1">Käytämme evästeitä</p>
             <p className="text-sm text-stone-500">
               Käytämme evästeitä parantaaksemme käyttökokemustasi ja analysoidaksemme sivuston liikennettä.
               Lue lisää{' '}
-              <Link href="/privacy" className="text-rose-500 hover:underline">
+              <Link href="/privacy" className="text-burgundy hover:underline">
                 tietosuojaselosteestamme
               </Link>
               .
@@ -61,7 +61,7 @@ export default function CookieConsent() {
           </button>
           <button
             onClick={accept}
-            className="px-5 py-2 text-sm font-medium text-white bg-rose-500 hover:bg-rose-600 rounded-full transition-colors"
+            className="px-5 py-2 text-sm font-medium text-white bg-burgundy hover:bg-burgundy/90 rounded-full transition-colors"
           >
             Hyväksy kaikki
           </button>
