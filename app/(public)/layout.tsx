@@ -51,7 +51,7 @@ export default async function PublicLayout({ children }: { children: React.React
   return (
     <NextIntlClientProvider messages={messages}>
       <CartProvider>
-        <div className="min-h-full flex flex-col bg-stone-50 antialiased font-sans">
+        <div className="min-h-full flex flex-col bg-white antialiased font-sans">
           <Header locale={locale} />
           <main className="flex-1">{children}</main>
           <Footer />

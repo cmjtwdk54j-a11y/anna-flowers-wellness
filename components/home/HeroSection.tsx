@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Flower2, Hand, Truck, Star, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Flower2, Hand, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface HeroSectionProps {
@@ -41,170 +41,188 @@ function fadeUp(delay = 0) {
   return {
     initial: { opacity: 0, y: 28 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.55, delay, ease: 'easeOut' },
+    transition: { duration: 0.6, delay, ease: 'easeOut' },
   } as const;
 }
 
 export default function HeroSection({ t }: HeroSectionProps) {
-  const whyItems = [
-    { icon: Star, key: 'fresh', title: t.whyFresh, desc: t.whyFreshDesc },
-    { icon: Truck, key: 'fast', title: t.whyFast, desc: t.whyFastDesc },
-    { icon: CheckCircle2, key: 'personal', title: t.whyPersonal, desc: t.whyPersonalDesc },
-  ];
-
-  const services = [
-    { href: '/flowers', color: 'rose', icon: Flower2, title: t.flowersTitle, desc: t.flowersDesc, link: t.flowersLink },
-    { href: '/massage', color: 'emerald', icon: Hand, title: t.massageTitle, desc: t.massageDesc, link: t.massageLink },
-    { href: '/delivery', color: 'amber', icon: Truck, title: t.deliveryTitle, desc: t.deliveryDesc, link: t.deliveryLink },
-  ];
-
   return (
     <>
-      {/* Hero */}
-      <section className="relative bg-gradient-to-br from-rose-50 via-stone-50 to-amber-50 overflow-hidden">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-10 right-10 w-64 h-64 bg-rose-200 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-48 h-48 bg-amber-200 rounded-full blur-3xl" />
-        </div>
+      {/* ── Hero ── */}
+      <section className="relative pt-44 pb-24 px-6 lg:px-10 overflow-hidden min-h-[90vh] flex items-center" style={{ backgroundColor: 'var(--soft-pink)' }}>
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-white/40 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <motion.div {...fadeUp(0)} className="inline-flex items-center gap-2 bg-rose-100 text-rose-700 text-xs font-medium px-3 py-1.5 rounded-full mb-6">
-                <Flower2 className="w-3.5 h-3.5" />
-                Helsinki · Espoo · Vantaa · Kerava
-              </motion.div>
+        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-16 items-center relative z-10">
+          {/* Text */}
+          <div className="max-w-xl">
+            <motion.div {...fadeUp(0)} className="mb-6 flex items-center gap-3">
+              <div className="flex text-sm" style={{ color: 'var(--gold)' }}>
+                {'★★★★★'.split('').map((s, i) => <span key={i}>{s}</span>)}
+              </div>
+              <span className="text-[11px] font-bold tracking-[0.2em] text-gray-400 uppercase">325 Reviews</span>
+            </motion.div>
 
-              <motion.h1 {...fadeUp(0.1)} className="text-4xl lg:text-5xl font-bold text-stone-800 leading-tight mb-4">
-                {t.heroTitle}
-              </motion.h1>
-
-              <motion.p {...fadeUp(0.2)} className="text-lg text-stone-500 leading-relaxed mb-8 max-w-md">
-                {t.heroSubtitle}
-              </motion.p>
-
-              <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-3">
-                <Link href="/flowers" className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-medium px-6 py-3 rounded-xl transition-all hover:shadow-lg hover:shadow-rose-200 hover:-translate-y-0.5">
-                  <Flower2 className="w-4 h-4" />
-                  {t.heroShopNow}
-                </Link>
-                <Link href="/massage" className="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 font-medium px-6 py-3 rounded-xl transition-colors">
-                  <Hand className="w-4 h-4" />
-                  {t.heroBookMassage}
-                </Link>
-              </motion.div>
-
-              <motion.div {...fadeUp(0.4)} className="flex items-center gap-6 mt-8 pt-8 border-t border-stone-100">
-                {[
-                  { value: '500+', label: t.trustCustomers },
-                  { value: '4.9★', label: t.trustRating },
-                  { value: '2–5h', label: t.trustDelivery },
-                ].map((badge, i) => (
-                  <div key={i} className={i > 0 ? 'flex items-center gap-6' : ''}>
-                    {i > 0 && <div className="w-px h-8 bg-stone-200" />}
-                    <div className="text-center">
-                      <div className="text-xl font-bold text-stone-800">{badge.value}</div>
-                      <div className="text-xs text-stone-400">{badge.label}</div>
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Image grid */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.65, delay: 0.15, ease: 'easeOut' }}
-              className="relative hidden lg:block"
+            <motion.h1
+              {...fadeUp(0.1)}
+              className="font-serif leading-[0.95] font-medium tracking-tighter mb-8"
+              style={{ fontSize: 'clamp(60px, 8vw, 100px)', color: 'var(--burgundy)' }}
             >
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <div className="rounded-2xl overflow-hidden h-48 bg-rose-100">
-                    <Image src="https://images.unsplash.com/photo-1548266652-99cf27701ced?w=300&h=200&fit=crop" alt="Kukkakimppu" width={300} height={200} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                  </div>
-                  <div className="rounded-2xl overflow-hidden h-32 bg-rose-50">
-                    <Image src="https://images.unsplash.com/photo-1519225421980-716e8e87cef2?w=300&h=150&fit=crop" alt="Häät" width={300} height={150} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                  </div>
-                </div>
-                <div className="space-y-4 mt-8">
-                  <div className="rounded-2xl overflow-hidden h-32 bg-emerald-50">
-                    <Image src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=300&h=150&fit=crop" alt="Hieronta" width={300} height={150} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                  </div>
-                  <div className="rounded-2xl overflow-hidden h-48 bg-amber-50">
-                    <Image src="https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=300&h=200&fit=crop" alt="Tulppaanit" width={300} height={200} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                  </div>
+              Kauneutta ja<br />hyvinvointia
+            </motion.h1>
+
+            <motion.p {...fadeUp(0.2)} className="text-gray-500 text-lg mb-12 leading-relaxed max-w-md">
+              {t.heroSubtitle}
+            </motion.p>
+
+            <motion.div {...fadeUp(0.3)} className="flex items-center gap-8">
+              <Link
+                href="/flowers"
+                className="px-10 py-4 text-white rounded-full font-bold text-sm tracking-widest uppercase transition-all hover:shadow-xl hover:shadow-pink-200 hover:-translate-y-0.5"
+                style={{ backgroundColor: 'var(--accent-pink)' }}
+              >
+                {t.heroShopNow}
+              </Link>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">01 / 05</span>
+                <div className="flex gap-2">
+                  <button className="w-8 h-8 rounded-full border border-pink-200 flex items-center justify-center transition-all hover:bg-white" style={{ color: 'var(--burgundy)' }}>
+                    <ChevronLeft className="w-3 h-3" />
+                  </button>
+                  <button className="w-8 h-8 rounded-full border border-pink-200 flex items-center justify-center transition-all hover:bg-white" style={{ color: 'var(--burgundy)' }}>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
             </motion.div>
           </div>
+
+          {/* Floating image */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
+            className="relative flex justify-center lg:justify-end"
+          >
+            <div className="relative w-full max-w-[560px] animate-float">
+              <Image
+                src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop"
+                alt="Elegant floral arrangement"
+                width={560}
+                height={640}
+                className="w-full h-auto object-contain mask-fade scale-110"
+                priority
+              />
+            </div>
+            {/* Price badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
+              className="absolute bottom-0 right-0 p-6 rounded-[32px] border border-white/40 shadow-2xl"
+              style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(20px)' }}
+            >
+              <div className="font-serif text-3xl font-bold" style={{ color: 'var(--burgundy)' }}>45,00 €</div>
+              <div className="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-400">Premium Collection</div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Services */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5 }}
-            className="text-2xl font-bold text-stone-800 text-center mb-10"
+      {/* ── Why Us / Features ── */}
+      <section className="py-24 bg-white border-b border-pink-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
+          {[
+            { icon: '🌱', title: 'Fresh Blooms', sub: 'Handpicked daily' },
+            { icon: '🚚', title: 'Fast Delivery', sub: 'Same-day service' },
+            { icon: '🏆', title: 'Top Quality', sub: 'Certified experts' },
+            { icon: '🎉', title: 'All Occasions', sub: 'Birthday to Weddings' },
+            { icon: '🍃', title: 'Eco Care', sub: 'Sustainable growth' },
+          ].map((item, i) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.45, delay: i * 0.08 }}
+              className="flex flex-col items-center text-center gap-4 group cursor-default"
+            >
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center text-2xl transition-all duration-500 group-hover:text-white"
+                style={{ backgroundColor: 'var(--soft-pink)', color: 'var(--accent-pink)' }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--accent-pink)')}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--soft-pink)')}
+              >
+                {item.icon}
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-gray-800 uppercase tracking-widest">{item.title}</h3>
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">{item.sub}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Spa Section ── */}
+      <section className="py-32 px-6 lg:px-10" style={{ backgroundColor: 'rgba(245,240,237,0.4)' }}>
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-24"
           >
-            {t.servicesTitle}
-          </motion.h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {services.map((s, i) => (
-              <motion.div key={s.href} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, delay: i * 0.1 }}>
-                <Link href={s.href} className={`group p-6 rounded-2xl border border-stone-100 hover:border-${s.color}-200 hover:shadow-md transition-all bg-stone-50 hover:bg-${s.color}-50 block`}>
-                  <div className={`w-12 h-12 bg-${s.color}-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-${s.color}-200 transition-colors`}>
-                    <s.icon className={`w-6 h-6 text-${s.color}-500`} />
-                  </div>
-                  <h3 className="font-semibold text-stone-800 mb-2">{s.title}</h3>
-                  <p className="text-sm text-stone-500 leading-relaxed">{s.desc}</p>
-                  <div className={`flex items-center gap-1 mt-4 text-${s.color}-500 text-sm font-medium group-hover:gap-2 transition-all`}>
-                    {s.link} <ArrowRight className="w-4 h-4" />
-                  </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] mb-4 block" style={{ color: 'var(--gold)' }}>
+              Luxury Wellness
+            </span>
+            <h2 className="font-serif text-5xl lg:text-6xl font-medium mb-6" style={{ color: 'var(--burgundy)' }}>
+              {t.massageTitle}
+            </h2>
+            <div className="w-16 h-1 mx-auto" style={{ backgroundColor: 'var(--gold)' }} />
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-10">
+            {[
+              { icon: '🌸', title: 'Rentouttava Hieronta', desc: t.massageDesc, href: '/massage' },
+              { icon: '💨', title: 'Aromaterapia', desc: 'Sensory healing through pure botanical essences for deep restoration.', href: '/massage' },
+              { icon: '✨', title: 'Päänahkahieronta', desc: 'Illuminate your radiance with botanical scalp treatments.', href: '/massage' },
+            ].map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="bg-white p-12 rounded-[48px] border flex flex-col items-center text-center group transition-all duration-500 hover:shadow-2xl"
+                style={{ borderColor: '#f0e8e0' }}
+                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = 'var(--gold)')}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = '#f0e8e0')}
+              >
+                <div
+                  className="w-24 h-24 rounded-full flex items-center justify-center mb-10 text-4xl transition-colors duration-500 group-hover:text-white"
+                  style={{ backgroundColor: 'var(--soft-pink)', color: 'var(--burgundy)' }}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--gold)')}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--soft-pink)')}
+                >
+                  {item.icon}
+                </div>
+                <h3 className="font-serif text-3xl mb-4" style={{ color: 'var(--burgundy)' }}>{item.title}</h3>
+                <p className="text-gray-500 mb-10 leading-relaxed">{item.desc}</p>
+                <Link
+                  href={item.href}
+                  className="mt-auto px-10 py-3 rounded-full text-xs font-bold uppercase tracking-widest border transition-all hover:text-white"
+                  style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--gold)'; (e.currentTarget as HTMLElement).style.color = 'white'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--gold)'; }}
+                >
+                  {t.heroBookMassage}
                 </Link>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-
-      {/* Why Us */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5 }}
-            className="text-2xl font-bold text-stone-800 text-center mb-10"
-          >
-            {t.whyUsTitle}
-          </motion.h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {whyItems.map(({ icon: Icon, key, title, desc }, i) => (
-              <motion.div key={key} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, delay: i * 0.1 }} className="text-center">
-                <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Icon className="w-7 h-7 text-rose-400" />
-                </div>
-                <h3 className="font-semibold text-stone-800 mb-2">{title}</h3>
-                <p className="text-sm text-stone-500 leading-relaxed">{desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Banner */}
-      <motion.section
-        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.6 }}
-        className="py-12 bg-rose-500"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-white mb-2">{t.giftCardTitle}</h2>
-          <p className="text-rose-100 mb-6">{t.giftCardSubtitle}</p>
-          <Link href="/gift-cards" className="inline-flex items-center gap-2 bg-white text-rose-500 hover:bg-rose-50 font-semibold px-6 py-3 rounded-xl transition-colors hover:-translate-y-0.5 hover:shadow-lg">
-            {t.giftCardButton} <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </motion.section>
     </>
   );
 }

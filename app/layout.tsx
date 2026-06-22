@@ -1,10 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Crimson_Pro, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
-  variable: '--font-inter',
+const crimsonPro = Crimson_Pro({
+  variable: '--font-serif',
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: '--font-sans',
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
   display: 'swap',
 });
 
@@ -25,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fi" className={`${inter.variable} h-full`}>
+    <html lang="fi" className={`${crimsonPro.variable} ${plusJakarta.variable} h-full`}>
       <body className="h-full">{children}</body>
     </html>
   );

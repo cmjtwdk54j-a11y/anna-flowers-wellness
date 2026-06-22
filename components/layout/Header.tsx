@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { ShoppingCart, Menu, X, Globe } from 'lucide-react';
+import { ShoppingCart, Menu, X, Globe, Flower2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
@@ -44,127 +44,110 @@ export default function Header({ locale }: HeaderProps) {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 py-4 flex items-center justify-between transition-all duration-300',
         scrolled
-          ? 'bg-white/90 backdrop-blur-md border-b border-stone-100 shadow-sm'
-          : 'bg-white border-b border-stone-100'
+          ? 'bg-white/85 backdrop-blur-md border-b border-pink-50 shadow-sm'
+          : 'bg-white/80 backdrop-blur-md border-b border-pink-50'
       )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <motion.div
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-8 h-8 bg-rose-400 rounded-full flex items-center justify-center"
+      {/* Logo */}
+      <Link href="/" className="flex items-center gap-3 group">
+        <motion.div
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.95 }}
+          className="w-10 h-10 rounded-full flex items-center justify-center"
+          style={{ backgroundColor: 'var(--soft-pink)' }}
+        >
+          <Flower2 className="w-5 h-5" style={{ color: 'var(--burgundy)' }} />
+        </motion.div>
+        <span
+          className="font-serif text-2xl font-bold tracking-tight uppercase hidden sm:block"
+          style={{ color: 'var(--burgundy)' }}
+        >
+          Aavafloristi
+        </span>
+      </Link>
+
+      {/* Desktop Nav */}
+      <nav className="hidden lg:flex items-center gap-10 text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-500">
+        {navLinks.map((link) => {
+          const active = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn('nav-link transition-colors', active ? 'text-[--burgundy]' : 'hover:text-[--burgundy]')}
+              style={active ? { color: 'var(--burgundy)' } : undefined}
             >
-              <span className="text-white text-xs font-bold">AF</span>
-            </motion.div>
-            <div className="hidden sm:block">
-              <span className="font-semibold text-stone-800 text-sm leading-tight block group-hover:text-rose-500 transition-colors">
-                Aavafloristi
-              </span>
-            </div>
-          </Link>
+              {link.label}
+            </Link>
+          );
+        })}
+      </nav>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => {
-              const active = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    'relative text-sm font-medium transition-colors hover:text-rose-500 py-1',
-                    active ? 'text-rose-500' : 'text-stone-600'
-                  )}
-                >
-                  {link.label}
-                  {active && (
-                    <motion.span
-                      layoutId="nav-underline"
-                      className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-rose-400 rounded-full"
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-3">
-            {/* Language switcher */}
-            <div className="flex items-center gap-1 border border-stone-200 rounded-full px-2 py-1">
-              <Globe className="w-3.5 h-3.5 text-stone-400" />
-              <button
-                onClick={() => switchLocale('fi')}
-                className={cn(
-                  'text-xs font-medium transition-colors',
-                  locale === 'fi' ? 'text-rose-500' : 'text-stone-400 hover:text-stone-700'
-                )}
-              >
-                FI
-              </button>
-              <span className="text-stone-300 text-xs">|</span>
-              <button
-                onClick={() => switchLocale('en')}
-                className={cn(
-                  'text-xs font-medium transition-colors',
-                  locale === 'en' ? 'text-rose-500' : 'text-stone-400 hover:text-stone-700'
-                )}
-              >
-                EN
-              </button>
-            </div>
-
-            {/* Cart */}
-            <motion.button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              onClick={toggleCart}
-              className="relative p-2 text-stone-600 hover:text-rose-500 transition-colors"
-              aria-label={t('cart')}
-            >
-              <ShoppingCart className="w-5 h-5" />
-              <AnimatePresence>
-                {totalItems > 0 && (
-                  <motion.span
-                    key="badge"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium"
-                  >
-                    {totalItems > 9 ? '9+' : totalItems}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.button>
-
-            {/* Mobile menu button */}
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-stone-600 hover:text-rose-500 transition-colors"
-              aria-label={mobileOpen ? t('closeMenu') : t('openMenu')}
-              aria-expanded={mobileOpen}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                  key={mobileOpen ? 'close' : 'open'}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                </motion.span>
-              </AnimatePresence>
-            </motion.button>
-          </div>
+      {/* Right actions */}
+      <div className="flex items-center gap-4">
+        {/* Language */}
+        <div className="hidden sm:flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+          <Globe className="w-3.5 h-3.5" />
+          <button
+            onClick={() => switchLocale('fi')}
+            className="transition-colors hover:text-[--burgundy]"
+            style={locale === 'fi' ? { color: 'var(--burgundy)' } : undefined}
+          >FI</button>
+          <span className="text-gray-300">|</span>
+          <button
+            onClick={() => switchLocale('en')}
+            className="transition-colors hover:text-[--burgundy]"
+            style={locale === 'en' ? { color: 'var(--burgundy)' } : undefined}
+          >EN</button>
         </div>
+
+        {/* Cart */}
+        <motion.button
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+          onClick={toggleCart}
+          className="relative p-2 text-gray-500 hover:text-[--burgundy] transition-colors"
+          style={{ '--burgundy': 'var(--burgundy)' } as React.CSSProperties}
+          aria-label={t('cart')}
+        >
+          <ShoppingCart className="w-5 h-5" />
+          <AnimatePresence>
+            {totalItems > 0 && (
+              <motion.span
+                key="badge"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
+                className="absolute -top-1 -right-1 w-4 h-4 text-white text-[8px] flex items-center justify-center rounded-full font-bold"
+                style={{ backgroundColor: 'var(--burgundy)' }}
+              >
+                {totalItems > 9 ? '9+' : totalItems}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
+
+        {/* Mobile toggle */}
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="lg:hidden p-2 text-gray-500 hover:text-[--burgundy] transition-colors"
+          aria-expanded={mobileOpen}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={mobileOpen ? 'close' : 'open'}
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </motion.span>
+          </AnimatePresence>
+        </motion.button>
       </div>
 
       {/* Mobile menu */}
@@ -174,10 +157,10 @@ export default function Header({ locale }: HeaderProps) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="lg:hidden overflow-hidden bg-white border-t border-stone-100"
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="lg:hidden absolute top-full left-0 right-0 overflow-hidden bg-white border-b border-pink-50 shadow-sm"
           >
-            <nav className="flex flex-col gap-1 px-4 pt-2 pb-4">
+            <nav className="flex flex-col px-6 pt-3 pb-5">
               {navLinks.map((link, i) => {
                 const active = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
                 return (
@@ -190,10 +173,8 @@ export default function Header({ locale }: HeaderProps) {
                     <Link
                       href={link.href}
                       onClick={() => setMobileOpen(false)}
-                      className={cn(
-                        'block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                        active ? 'bg-rose-50 text-rose-500' : 'text-stone-600 hover:bg-stone-50'
-                      )}
+                      className="block py-3 text-[11px] font-bold uppercase tracking-[0.2em] border-b border-pink-50 last:border-0 transition-colors"
+                      style={{ color: active ? 'var(--burgundy)' : '#6b7280' }}
                     >
                       {link.label}
                     </Link>

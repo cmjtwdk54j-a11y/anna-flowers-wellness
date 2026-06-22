@@ -1,37 +1,87 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafaf9;
-  --foreground: #1c1917;
-  --font-sans: var(--font-inter);
+  --background: #ffffff;
+  --foreground: #4a4a4a;
+  --soft-pink: #fdf2f5;
+  --accent-pink: #ffb6d9;
+  --burgundy: #8B4555;
+  --gold: #D4AF37;
+  --warm-gray: #4a4a4a;
+  --light-gray: #f5f0ed;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --color-soft-pink: var(--soft-pink);
+  --color-accent-pink: var(--accent-pink);
+  --color-burgundy: var(--burgundy);
+  --color-gold: var(--gold);
+  --color-warm-gray: var(--warm-gray);
+  --color-light-gray: var(--light-gray);
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: var(--font-sans), 'Plus Jakarta Sans', sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Scandinavian clean scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+.font-serif {
+  font-family: var(--font-serif), 'Crimson Pro', Georgia, serif;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #fce7f3; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-pink); }
+
+/* Float animation for hero image */
+@keyframes float {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-14px) rotate(0.8deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
 }
-::-webkit-scrollbar-thumb {
-  background: #d6d3d1;
-  border-radius: 3px;
+.animate-float { animation: float 8s ease-in-out infinite; }
+
+/* Fade mask on hero image */
+.mask-fade {
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a29e;
+
+/* Floral divider */
+.floral-divider::before,
+.floral-divider::after {
+  content: '';
+  display: block;
+  height: 1px;
+  flex-grow: 1;
+  background: linear-gradient(to right, transparent, var(--accent-pink), transparent);
 }
+
+/* Nav underline hover */
+.nav-link { position: relative; transition: color 0.3s ease; }
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background-color: var(--accent-pink);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+.nav-link:hover::after { width: 100%; }
+
+/* Premium card shadow */
+.premium-shadow { box-shadow: 0 20px 50px -10px rgba(139, 69, 85, 0.08); }

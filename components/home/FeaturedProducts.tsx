@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { ShoppingCart, ArrowRight } from 'lucide-react';
+import { Plus, ArrowRight, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import type { CatalogProduct } from '@/lib/products';
@@ -31,73 +31,113 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
   };
 
   return (
-    <section className="py-16 bg-stone-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-32 px-6 lg:px-10 bg-white">
+      <div className="max-w-7xl mx-auto">
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-between mb-8"
+          className="text-center mb-24 max-w-2xl mx-auto"
         >
-          <h2 className="text-2xl font-bold text-stone-800">{t('featured')}</h2>
-          <Link
-            href="/flowers"
-            className="text-sm text-rose-500 hover:text-rose-600 font-medium flex items-center gap-1 group"
-          >
-            {t('allProducts')}
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
+          <div className="flex items-center gap-6 mb-6 floral-divider">
+            <Sparkles className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--accent-pink)' }} />
+            <h2 className="font-serif text-4xl lg:text-5xl font-medium whitespace-nowrap" style={{ color: 'var(--burgundy)' }}>
+              {t('featured')}
+            </h2>
+            <Sparkles className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--accent-pink)' }} />
+          </div>
+          <p className="text-gray-400 italic font-medium text-sm">
+            {locale === 'fi'
+              ? 'Huolella valitut kausikokoelmamme, jokainen kukkakimppu täydellisesti järjestetty.'
+              : 'Explore our curated seasonal collections, hand-arranged to perfection.'}
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        {/* Cards grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {products.map((product, i) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.45, delay: i * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
-              className="group bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-rose-200 hover:shadow-lg transition-all flex flex-col"
+              transition={{ duration: 0.5, delay: i * 0.1, ease: 'easeOut' }}
+              className="group cursor-pointer"
             >
-              <Link href={`/flowers/${product.slug}`} className="block">
-                <div className="aspect-square overflow-hidden bg-stone-100 relative">
+              {/* Portrait image */}
+              <Link href={`/flowers/${product.slug}`}>
+                <div
+                  className="aspect-[3/4] rounded-[40px] overflow-hidden mb-6 premium-shadow transition-all duration-500 group-hover:-translate-y-3"
+                  style={{ backgroundColor: 'var(--soft-pink)' }}
+                >
                   <Image
                     src={product.imageUrl}
                     alt={locale === 'fi' ? product.name_fi : product.name_en}
                     width={400}
-                    height={400}
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
+                    height={533}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  {product.isFeatured && (
-                    <span className="absolute top-2 left-2 bg-rose-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
-                      ★
-                    </span>
-                  )}
                 </div>
               </Link>
-              <div className="p-4 flex flex-col flex-1">
-                <Link href={`/flowers/${product.slug}`}>
-                  <h3 className="text-sm font-medium text-stone-800 leading-tight mb-1 hover:text-rose-500 transition-colors line-clamp-2">
-                    {locale === 'fi' ? product.name_fi : product.name_en}
-                  </h3>
-                </Link>
-                <p className="text-xs text-stone-400 mb-3 flex-1">
-                  {tFlowers('from')} <span className="text-stone-600 font-medium">{product.priceSmall} €</span>
-                </p>
+
+              {/* Info */}
+              <Link href={`/flowers/${product.slug}`}>
+                <h3 className="font-serif text-2xl mb-2 transition-colors group-hover:opacity-80" style={{ color: 'var(--burgundy)' }}>
+                  {locale === 'fi' ? product.name_fi : product.name_en}
+                </h3>
+              </Link>
+              <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-4">
+                {product.occasions.slice(0, 2).join(' & ')}
+              </p>
+
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-bold" style={{ color: 'var(--gold)' }}>
+                  {product.priceSmall.toFixed(2).replace('.', ',')} €
+                </span>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => handleAdd(product)}
-                  className="flex items-center justify-center gap-1.5 w-full py-2 bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white text-xs font-medium rounded-lg transition-colors"
+                  className="w-10 h-10 rounded-full border flex items-center justify-center transition-all"
+                  style={{ borderColor: '#fce7f3', color: 'var(--burgundy)' }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--accent-pink)';
+                    (e.currentTarget as HTMLElement).style.color = 'white';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent-pink)';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+                    (e.currentTarget as HTMLElement).style.color = 'var(--burgundy)';
+                    (e.currentTarget as HTMLElement).style.borderColor = '#fce7f3';
+                  }}
+                  aria-label={tFlowers('addToCart')}
                 >
-                  <ShoppingCart className="w-3.5 h-3.5" />
-                  {tFlowers('addToCart')}
+                  <Plus className="w-4 h-4" />
                 </motion.button>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* View all */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="text-center mt-16"
+        >
+          <Link
+            href="/flowers"
+            className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest transition-colors group"
+            style={{ color: 'var(--burgundy)' }}
+          >
+            {t('allProducts')}
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

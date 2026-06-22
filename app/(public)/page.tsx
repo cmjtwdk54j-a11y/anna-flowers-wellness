@@ -3,6 +3,7 @@ export const revalidate = 60;
 import { getTranslations, getLocale } from 'next-intl/server';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import HeroSection from '@/components/home/HeroSection';
+import NewsletterCTA from '@/components/home/NewsletterCTA';
 import { getFeaturedProducts } from '@/lib/products';
 
 export default async function HomePage() {
@@ -44,6 +45,7 @@ export default async function HomePage() {
     <>
       <HeroSection t={heroT} />
       <FeaturedProducts locale={locale} products={featuredProducts} />
+      <NewsletterCTA locale={locale} />
     </>
   );
 }
