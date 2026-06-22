@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ShoppingCart, AlertCircle, Filter, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { formatPrice, cn } from '@/lib/utils';
 import type { CatalogProduct } from '@/lib/products';
@@ -113,10 +114,15 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Page header */}
-      <div className="mb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-8"
+      >
         <h1 className="text-3xl font-bold text-stone-800 mb-2">{t('title')}</h1>
         <p className="text-stone-500">{t('subtitle')}</p>
-      </div>
+      </motion.div>
 
       {/* Category filter */}
       <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
@@ -217,9 +223,21 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
       )}
 
       {/* Products grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
-        {filtered.map((product) => (
-          <div key={product.id} className="group">
+      <motion.div
+        layout
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6"
+      >
+        <AnimatePresence mode="popLayout">
+        {filtered.map((product, i) => (
+          <motion.div
+            key={product.id}
+            layout
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.25, delay: i * 0.04 }}
+            className="group"
+          >
             {/* Funeral notice modal */}
             {showFuneralNotice === product.id && (
               <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
@@ -294,9 +312,10 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

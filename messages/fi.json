@@ -22,7 +22,7 @@
       "title": "Palvelumme",
       "flowers": {
         "title": "Kukkakauppa",
-        "description": "Kauniit tuorelukkuja jokaiseen tilaisuuteen – häistä hautajaisiin",
+        "description": "Kauniit tuoreita kukkakimppuja jokaiseen tilaisuuteen – häistä hautajaisiin",
         "link": "Katso tuotteet"
       },
       "massage": {
@@ -256,9 +256,6 @@
       "spot1": "1 pysäköintipaikka – 3 tunnin aikaraja",
       "spot2": "2 lisäpaikkaa – 2 tunnin aikaraja"
     },
-    "weekdays": "Ma–Pe: 9:00–18:00",
-    "saturday": "La: 10:00–16:00",
-    "sunday": "Su: Suljettu",
     "sendMessage": "Lähetä viesti",
     "name": "Nimi",
     "yourEmail": "Sähköposti",
@@ -272,7 +269,8 @@
     "here": "Olemme täällä sinua varten.",
     "weekdays": "Ma – Pe",
     "saturday": "La",
-    "sunday": "Su"
+    "sunday": "Su",
+    "closedLabel": "Suljettu"
   },
   "cart": {
     "title": "Ostoskori",

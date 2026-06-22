@@ -80,7 +80,7 @@ export const BUSINESS_INFO = {
   name: 'Aavafloristi',
   address: 'Puistolantori 1, 00760 Helsinki',
   phone: '+358 50 123 4567',
-  email: 'info@annaflowers.fi',
+  email: 'info@aavafloristi.fi',
   whatsapp: '+358 50 123 4567',
   googleMapsUrl: 'https://maps.google.com',
   parking: {
