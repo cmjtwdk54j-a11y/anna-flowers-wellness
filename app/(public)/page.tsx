@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 import { getTranslations, getLocale } from 'next-intl/server';
 import Link from 'next/link';
