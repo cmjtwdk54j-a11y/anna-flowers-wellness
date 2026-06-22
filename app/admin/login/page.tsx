@@ -23,8 +23,7 @@ function LoginForm() {
       });
       if (res.ok) {
         const from = searchParams.get('from') || '/admin';
-        router.push(from);
-        router.refresh();
+        window.location.href = from;
       } else {
         const data = await res.json();
         setError(data.error || 'Kirjautuminen epäonnistui');
