@@ -103,31 +103,31 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
     openCart();
   };
 
-  const selectClass = 'border border-pink-100 rounded-full px-5 py-2 text-xs font-semibold uppercase tracking-wider bg-white outline-none focus:border-pink-300 transition-colors text-gray-600';
+  const selectClass = 'border border-pink-100 rounded-full px-3 sm:px-5 py-2 text-xs font-semibold uppercase tracking-wider bg-white outline-none focus:border-pink-300 transition-colors text-gray-600';
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-36 pb-24">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-28 pb-12 lg:pt-36 lg:pb-24">
       {/* Page header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-16"
+        className="text-center mb-8 lg:mb-16"
       >
-        <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-4" style={{ color: 'var(--burgundy)' }}>
+        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-medium mb-3" style={{ color: 'var(--burgundy)' }}>
           {t('title')}
         </h1>
         <p className="text-gray-400 text-sm italic">{t('subtitle')}</p>
       </motion.div>
 
       {/* Category pills */}
-      <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6 lg:mb-8">
         {categories.map((cat) => (
           <button
             key={cat.key}
             onClick={() => setActiveCategory(cat.key)}
             className={cn(
-              'px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all',
+              'px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all',
               activeCategory === cat.key
                 ? 'text-white shadow-sm'
                 : 'bg-white border border-pink-100 text-gray-500 hover:border-pink-300'
@@ -140,7 +140,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
       </div>
 
       {/* Filters bar */}
-      <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
         <select
           value={occasion}
           onChange={(e) => setOccasion(e.target.value)}
@@ -221,7 +221,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
       )}
 
       {/* Products grid */}
-      <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 lg:gap-10">
+      <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
         <AnimatePresence mode="popLayout">
           {filtered.map((product, i) => (
             <motion.div
@@ -267,7 +267,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
               <div>
                 <Link href={`/flowers/${product.slug}`}>
                   <div
-                    className="aspect-[3/4] rounded-[36px] overflow-hidden mb-5 premium-shadow transition-all duration-500 group-hover:-translate-y-2"
+                    className="aspect-[3/4] rounded-[20px] sm:rounded-[36px] overflow-hidden mb-3 sm:mb-5 premium-shadow transition-all duration-500 group-hover:-translate-y-2"
                     style={{ backgroundColor: 'var(--soft-pink)' }}
                   >
                     <Image
@@ -276,13 +276,14 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
                       width={400}
                       height={533}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      sizes="(max-width: 640px) calc(50vw - 20px), (max-width: 1024px) calc(33vw - 24px), calc(25vw - 40px)"
                     />
                   </div>
                 </Link>
 
                 <Link href={`/flowers/${product.slug}`}>
                   <h3
-                    className="font-serif text-xl mb-1 group-hover:opacity-70 transition-opacity"
+                    className="font-serif text-sm sm:text-lg lg:text-xl mb-1 group-hover:opacity-70 transition-opacity leading-tight"
                     style={{ color: 'var(--burgundy)' }}
                   >
                     {product.name_fi}

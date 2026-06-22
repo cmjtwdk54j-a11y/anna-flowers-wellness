@@ -61,9 +61,9 @@ export default function ProductPageClient({ product }: { product: CatalogProduct
   const availableTimes = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-36 pb-24">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-24 pb-12 lg:pt-36 lg:pb-24">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 mb-16">
+      <nav className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 mb-8 lg:mb-16">
         <Link href="/" className="transition-colors hover:text-gray-600">{t('home')}</Link>
         <span>/</span>
         <Link href="/flowers" className="transition-colors hover:text-gray-600">{tFlowers('title')}</Link>
@@ -71,11 +71,11 @@ export default function ProductPageClient({ product }: { product: CatalogProduct
         <span style={{ color: 'var(--burgundy)' }}>{product.name_fi}</span>
       </nav>
 
-      <div className="grid lg:grid-cols-2 gap-20 items-start">
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-start">
         {/* ── Left: image ── */}
         <div className="lg:sticky lg:top-32">
           <div
-            className="aspect-[3/4] rounded-[40px] overflow-hidden premium-shadow"
+            className="aspect-[3/4] rounded-[24px] lg:rounded-[40px] overflow-hidden premium-shadow"
             style={{ backgroundColor: 'var(--soft-pink)' }}
           >
             <Image
@@ -83,8 +83,9 @@ export default function ProductPageClient({ product }: { product: CatalogProduct
               alt={product.name_fi}
               width={600}
               height={800}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              className="w-full h-full object-cover lg:hover:scale-105 transition-transform duration-700"
               priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
           {product.imageUrls.length > 1 && (

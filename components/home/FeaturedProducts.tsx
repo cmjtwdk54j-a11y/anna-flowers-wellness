@@ -31,7 +31,7 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
   };
 
   return (
-    <section className="py-32 px-6 lg:px-10 bg-white">
+    <section className="py-16 lg:py-32 px-6 lg:px-10 bg-white">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -39,11 +39,11 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-24 max-w-2xl mx-auto"
+          className="text-center mb-10 lg:mb-24 max-w-2xl mx-auto"
         >
-          <div className="flex items-center gap-6 mb-6 floral-divider">
+          <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-6 floral-divider">
             <Sparkles className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--accent-pink)' }} />
-            <h2 className="font-serif text-4xl lg:text-5xl font-medium whitespace-nowrap" style={{ color: 'var(--burgundy)' }}>
+            <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-medium" style={{ color: 'var(--burgundy)' }}>
               {t('featured')}
             </h2>
             <Sparkles className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--accent-pink)' }} />
@@ -56,7 +56,7 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
         </motion.div>
 
         {/* Cards grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-12">
           {products.map((product, i) => (
             <motion.div
               key={product.id}
@@ -69,7 +69,7 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
               {/* Portrait image */}
               <Link href={`/flowers/${product.slug}`}>
                 <div
-                  className="aspect-[3/4] rounded-[40px] overflow-hidden mb-6 premium-shadow transition-all duration-500 group-hover:-translate-y-3"
+                  className="aspect-[3/4] rounded-[24px] sm:rounded-[40px] overflow-hidden mb-3 sm:mb-6 premium-shadow transition-all duration-500 group-hover:-translate-y-3"
                   style={{ backgroundColor: 'var(--soft-pink)' }}
                 >
                   <Image
@@ -78,13 +78,14 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
                     width={400}
                     height={533}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    sizes="(max-width: 640px) calc(50vw - 32px), (max-width: 1024px) calc(50vw - 48px), calc(25vw - 48px)"
                   />
                 </div>
               </Link>
 
               {/* Info */}
               <Link href={`/flowers/${product.slug}`}>
-                <h3 className="font-serif text-2xl mb-2 transition-colors group-hover:opacity-80" style={{ color: 'var(--burgundy)' }}>
+                <h3 className="font-serif text-base sm:text-2xl mb-1 sm:mb-2 transition-colors group-hover:opacity-80" style={{ color: 'var(--burgundy)' }}>
                   {locale === 'fi' ? product.name_fi : product.name_en}
                 </h3>
               </Link>
@@ -127,7 +128,7 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-16"
+          className="text-center mt-8 lg:mt-16"
         >
           <Link
             href="/flowers"

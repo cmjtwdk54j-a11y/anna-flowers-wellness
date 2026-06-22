@@ -51,6 +51,9 @@ html {
   100% { transform: translateY(0px) rotate(0deg); }
 }
 .animate-float { animation: float 8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-float { animation: none; }
+}
 
 /* Fade mask on hero image */
 .mask-fade {
