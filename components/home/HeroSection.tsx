@@ -154,8 +154,9 @@ export default function HeroSection({ t }: HeroSectionProps) {
               <span className="text-[11px] font-bold tracking-[0.2em] text-gray-400 uppercase">325 Reviews</span>
             </motion.div>
 
-            <div className="overflow-hidden mb-8" style={{ minHeight: '200px' }}>
-              <AnimatePresence mode="wait" custom={direction}>
+            {/* Fixed height + absolute kids = zero layout shift */}
+            <div className="relative mb-8" style={{ height: '220px', overflow: 'hidden' }}>
+              <AnimatePresence custom={direction}>
                 <motion.h1
                   key={`headline-${current}`}
                   custom={direction}
@@ -163,8 +164,8 @@ export default function HeroSection({ t }: HeroSectionProps) {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="font-serif leading-[0.95] font-medium tracking-tighter"
+                  transition={{ duration: 0.38, ease: 'easeOut' }}
+                  className="absolute inset-x-0 top-0 font-serif leading-[0.95] font-medium tracking-tighter"
                   style={{ fontSize: 'clamp(56px, 7vw, 96px)', color: 'var(--burgundy)' }}
                 >
                   {slide.headline[0]}<br />{slide.headline[1]}
@@ -229,38 +230,40 @@ export default function HeroSection({ t }: HeroSectionProps) {
             </div>
           </div>
 
-          {/* Image side */}
-          <div className="relative flex justify-center lg:justify-end">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={`img-${current}`}
-                custom={direction}
-                variants={imgVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.45, ease: 'easeOut' }}
-                className="relative w-full max-w-[560px] animate-float"
-              >
-                <Image
-                  src={slide.image}
-                  alt={slide.headline.join(' ')}
-                  width={560}
-                  height={640}
-                  className="w-full h-auto object-contain mask-fade scale-110"
-                  priority={current === 0}
-                />
-              </motion.div>
-            </AnimatePresence>
+          {/* Image side — fixed height so layout never shifts */}
+          <div className="relative flex justify-center lg:justify-end" style={{ minHeight: '520px' }}>
+            {/* Fixed-size image wrapper, images stack absolutely */}
+            <div className="relative w-full max-w-[560px] animate-float" style={{ height: '560px' }}>
+              <AnimatePresence custom={direction}>
+                <motion.div
+                  key={`img-${current}`}
+                  custom={direction}
+                  variants={imgVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.42, ease: 'easeOut' }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={slide.image}
+                    alt={slide.headline.join(' ')}
+                    fill
+                    className="object-contain mask-fade scale-110"
+                    priority={current === 0}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
             {/* Price badge */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               <motion.div
                 key={`badge-${current}`}
                 initial={{ opacity: 0, y: 16, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                transition={{ delay: 0.2, duration: 0.4, ease: 'easeOut' }}
+                transition={{ delay: 0.2, duration: 0.35, ease: 'easeOut' }}
                 className="absolute bottom-0 right-0 p-6 rounded-[32px] border border-white/40 shadow-2xl"
                 style={{ background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(20px)' }}
               >
