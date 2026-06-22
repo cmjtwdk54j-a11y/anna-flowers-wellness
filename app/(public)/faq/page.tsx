@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -152,19 +152,19 @@ const icons = [
 function FaqAccordion({ items }: { items: FaqItem[] }) {
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <div className="divide-y divide-stone-100">
+    <div className="divide-y divide-pink-50">
       {items.map((item, i) => (
         <div key={i}>
           <button
             onClick={() => setOpen(open === i ? null : i)}
             className="w-full text-left py-4 flex items-start justify-between gap-4 group"
           >
-            <span className="text-sm font-medium text-stone-800 group-hover:text-rose-600 transition-colors">{item.q}</span>
-            <ChevronDown className={`w-4 h-4 text-stone-400 flex-shrink-0 mt-0.5 transition-transform duration-200 ${open === i ? 'rotate-180 text-rose-500' : ''}`} />
+            <span className="text-sm font-medium text-gray-800 group-hover:text-burgundy transition-colors">{item.q}</span>
+            <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5 transition-transform duration-200 ${open === i ? 'rotate-180 text-burgundy' : ''}`} />
           </button>
           {open === i && (
             <div className="pb-4 pr-8">
-              <p className="text-sm text-stone-500 leading-relaxed">{item.a}</p>
+              <p className="text-sm text-gray-500 leading-relaxed">{item.a}</p>
             </div>
           )}
         </div>
@@ -179,13 +179,13 @@ export default function FaqPage() {
 
   return (
     <div>
-      <section className="bg-gradient-to-br from-rose-50 via-stone-50 to-violet-50 py-14">
+      <section className="bg-gradient-to-br from-[#fdf2f5] via-white to-[#f5f0ed] py-14">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs font-semibold text-rose-400 uppercase tracking-widest">{t.badge}</p>
+            <p className="text-xs font-semibold text-accent-pink uppercase tracking-widest">{t.badge}</p>
             <LangToggle />
           </div>
-          <h1 className="text-3xl lg:text-4xl font-bold text-stone-800 mb-3">{t.title}</h1>
+          <h1 className="text-3xl lg:text-4xl font-serif text-4xl font-medium mb-3">{t.title}</h1>
           <p className="text-stone-500">{t.subtitle}</p>
         </div>
       </section>
@@ -193,12 +193,12 @@ export default function FaqPage() {
       <section className="py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           {t.categories.map((cat, ci) => (
-            <div key={ci} className="bg-white border border-stone-100 rounded-2xl overflow-hidden shadow-sm">
-              <div className="flex items-center gap-3 px-6 py-4 bg-stone-50 border-b border-stone-100">
-                <div className="w-8 h-8 bg-rose-100 text-rose-500 rounded-lg flex items-center justify-center flex-shrink-0">
+            <div key={ci} className="bg-white border border-pink-100 rounded-[28px] overflow-hidden shadow-sm">
+              <div className="flex items-center gap-3 px-6 py-4 bg-soft-pink border-b border-pink-100">
+                <div className="w-8 h-8 bg-soft-pink text-accent-pink rounded-lg flex items-center justify-center flex-shrink-0">
                   {icons[ci]}
                 </div>
-                <h2 className="font-semibold text-stone-800">{cat.title}</h2>
+                <h2 className="font-serif text-xl text-burgundy">{cat.title}</h2>
               </div>
               <div className="px-6">
                 <FaqAccordion items={cat.items} />
@@ -208,15 +208,15 @@ export default function FaqPage() {
         </div>
       </section>
 
-      <section className="py-12 bg-stone-50 border-t border-stone-100">
+      <section className="py-12 border-t border-pink-100">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-lg font-semibold text-stone-800 mb-2">{t.notFound}</h2>
-          <p className="text-stone-500 text-sm mb-6">{t.notFoundDesc}</p>
+          <h2 className="text-lg font-serif text-xl text-burgundy mb-2">{t.notFound}</h2>
+          <p className="text-gray-500 text-sm mb-6">{t.notFoundDesc}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/contact" className="inline-flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-medium px-6 py-3 rounded-xl transition-colors text-sm">
+            <Link href="/contact" className="inline-flex items-center justify-center gap-2 bg-burgundy hover:bg-burgundy/90 text-white font-bold px-8 py-3 rounded-full uppercase tracking-widest text-xs transition-colors text-sm">
               {t.contact}
             </Link>
-            <a href="https://wa.me/358501234567" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-3 rounded-xl transition-colors text-sm">
+            <a href="https://wa.me/358501234567" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 border border-burgundy text-burgundy hover:bg-soft-pink font-bold px-8 py-3 rounded-full uppercase tracking-widest text-xs transition-colors text-sm">
               WhatsApp
             </a>
           </div>
@@ -224,7 +224,7 @@ export default function FaqPage() {
       </section>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link href="/" className="text-rose-500 hover:text-rose-600 text-sm font-medium">{t.back}</Link>
+        <Link href="/" className="text-burgundy hover:text-burgundy/80 text-sm font-bold uppercase tracking-widest">{t.back}</Link>
       </div>
     </div>
   );

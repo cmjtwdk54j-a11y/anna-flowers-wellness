@@ -6,6 +6,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CartDrawer from '@/components/cart/CartDrawer';
 import CookieConsent from '@/components/CookieConsent';
+import ScrollToTop from '@/components/ui/ScrollToTop';
+import PageTransition from '@/components/ui/PageTransition';
 
 export const metadata: Metadata = {
   title: {
@@ -53,10 +55,11 @@ export default async function PublicLayout({ children }: { children: React.React
       <CartProvider>
         <div className="min-h-full flex flex-col bg-white antialiased font-sans">
           <Header locale={locale} />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1"><PageTransition>{children}</PageTransition></main>
           <Footer />
           <CartDrawer locale={locale} />
           <CookieConsent />
+          <ScrollToTop />
         </div>
       </CartProvider>
     </NextIntlClientProvider>
