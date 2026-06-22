@@ -6,7 +6,7 @@ import { ShoppingCart, Menu, X, Globe, Flower2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 interface HeaderProps {
@@ -19,7 +19,6 @@ export default function Header({ locale }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const { totalItems, toggleCart } = useCart();
   const pathname = usePathname();
-  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -38,7 +37,7 @@ export default function Header({ locale }: HeaderProps) {
 
   const switchLocale = (newLocale: string) => {
     document.cookie = `locale=${newLocale}; path=/; max-age=31536000`;
-    router.refresh();
+    window.location.reload();
   };
 
   return (
