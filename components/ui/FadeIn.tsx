@@ -37,7 +37,7 @@ export function FadeIn({
       className={className}
       initial={{ opacity: 0, x, y }}
       animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
-      transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{ duration, delay, ease: 'easeOut' }}
     >
       {children}
     </motion.div>
@@ -73,5 +73,5 @@ export function Stagger({ children, className, delay = 0, staggerDelay = 0.1 }: 
 
 export const staggerItem = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.25, 0.1, 0.25, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' } },
 };
