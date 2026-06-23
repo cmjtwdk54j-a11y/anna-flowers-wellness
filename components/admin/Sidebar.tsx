@@ -40,24 +40,24 @@ export default function Sidebar() {
       <button
         onClick={() => setLang('fi')}
         className={cn(
-          'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all',
+          'px-2.5 py-1 rounded-md text-xs font-semibold transition-all',
           lang === 'fi'
             ? 'bg-stone-600 text-white shadow-sm'
             : 'text-stone-400 hover:text-stone-200'
         )}
       >
-        <span>🇫🇮</span> FI
+        FI
       </button>
       <button
         onClick={() => setLang('en')}
         className={cn(
-          'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all',
+          'px-2.5 py-1 rounded-md text-xs font-semibold transition-all',
           lang === 'en'
             ? 'bg-stone-600 text-white shadow-sm'
             : 'text-stone-400 hover:text-stone-200'
         )}
       >
-        <span>🇬🇧</span> EN
+        EN
       </button>
     </div>
   );

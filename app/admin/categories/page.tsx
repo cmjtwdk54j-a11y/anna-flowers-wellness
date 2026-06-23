@@ -52,7 +52,7 @@ export default function CategoriesPage() {
   const handleSave = async () => {
     if (!edit) return;
     if (!edit.slug.trim() || !edit.name_fi.trim() || !edit.name_en.trim()) {
-      setError('Slug, nimi FI ja EN ovat pakollisia');
+      setError(t.categoriesExtra.requiredFields);
       return;
     }
     setSaving(true);
@@ -69,22 +69,22 @@ export default function CategoriesPage() {
       setEdit(null);
     } else {
       const d = await res.json();
-      setError(d.error || 'Virhe');
+      setError(d.error || t.categoriesExtra.errorGeneric);
     }
     setSaving(false);
   };
 
   const handleDelete = async (id: string, name: string, count = 0) => {
     if (count > 0) {
-      alert(`Kategoriaan kuuluu ${count} tuotetta. Siirrä tuotteet ensin.`);
+      alert(`${t.categoriesExtra.hasProductsPre} ${count} ${t.categoriesExtra.hasProductsPost}`);
       return;
     }
-    if (!confirm(`Poistetaanko kategoria "${name}"?`)) return;
+    if (!confirm(`${t.categoriesExtra.confirmDelete} "${name}"?`)) return;
     const res = await fetch(`/api/admin/categories/${id}`, { method: 'DELETE' });
     if (res.ok) setCategories((cs) => cs.filter((c) => c.id !== id));
     else {
       const d = await res.json();
-      alert(d.error || 'Virhe');
+      alert(d.error || t.categoriesExtra.errorGeneric);
     }
   };
 
@@ -125,11 +125,11 @@ export default function CategoriesPage() {
       {/* New/Edit form */}
       {edit !== null && (
         <div className="bg-white border border-indigo-200 rounded-xl p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-stone-700 mb-4">{edit.id ? 'Muokkaa kategoriaa' : 'Uusi kategoria'}</h2>
+          <h2 className="text-sm font-semibold text-stone-700 mb-4">{edit.id ? t.categoriesExtra.editTitle : t.categoriesExtra.newTitle}</h2>
           {error && <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg mb-3 border border-red-200">{error}</p>}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs font-medium text-stone-500 mb-1">Slug *</label>
+              <label className="block text-xs font-medium text-stone-500 mb-1">{t.categoriesExtra.slug}</label>
               <input
                 value={edit.slug}
                 onChange={(e) => setEdit({ ...edit, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
@@ -138,7 +138,7 @@ export default function CategoriesPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-stone-500 mb-1">Nimi FI *</label>
+              <label className="block text-xs font-medium text-stone-500 mb-1">{t.categoriesExtra.nameFi}</label>
               <input
                 value={edit.name_fi}
                 onChange={(e) => setEdit({ ...edit, name_fi: e.target.value })}
@@ -147,7 +147,7 @@ export default function CategoriesPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-stone-500 mb-1">Nimi EN *</label>
+              <label className="block text-xs font-medium text-stone-500 mb-1">{t.categoriesExtra.nameEn}</label>
               <input
                 value={edit.name_en}
                 onChange={(e) => setEdit({ ...edit, name_en: e.target.value })}
@@ -156,7 +156,7 @@ export default function CategoriesPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-stone-500 mb-1">Järjestys</label>
+              <label className="block text-xs font-medium text-stone-500 mb-1">{t.categoriesExtra.order}</label>
               <input
                 type="number"
                 value={edit.sortOrder}
@@ -172,14 +172,14 @@ export default function CategoriesPage() {
               className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-xs font-medium px-3 py-2 rounded-lg"
             >
               <Check className="w-3.5 h-3.5" />
-              {saving ? 'Tallennetaan...' : 'Tallenna'}
+              {saving ? t.categoriesExtra.saving : t.categoriesExtra.save}
             </button>
             <button
               onClick={() => { setEdit(null); setError(''); }}
               className="flex items-center gap-1.5 text-xs text-stone-500 hover:text-stone-700 px-3 py-2 rounded-lg border border-stone-200 hover:bg-stone-50"
             >
               <X className="w-3.5 h-3.5" />
-              Peruuta
+              {t.categoriesExtra.cancel}
             </button>
           </div>
         </div>

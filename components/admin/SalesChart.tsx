@@ -1,5 +1,7 @@
 'use client';
 
+import { useAdminLang } from '@/components/admin/AdminLangContext';
+
 interface DataPoint {
   date: string;
   revenue: number;
@@ -23,10 +25,11 @@ function formatEur(v: number) {
 }
 
 export default function SalesChart({ data, mode = 'revenue', height = 180 }: SalesChartProps) {
+  const { t } = useAdminLang();
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center text-stone-300 text-sm" style={{ height }}>
-        Ei dataa
+        {t.salesChart.noData}
       </div>
     );
   }
@@ -67,7 +70,7 @@ export default function SalesChart({ data, mode = 'revenue', height = 180 }: Sal
                 rx={1.5} fill={val > 0 ? '#6366f1' : '#e5e7eb'}
                 opacity={0.85}
               >
-                <title>{mode === 'revenue' ? formatEur(val) : `${val} tilaus`} — {formatDate(d.date)}</title>
+                <title>{mode === 'revenue' ? formatEur(val) : `${val} ${t.salesChart.order}`} — {formatDate(d.date)}</title>
               </rect>
               {showLabel && (
                 <text

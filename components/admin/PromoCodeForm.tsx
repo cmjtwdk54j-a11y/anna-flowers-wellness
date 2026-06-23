@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { AdminPromoCode } from '@/lib/admin/types';
+import { useAdminLang } from '@/components/admin/AdminLangContext';
 
 const schema = z.object({
   code: z.string().min(1, 'Pakollinen').regex(/^[A-Z0-9_-]+$/i, 'Vain kirjaimia, numeroita, _ ja -'),
@@ -31,6 +32,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function PromoCodeForm({ promo }: { promo?: AdminPromoCode }) {
   const router = useRouter();
+  const { t } = useAdminLang();
+  const tp = t.promoForm;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const isEdit = !!promo;
@@ -82,11 +85,11 @@ export default function PromoCodeForm({ promo }: { promo?: AdminPromoCode }) {
         body: JSON.stringify(payload),
       });
       const json = await res.json();
-      if (!res.ok) { setError(json.error || 'Virhe'); return; }
+      if (!res.ok) { setError(json.error || t.common.error); return; }
       router.push('/admin/promo-codes');
       router.refresh();
     } catch {
-      setError('Verkkovirhe');
+      setError(tp.errorNetwork);
     } finally {
       setSaving(false);
     }
@@ -110,63 +113,63 @@ export default function PromoCodeForm({ promo }: { promo?: AdminPromoCode }) {
       )}
 
       <section className="bg-white border border-stone-200 rounded-xl p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-stone-700">Promokoodin tiedot</h2>
+        <h2 className="text-sm font-semibold text-stone-700">{tp.details}</h2>
 
-        <Row label="Koodi *" error={errors.code?.message}>
+        <Row label={tp.code} error={errors.code?.message}>
           <input
             {...register('code')}
             placeholder="FLOWERS10"
             className={`${inputClass} uppercase`}
             style={{ textTransform: 'uppercase' }}
           />
-          <p className="text-xs text-stone-400 mt-1">Kirjoitetaan isoilla kirjaimilla automaattisesti</p>
+          <p className="text-xs text-stone-400 mt-1">{tp.codeHint}</p>
         </Row>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          <Row label="Alennustyyppi *" error={errors.discountType?.message}>
+          <Row label={tp.discountType} error={errors.discountType?.message}>
             <select {...register('discountType')} className={`${inputClass} bg-white`}>
-              <option value="PERCENT">Prosentti (%)</option>
-              <option value="FIXED">Kiinteä summa (€)</option>
+              <option value="PERCENT">{tp.percent}</option>
+              <option value="FIXED">{tp.fixed}</option>
             </select>
           </Row>
-          <Row label={discountType === 'PERCENT' ? 'Alennus (%) *' : 'Alennus (€) *'} error={errors.discountValue?.message}>
+          <Row label={discountType === 'PERCENT' ? tp.discountPercent : tp.discountFixed} error={errors.discountValue?.message}>
             <input {...register('discountValue')} type="number" step="0.01" placeholder={discountType === 'PERCENT' ? '10' : '5.00'} className={inputClass} />
           </Row>
         </div>
 
-        <Row label="Minitilaussumma (€)" error={errors.minOrderAmount?.message}>
+        <Row label={tp.minOrder} error={errors.minOrderAmount?.message}>
           <input {...register('minOrderAmount')} type="number" step="0.01" placeholder="0" className={inputClass} />
         </Row>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          <Row label="Alkaa" error={errors.startsAt?.message}>
+          <Row label={tp.startsAt} error={errors.startsAt?.message}>
             <input {...register('startsAt')} type="datetime-local" className={inputClass} />
           </Row>
-          <Row label="Päättyy" error={errors.expiresAt?.message}>
+          <Row label={tp.expiresAt} error={errors.expiresAt?.message}>
             <input {...register('expiresAt')} type="datetime-local" className={inputClass} />
           </Row>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          <Row label="Max käyttökerrat (yhteensä)" error={errors.maxUses?.message}>
-            <input {...register('maxUses')} type="number" placeholder="Rajaton" className={inputClass} />
+          <Row label={tp.maxUses} error={errors.maxUses?.message}>
+            <input {...register('maxUses')} type="number" placeholder={tp.unlimited} className={inputClass} />
           </Row>
-          <Row label="Max per asiakas" error={errors.maxUsesPerUser?.message}>
-            <input {...register('maxUsesPerUser')} type="number" placeholder="Rajaton" className={inputClass} />
+          <Row label={tp.maxPerUser} error={errors.maxUsesPerUser?.message}>
+            <input {...register('maxUsesPerUser')} type="number" placeholder={tp.unlimited} className={inputClass} />
           </Row>
         </div>
 
-        <Row label="Soveltuu" error={errors.applicableTo?.message}>
+        <Row label={tp.applicableTo} error={errors.applicableTo?.message}>
           <select {...register('applicableTo')} className={`${inputClass} bg-white`}>
-            <option value="ALL">Kaikki tuotteet</option>
-            <option value="CATEGORIES">Valitut kategoriat</option>
-            <option value="PRODUCTS">Valitut tuotteet</option>
+            <option value="ALL">{tp.applAll}</option>
+            <option value="CATEGORIES">{tp.applCategories}</option>
+            <option value="PRODUCTS">{tp.applProducts}</option>
           </select>
         </Row>
 
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" {...register('isActive')} className="rounded border-stone-300 text-indigo-500 focus:ring-indigo-400" />
-          <span className="text-sm text-stone-700">Aktiivinen</span>
+          <span className="text-sm text-stone-700">{tp.active}</span>
         </label>
       </section>
 
@@ -176,14 +179,14 @@ export default function PromoCodeForm({ promo }: { promo?: AdminPromoCode }) {
           disabled={saving}
           className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
         >
-          {saving ? 'Tallennetaan...' : isEdit ? 'Tallenna muutokset' : 'Luo promokoodi'}
+          {saving ? tp.saving : isEdit ? tp.save : tp.create}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
           className="text-sm text-stone-500 hover:text-stone-700 px-4 py-2.5"
         >
-          Peruuta
+          {tp.cancel}
         </button>
       </div>
     </form>

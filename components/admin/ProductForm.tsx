@@ -8,6 +8,7 @@ import { useState, useRef } from 'react';
 import type { AdminCategory, AdminProduct } from '@/lib/admin/types';
 import Image from 'next/image';
 import { Upload, Loader2 } from 'lucide-react';
+import { useAdminLang } from '@/components/admin/AdminLangContext';
 
 const schema = z.object({
   slug: z.string().min(1, 'Pakollinen').regex(/^[a-z0-9-]+$/, 'Vain pieniä kirjaimia, numeroita ja viivoja'),
@@ -44,6 +45,8 @@ interface ProductFormProps {
 
 export default function ProductForm({ product, categories }: ProductFormProps) {
   const router = useRouter();
+  const { t, lang } = useAdminLang();
+  const tf = t.productForm;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -139,11 +142,11 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
         body: JSON.stringify(payload),
       });
       const json = await res.json();
-      if (!res.ok) { setError(json.error || 'Virhe'); return; }
+      if (!res.ok) { setError(json.error || t.common.error); return; }
       router.push('/admin/products');
       router.refresh();
     } catch {
-      setError('Verkkovirhe');
+      setError(tf.errorNetwork);
     } finally {
       setSaving(false);
     }
@@ -189,53 +192,53 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
       {/* Perustiedot */}
       <section className="bg-white border border-stone-200 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-stone-700 mb-4">Perustiedot</h2>
+        <h2 className="text-sm font-semibold text-stone-700 mb-4">{tf.basicInfo}</h2>
         <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="Slug / URL *" name="slug" placeholder="ruusukimppu-klassinen" />
+          <Field label={tf.slug} name="slug" placeholder="ruusukimppu-klassinen" />
           <div>
-            <label className="block text-xs font-medium text-stone-600 mb-1">Kategoria *</label>
+            <label className="block text-xs font-medium text-stone-600 mb-1">{tf.category}</label>
             <select
               {...register('categoryId')}
               className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white"
             >
-              <option value="">Valitse kategoria</option>
+              <option value="">{tf.selectCategory}</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name_fi}</option>
+                <option key={c.id} value={c.id}>{lang === 'en' ? c.name_en : c.name_fi}</option>
               ))}
             </select>
             {errors.categoryId && <p className="text-xs text-red-500 mt-1">{errors.categoryId.message}</p>}
           </div>
-          <Field label="Nimi (FI) *" name="name_fi" placeholder="Klassinen ruusukimppu" />
-          <Field label="Nimi (EN) *" name="name_en" placeholder="Classic rose bouquet" />
+          <Field label={tf.nameFi} name="name_fi" placeholder="Klassinen ruusukimppu" />
+          <Field label={tf.nameEn} name="name_en" placeholder="Classic rose bouquet" />
           <div className="sm:col-span-2">
-            <Field label="Kuvaus (FI) *" name="description_fi" textarea placeholder="Kaunis klassinen ruusukimppu..." />
+            <Field label={tf.descFi} name="description_fi" textarea placeholder="Kaunis klassinen ruusukimppu..." />
           </div>
           <div className="sm:col-span-2">
-            <Field label="Kuvaus (EN) *" name="description_en" textarea placeholder="Beautiful classic rose bouquet..." />
+            <Field label={tf.descEn} name="description_en" textarea placeholder="Beautiful classic rose bouquet..." />
           </div>
-          <Field label="Koostumus (FI)" name="composition_fi" textarea placeholder="10 punaista ruusua, vihreät..." />
-          <Field label="Koostumus (EN)" name="composition_en" textarea placeholder="10 red roses, greenery..." />
-          <Field label="Hoito-ohjeet (FI)" name="careInfo_fi" textarea placeholder="Vaihda vesi päivittäin..." />
-          <Field label="Hoito-ohjeet (EN)" name="careInfo_en" textarea placeholder="Change water daily..." />
+          <Field label={tf.compositionFi} name="composition_fi" textarea placeholder="10 punaista ruusua, vihreät..." />
+          <Field label={tf.compositionEn} name="composition_en" textarea placeholder="10 red roses, greenery..." />
+          <Field label={tf.careFi} name="careInfo_fi" textarea placeholder="Vaihda vesi päivittäin..." />
+          <Field label={tf.careEn} name="careInfo_en" textarea placeholder="Change water daily..." />
         </div>
       </section>
 
       {/* Hinnat */}
       <section className="bg-white border border-stone-200 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-stone-700 mb-4">Hinnat</h2>
+        <h2 className="text-sm font-semibold text-stone-700 mb-4">{tf.prices}</h2>
         <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="Hinta pieni (€) *" name="priceSmall" type="number" placeholder="35.00" />
-          <Field label="Hinta suuri (€)" name="priceLarge" type="number" placeholder="65.00" />
+          <Field label={tf.priceSmall} name="priceSmall" type="number" placeholder="35.00" />
+          <Field label={tf.priceLarge} name="priceLarge" type="number" placeholder="65.00" />
         </div>
       </section>
 
       {/* Kuvat */}
       <section className="bg-white border border-stone-200 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-stone-700 mb-4">Kuvat</h2>
+        <h2 className="text-sm font-semibold text-stone-700 mb-4">{tf.images}</h2>
         <div className="space-y-4">
           {/* Upload zone */}
           <div>
-            <label className="block text-xs font-medium text-stone-600 mb-2">Pääkuva *</label>
+            <label className="block text-xs font-medium text-stone-600 mb-2">{tf.mainImage}</label>
             <div
               onClick={() => !uploading && fileInputRef.current?.click()}
               className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
@@ -249,14 +252,14 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                     <Image src={imageUrl} alt="Esikatselu" width={80} height={80} className="w-full h-full object-cover" />
                   </div>
                   <div className="text-left">
-                    <p className="text-sm font-medium text-stone-700">Kuva valittu</p>
+                    <p className="text-sm font-medium text-stone-700">{tf.photoSelected}</p>
                     <p className="text-xs text-stone-400 mt-0.5 break-all line-clamp-2">{imageUrl}</p>
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
                       className="text-xs text-indigo-600 hover:underline mt-1"
                     >
-                      Vaihda kuva
+                      {tf.changePhoto}
                     </button>
                   </div>
                 </div>
@@ -265,13 +268,13 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                   {uploading ? (
                     <>
                       <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
-                      <p className="text-sm text-indigo-600">Ladataan...</p>
+                      <p className="text-sm text-indigo-600">{tf.uploading}</p>
                     </>
                   ) : (
                     <>
                       <Upload className="w-8 h-8 text-stone-300" />
-                      <p className="text-sm font-medium text-stone-600">Lataa kuva tietokoneelta</p>
-                      <p className="text-xs text-stone-400">JPG, PNG, WebP · max 5 MB</p>
+                      <p className="text-sm font-medium text-stone-600">{tf.uploadPhoto}</p>
+                      <p className="text-xs text-stone-400">{tf.uploadHint}</p>
                     </>
                   )}
                 </div>
@@ -279,9 +282,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
             </div>
             {uploadError && (
               <p className="text-xs text-red-500 mt-1.5">
-                {uploadError.includes('Blob Storage') ? (
-                  <>Kuvanlataus ei toimi — lisää <strong>Vercel Blob Storage</strong> projektiisi Vercel-hallintapaneelista.</>
-                ) : uploadError}
+                {uploadError.includes('Blob Storage') ? tf.uploadFailHint : uploadError}
               </p>
             )}
             {errors.imageUrl && <p className="text-xs text-red-500 mt-1">{errors.imageUrl.message}</p>}
@@ -289,7 +290,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
           {/* Manual URL fallback */}
           <div>
-            <label className="block text-xs font-medium text-stone-500 mb-1">tai syötä kuvan URL käsin</label>
+            <label className="block text-xs font-medium text-stone-500 mb-1">{tf.orUrl}</label>
             <input
               {...register('imageUrl')}
               placeholder="https://..."
@@ -298,7 +299,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-600 mb-1">Lisäkuvien URL:t (yksi per rivi)</label>
+            <label className="block text-xs font-medium text-stone-600 mb-1">{tf.extraImages}</label>
             <textarea
               {...register('imageUrls')}
               rows={3}
@@ -311,21 +312,21 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
       {/* Lisätiedot */}
       <section className="bg-white border border-stone-200 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-stone-700 mb-4">Lisätiedot</h2>
+        <h2 className="text-sm font-semibold text-stone-700 mb-4">{tf.details}</h2>
         <div className="grid sm:grid-cols-3 gap-4">
-          <Field label="Väri" name="color" placeholder="Punainen" />
-          <Field label="Kukkien määrä" name="flowerCount" type="number" placeholder="10" />
-          <Field label="Korkeus (cm)" name="heightCm" type="number" placeholder="40" />
-          <Field label="Suosio (0–100)" name="popularity" type="number" placeholder="0" />
+          <Field label={tf.color} name="color" placeholder="Punainen" />
+          <Field label={tf.flowerCount} name="flowerCount" type="number" placeholder="10" />
+          <Field label={tf.height} name="heightCm" type="number" placeholder="40" />
+          <Field label={tf.popularity} name="popularity" type="number" placeholder="0" />
           <div className="sm:col-span-2">
-            <Field label="Tilaisuudet (pilkulla eroteltu)" name="occasions" placeholder="Syntymäpäivä, Häät, Juhla" />
+            <Field label={tf.occasions} name="occasions" placeholder="Syntymäpäivä, Häät, Juhla" />
           </div>
         </div>
         <div className="grid sm:grid-cols-2 gap-3 mt-4">
-          <CheckField label="Varastossa" name="inStock" />
-          <CheckField label="Suosittu tuote (featured)" name="isFeatured" />
-          <CheckField label="Hautajaiskukka" name="isFuneral" />
-          <CheckField label="Häätarjoilu" name="isWedding" />
+          <CheckField label={tf.inStock} name="inStock" />
+          <CheckField label={tf.featured} name="isFeatured" />
+          <CheckField label={tf.funeral} name="isFuneral" />
+          <CheckField label={tf.wedding} name="isWedding" />
         </div>
       </section>
 
@@ -335,14 +336,14 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
           disabled={saving}
           className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
         >
-          {saving ? 'Tallennetaan...' : isEdit ? 'Tallenna muutokset' : 'Luo tuote'}
+          {saving ? tf.saving : isEdit ? tf.save : tf.create}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
           className="text-sm text-stone-500 hover:text-stone-700 px-4 py-2.5"
         >
-          Peruuta
+          {tf.cancel}
         </button>
       </div>
     </form>
