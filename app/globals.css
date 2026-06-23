@@ -51,7 +51,19 @@ html {
   100% { transform: translateY(0px) rotate(0deg); }
 }
 .animate-float { animation: float 8s ease-in-out infinite; }
+
+/* Eliminate 300ms tap delay on all interactive elements */
+a, button, [role="button"], input, select, textarea, label {
+  touch-action: manipulation;
+}
+
+/* Disable all animations for reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
   .animate-float { animation: none; }
 }
 

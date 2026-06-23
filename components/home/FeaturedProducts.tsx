@@ -57,19 +57,19 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
 
         {/* Cards grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-12">
-          {products.map((product, i) => (
+          {products.map((product) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: i * 0.1, ease: 'easeOut' }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
               className="group cursor-pointer"
             >
               {/* Portrait image */}
               <Link href={`/flowers/${product.slug}`}>
                 <div
-                  className="aspect-[3/4] rounded-[24px] sm:rounded-[40px] overflow-hidden mb-3 sm:mb-6 premium-shadow transition-all duration-500 group-hover:-translate-y-3"
+                  className="aspect-[3/4] rounded-[24px] sm:rounded-[40px] overflow-hidden mb-3 sm:mb-6 premium-shadow transition-transform duration-300 lg:group-hover:-translate-y-3"
                   style={{ backgroundColor: 'var(--soft-pink)' }}
                 >
                   <Image
@@ -77,7 +77,7 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
                     alt={locale === 'fi' ? product.name_fi : product.name_en}
                     width={400}
                     height={533}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover lg:group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 640px) calc(50vw - 32px), (max-width: 1024px) calc(50vw - 48px), calc(25vw - 48px)"
                   />
                 </div>
@@ -98,10 +98,9 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
                   {product.priceSmall.toFixed(2).replace('.', ',')} €
                 </span>
                 <motion.button
-                  whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleAdd(product)}
-                  className="w-10 h-10 rounded-full border flex items-center justify-center transition-all"
+                  className="w-10 h-10 rounded-full border flex items-center justify-center transition-colors"
                   style={{ borderColor: '#fce7f3', color: 'var(--burgundy)' }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--accent-pink)';

@@ -221,16 +221,15 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
       )}
 
       {/* Products grid */}
-      <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((product, i) => (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
+        <AnimatePresence>
+          {filtered.map((product) => (
             <motion.div
               key={product.id}
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.3, delay: i * 0.04, ease: 'easeOut' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
               className="group"
             >
               {/* Funeral notice modal */}
@@ -267,7 +266,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
               <div>
                 <Link href={`/flowers/${product.slug}`}>
                   <div
-                    className="aspect-[3/4] rounded-[20px] sm:rounded-[36px] overflow-hidden mb-3 sm:mb-5 premium-shadow transition-all duration-500 group-hover:-translate-y-2"
+                    className="aspect-[3/4] rounded-[20px] sm:rounded-[36px] overflow-hidden mb-3 sm:mb-5 premium-shadow transition-transform duration-300 lg:group-hover:-translate-y-2"
                     style={{ backgroundColor: 'var(--soft-pink)' }}
                   >
                     <Image
@@ -275,7 +274,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
                       alt={product.name_fi}
                       width={400}
                       height={533}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-cover lg:group-hover:scale-105 transition-transform duration-300"
                       sizes="(max-width: 640px) calc(50vw - 20px), (max-width: 1024px) calc(33vw - 24px), calc(25vw - 40px)"
                     />
                   </div>
@@ -307,10 +306,9 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
                     {product.priceSmall.toFixed(2).replace('.', ',')} €
                   </span>
                   <motion.button
-                    whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => handleAddToCart(product)}
-                    className="w-9 h-9 rounded-full border flex items-center justify-center transition-all"
+                    className="w-9 h-9 rounded-full border flex items-center justify-center transition-colors"
                     style={{ borderColor: '#fce7f3', color: 'var(--burgundy)' }}
                     onMouseEnter={(e) => {
                       (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--accent-pink)';
@@ -331,7 +329,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
             </motion.div>
           ))}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </div>
   );
 }
