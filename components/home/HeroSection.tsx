@@ -324,23 +324,26 @@ export default function HeroSection() {
                 <p className="text-gray-500 text-sm lg:text-base mb-6 lg:mb-10 leading-relaxed">
                   {t(item.descKey as any)}
                 </p>
-                <Link
-                  href="/massage"
-                  className="mt-auto px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest border transition-all active:scale-95"
-                  style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--gold)';
-                    (e.currentTarget as HTMLElement).style.color = 'white';
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--gold)';
-                  }}
-                >
-                  {t('hero.bookMassage')}
-                </Link>
               </motion.div>
             ))}
+          </div>
+
+          <div className="flex justify-center mt-10 lg:mt-16">
+            <Link
+              href="/massage"
+              className="px-10 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest border transition-all active:scale-95"
+              style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--gold)';
+                (e.currentTarget as HTMLElement).style.color = 'white';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+                (e.currentTarget as HTMLElement).style.color = 'var(--gold)';
+              }}
+            >
+              {t('hero.bookMassage')}
+            </Link>
           </div>
         </div>
       </section>
