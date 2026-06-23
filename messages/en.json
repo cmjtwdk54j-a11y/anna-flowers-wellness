@@ -56,6 +56,42 @@
       "fastDesc": "Same-day delivery to city center",
       "personal": "Personal Service",
       "personalDesc": "We help you find the perfect gift"
+    },
+    "features": {
+      "fresh": "Fresh Flowers",
+      "freshSub": "Picked Daily",
+      "fast": "Fast Delivery",
+      "fastSub": "Same Day",
+      "quality": "High Quality",
+      "qualitySub": "Certified Experts",
+      "occasions": "All Occasions",
+      "occasionsSub": "Birthdays to Weddings",
+      "eco": "Eco-Friendly",
+      "ecoSub": "Sustainable"
+    },
+    "spa": {
+      "label": "Luxury Wellness",
+      "massage": "Relaxing Massage",
+      "aromatherapy": "Aromatherapy",
+      "aromatherapyDesc": "Sensory healing with pure plant essences for deep restoration.",
+      "scalp": "Scalp Massage",
+      "scalpDesc": "Moisturise and revitalise your scalp with nourishing plant treatments."
+    },
+    "slides": {
+      "s1h1": "Beauty &",
+      "s1h2": "Wellbeing",
+      "s2h1": "The Perfect",
+      "s2h2": "Wedding Bouquet",
+      "s2tag": "Weddings & Events",
+      "s3h1": "Colourful",
+      "s3h2": "Flower Collection",
+      "s3tag": "Seasonal Collection",
+      "s4h1": "Relaxing",
+      "s4h2": "Massage",
+      "s4tag": "Aromatherapy",
+      "s5h1": "The Perfect",
+      "s5h2": "Gift for Everyone",
+      "s5tag": "Gift Cards"
     }
   },
   "flowers": {
@@ -229,7 +265,10 @@
       "helsinki": "Helsinki",
       "espoo": "Espoo",
       "vantaa": "Vantaa",
-      "kerava": "Kerava"
+      "kerava": "Kerava",
+      "freeRadius": "Free delivery within {km} km",
+      "outsidePrice": "{price} € outside the zone",
+      "sameDayLabel": "Same-day available"
     },
     "free": "Free Delivery",
     "freeDesc": "Free delivery within {km} km radius",
@@ -241,7 +280,47 @@
       "title": "Delivery Times",
       "weekdays": "Monday–Friday: 9:00–18:00",
       "saturday": "Saturday: 10:00–16:00",
-      "sunday": "Sunday: Closed"
+      "sunday": "Sunday: Closed",
+      "mondayLabel": "Monday – Friday",
+      "saturdayLabel": "Saturday",
+      "sundayLabel": "Sunday",
+      "closed": "Closed"
+    },
+    "calculator": {
+      "badge": "Delivery Calculator",
+      "title": "Calculate Delivery Cost",
+      "subtitle": "Enter your address to see the delivery fee instantly",
+      "street": "Street Address",
+      "postal": "Postal Code",
+      "calculate": "Calculate",
+      "streetPlaceholder": "e.g. Mannerheimintie 1",
+      "postalPlaceholder": "00100",
+      "free": "Free",
+      "feeLabel": "delivery fee",
+      "estimatedTime": "Estimated delivery time",
+      "notAvailable": "Delivery not available to this address",
+      "notAvailableDesc": "We deliver to Helsinki, Espoo, Vantaa and Kerava",
+      "freeDelivery": "Free delivery!",
+      "deliveryAvailable": "Delivery available"
+    },
+    "types": {
+      "title": "Delivery Options",
+      "home": "Home Delivery",
+      "homeDesc": "Delivered directly to your door",
+      "school": "To School",
+      "schoolDesc": "Delivered to school or daycare",
+      "city": "City Centre",
+      "cityDesc": "Same-day delivery to city centre",
+      "pickup": "In-Store Pickup",
+      "pickupDesc": "Collect from our shop"
+    },
+    "info": {
+      "title": "Delivery Information",
+      "item1": "Same-day delivery to Helsinki city centre when ordered before 14:00",
+      "item2": "Pre-order available – choose your preferred delivery date and time",
+      "item3": "You will receive a confirmation and tracking info by email",
+      "item4": "Flowers are carefully packed fresh",
+      "item5": "Delivery to schools and daycares available"
     }
   },
   "contact": {
@@ -256,9 +335,6 @@
       "spot1": "1 parking space – 3-hour limit",
       "spot2": "2 additional spaces – 2-hour limit"
     },
-    "weekdays": "Mon–Fri: 9:00–18:00",
-    "saturday": "Sat: 10:00–16:00",
-    "sunday": "Sun: Closed",
     "sendMessage": "Send a Message",
     "name": "Name",
     "yourEmail": "Email",

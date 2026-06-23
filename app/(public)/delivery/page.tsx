@@ -5,19 +5,21 @@ import { DELIVERY_ZONES } from '@/lib/utils';
 import DeliveryCalculatorClient from './DeliveryCalculatorClient';
 
 export const metadata: Metadata = {
-  title: 'Toimitusehdot',
-  description: 'Toimitamme tuoreita kukkia Helsingissä, Espoossa, Vantaalla ja Keravalla. Ilmainen toimitus lähialueille.',
+  title: 'Delivery Information',
+  description: 'We deliver fresh flowers in Helsinki, Espoo, Vantaa and Kerava. Free delivery to nearby areas.',
 };
 
 export default function DeliveryPage() {
   const t = useTranslations('delivery');
 
   const deliveryTypes = [
-    { icon: Home, label: 'Kotiinkuljetus', desc: 'Toimitus suoraan kotiovellesi' },
-    { icon: School, label: 'Kouluun', desc: 'Toimitus kouluun tai päiväkotiin' },
-    { icon: Building2, label: 'Kaupunkikeskusta', desc: 'Samana päivänä kaupunkikeskustaan' },
-    { icon: MapPin, label: 'Nouto liikkeestä', desc: 'Nouda itse myymälästämme' },
+    { icon: Home, label: t('types.home'), desc: t('types.homeDesc') },
+    { icon: School, label: t('types.school'), desc: t('types.schoolDesc') },
+    { icon: Building2, label: t('types.city'), desc: t('types.cityDesc') },
+    { icon: MapPin, label: t('types.pickup'), desc: t('types.pickupDesc') },
   ];
+
+  const infoItems = ['item1', 'item2', 'item3', 'item4', 'item5'] as const;
 
   return (
     <div>
@@ -63,19 +65,19 @@ export default function DeliveryPage() {
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: 'var(--burgundy)' }} />
                     <p className="text-xs text-gray-500">
-                      Ilmainen toimitus {zone.freeRadiusKm} km säteellä
+                      {t('zones.freeRadius', { km: zone.freeRadiusKm })}
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <Truck className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: 'var(--accent-pink)' } as any} />
                     <p className="text-xs text-gray-500">
-                      {zone.priceOutside} € sen ulkopuolella
+                      {t('zones.outsidePrice', { price: zone.priceOutside })}
                     </p>
                   </div>
                   {zone.sameDayCity && (
                     <div className="flex items-start gap-2">
                       <Clock className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: 'var(--gold)' }} />
-                      <p className="text-xs text-gray-500">Samana päivänä saatavilla</p>
+                      <p className="text-xs text-gray-500">{t('zones.sameDayLabel')}</p>
                     </div>
                   )}
                 </div>
@@ -91,7 +93,7 @@ export default function DeliveryPage() {
       {/* Delivery types */}
       <section className="py-14" style={{ backgroundColor: 'var(--soft-pink)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold mb-8" style={{ color: 'var(--burgundy)' }}>Toimitustavat</h2>
+          <h2 className="text-2xl font-bold mb-8" style={{ color: 'var(--burgundy)' }}>{t('types.title')}</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {deliveryTypes.map(({ icon: Icon, label, desc }) => (
               <div key={label} className="bg-white rounded-[24px] p-5 border border-pink-50 text-center">
@@ -119,40 +121,34 @@ export default function DeliveryPage() {
                 <li className="flex items-center gap-3 py-3 border-b border-pink-50">
                   <Clock className="w-4 h-4" style={{ color: 'var(--burgundy)' }} />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Maanantai – Perjantai</p>
+                    <p className="text-sm font-medium text-gray-800">{t('times.mondayLabel')}</p>
                     <p className="text-sm text-gray-400">9:00 – 18:00</p>
                   </div>
                 </li>
                 <li className="flex items-center gap-3 py-3 border-b border-pink-50">
                   <Clock className="w-4 h-4" style={{ color: 'var(--burgundy)' }} />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Lauantai</p>
+                    <p className="text-sm font-medium text-gray-800">{t('times.saturdayLabel')}</p>
                     <p className="text-sm text-gray-400">10:00 – 16:00</p>
                   </div>
                 </li>
                 <li className="flex items-center gap-3 py-3">
                   <Clock className="w-4 h-4 text-gray-200" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Sunnuntai</p>
-                    <p className="text-sm text-gray-300">Suljettu</p>
+                    <p className="text-sm font-medium text-gray-800">{t('times.sundayLabel')}</p>
+                    <p className="text-sm text-gray-300">{t('times.closed')}</p>
                   </div>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--burgundy)' }}>Tietoa toimituksesta</h2>
+              <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--burgundy)' }}>{t('info.title')}</h2>
               <ul className="space-y-3">
-                {[
-                  'Toimitus Helsinki kaupunkikeskustaan samana päivänä tilattaessa ennen klo 14:00',
-                  'Ennakkotilaus mahdollinen – valitse haluamasi toimituspäivä ja -aika',
-                  'Saat vahvistuksen ja seurantatiedon sähköpostiisi',
-                  'Kukat pakataan huolellisesti tuoreena',
-                  'Toimitus kouluihin ja päiväkoteihin onnistuu',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5">
+                {infoItems.map((key) => (
+                  <li key={key} className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--burgundy)' }} />
-                    <p className="text-sm text-gray-500">{item}</p>
+                    <p className="text-sm text-gray-500">{t(`info.${key}` as any)}</p>
                   </li>
                 ))}
               </ul>

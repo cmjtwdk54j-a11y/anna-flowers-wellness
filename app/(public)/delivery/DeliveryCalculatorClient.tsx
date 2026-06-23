@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { MapPin, Truck, CheckCircle2, AlertCircle, Search, Clock } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type ZoneResult = {
   city: string;
@@ -35,6 +36,7 @@ function calcDelivery(postalCode: string): ZoneResult | null {
 }
 
 export default function DeliveryCalculatorClient() {
+  const t = useTranslations('delivery');
   const [address, setAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [result, setResult] = useState<ZoneResult | null>(null);
@@ -55,38 +57,38 @@ export default function DeliveryCalculatorClient() {
             style={{ backgroundColor: 'var(--soft-pink)', color: 'var(--burgundy)' }}
           >
             <MapPin className="w-3.5 h-3.5" />
-            Toimituslaskuri
+            {t('calculator.badge')}
           </div>
           <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--burgundy)' }}>
-            Laske toimitushinta
+            {t('calculator.title')}
           </h2>
-          <p className="text-gray-400 text-sm">Syötä osoitteesi ja näet heti toimitushinnan</p>
+          <p className="text-gray-400 text-sm">{t('calculator.subtitle')}</p>
         </div>
 
         <div className="rounded-[32px] p-8 border border-pink-50 shadow-sm" style={{ backgroundColor: 'var(--soft-pink)' }}>
           <div className="space-y-4">
             <div>
               <label className="text-[10px] font-bold uppercase tracking-widest block mb-2 text-gray-500">
-                Katuosoite
+                {t('calculator.street')}
               </label>
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Esim. Mannerheimintie 1"
+                placeholder={t('calculator.streetPlaceholder')}
                 className="w-full bg-white border border-pink-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#ffb6d9] transition-colors"
               />
             </div>
             <div>
               <label className="text-[10px] font-bold uppercase tracking-widest block mb-2 text-gray-500">
-                Postinumero
+                {t('calculator.postal')}
               </label>
               <div className="flex gap-3">
                 <input
                   type="text"
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
-                  placeholder="00100"
+                  placeholder={t('calculator.postalPlaceholder')}
                   maxLength={5}
                   className="flex-1 bg-white border border-pink-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#ffb6d9] transition-colors"
                   onKeyDown={(e) => e.key === 'Enter' && postalCode.length === 5 && handleCheck()}
@@ -98,7 +100,7 @@ export default function DeliveryCalculatorClient() {
                   style={{ backgroundColor: 'var(--burgundy)' }}
                 >
                   <Search className="w-4 h-4" />
-                  Laske
+                  {t('calculator.calculate')}
                 </button>
               </div>
             </div>
@@ -122,7 +124,7 @@ export default function DeliveryCalculatorClient() {
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">{result.city}</p>
                       <p className="text-xs text-gray-400">
-                        {result.free ? 'Ilmainen toimitus!' : 'Toimitus saatavilla'}
+                        {result.free ? t('calculator.freeDelivery') : t('calculator.deliveryAvailable')}
                       </p>
                     </div>
                     <div className="text-right">
@@ -130,18 +132,16 @@ export default function DeliveryCalculatorClient() {
                         className="text-2xl font-bold"
                         style={{ color: result.free ? 'var(--burgundy)' : 'var(--gold)' }}
                       >
-                        {result.free ? 'Ilmainen' : `${result.fee} €`}
+                        {result.free ? t('calculator.free') : `${result.fee} €`}
                       </p>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-widest">toimitushinta</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-widest">{t('calculator.feeLabel')}</p>
                     </div>
                   </div>
 
-                  <div
-                    className="flex items-center gap-2 p-3 rounded-xl bg-white border border-pink-50"
-                  >
+                  <div className="flex items-center gap-2 p-3 rounded-xl bg-white border border-pink-50">
                     <Clock className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--burgundy)' }} />
                     <p className="text-sm text-gray-500">
-                      Arvioitu toimitusaika:{' '}
+                      {t('calculator.estimatedTime')}:{' '}
                       <strong style={{ color: 'var(--burgundy)' }}>{result.time}</strong>
                     </p>
                   </div>
@@ -151,10 +151,10 @@ export default function DeliveryCalculatorClient() {
                   <AlertCircle className="w-5 h-5 text-gray-300 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-semibold text-gray-600">
-                      Toimitus ei ole saatavilla tähän osoitteeseen
+                      {t('calculator.notAvailable')}
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5">
-                      Toimitamme Helsinkiin, Espooseen, Vantaalle ja Keravalle
+                      {t('calculator.notAvailableDesc')}
                     </p>
                   </div>
                 </div>

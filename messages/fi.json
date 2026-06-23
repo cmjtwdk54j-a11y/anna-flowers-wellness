@@ -56,6 +56,42 @@
       "fastDesc": "Toimitus samana päivänä kaupunkikeskustaan",
       "personal": "Henkilökohtainen palvelu",
       "personalDesc": "Autamme sinua löytämään täydellisen lahjan"
+    },
+    "features": {
+      "fresh": "Tuoreet kukat",
+      "freshSub": "Poimittu päivittäin",
+      "fast": "Nopea toimitus",
+      "fastSub": "Samana päivänä",
+      "quality": "Korkea laatu",
+      "qualitySub": "Sertifioidut asiantuntijat",
+      "occasions": "Kaikki tilaisuudet",
+      "occasionsSub": "Syntymäpäivistä häihin",
+      "eco": "Ekologinen",
+      "ecoSub": "Kestävä kehitys"
+    },
+    "spa": {
+      "label": "Luxury Wellness",
+      "massage": "Rentouttava Hieronta",
+      "aromatherapy": "Aromaterapia",
+      "aromatherapyDesc": "Aistillinen parantaminen puhtailla kasvisesensseillä syvään palautumiseen.",
+      "scalp": "Päänahkahieronta",
+      "scalpDesc": "Kosteuta ja elvytä hiuspohjaasi kasvishoitohieronnoilla."
+    },
+    "slides": {
+      "s1h1": "Kauneutta ja",
+      "s1h2": "hyvinvointia",
+      "s2h1": "Täydellinen",
+      "s2h2": "hääkimppu",
+      "s2tag": "Häät & Juhlat",
+      "s3h1": "Värikäs",
+      "s3h2": "kukkakokoelma",
+      "s3tag": "Kausikokoelma",
+      "s4h1": "Rentouttava",
+      "s4h2": "hieronta",
+      "s4tag": "Aromaterapia",
+      "s5h1": "Täydellinen",
+      "s5h2": "lahja kaikille",
+      "s5tag": "Lahjakortit"
     }
   },
   "flowers": {
@@ -229,7 +265,10 @@
       "helsinki": "Helsinki",
       "espoo": "Espoo",
       "vantaa": "Vantaa",
-      "kerava": "Kerava"
+      "kerava": "Kerava",
+      "freeRadius": "Ilmainen toimitus {km} km säteellä",
+      "outsidePrice": "{price} € sen ulkopuolella",
+      "sameDayLabel": "Samana päivänä saatavilla"
     },
     "free": "Ilmainen toimitus",
     "freeDesc": "Ilmainen toimitus {km} km säteellä",
@@ -241,7 +280,47 @@
       "title": "Toimitusajat",
       "weekdays": "Maanantai–Perjantai: 9:00–18:00",
       "saturday": "Lauantai: 10:00–16:00",
-      "sunday": "Sunnuntai: Suljettu"
+      "sunday": "Sunnuntai: Suljettu",
+      "mondayLabel": "Maanantai – Perjantai",
+      "saturdayLabel": "Lauantai",
+      "sundayLabel": "Sunnuntai",
+      "closed": "Suljettu"
+    },
+    "calculator": {
+      "badge": "Toimituslaskuri",
+      "title": "Laske toimitushinta",
+      "subtitle": "Syötä osoitteesi ja näet heti toimitushinnan",
+      "street": "Katuosoite",
+      "postal": "Postinumero",
+      "calculate": "Laske",
+      "streetPlaceholder": "Esim. Mannerheimintie 1",
+      "postalPlaceholder": "00100",
+      "free": "Ilmainen",
+      "feeLabel": "toimitushinta",
+      "estimatedTime": "Arvioitu toimitusaika",
+      "notAvailable": "Toimitus ei ole saatavilla tähän osoitteeseen",
+      "notAvailableDesc": "Toimitamme Helsinkiin, Espooseen, Vantaalle ja Keravalle",
+      "freeDelivery": "Ilmainen toimitus!",
+      "deliveryAvailable": "Toimitus saatavilla"
+    },
+    "types": {
+      "title": "Toimitustavat",
+      "home": "Kotiinkuljetus",
+      "homeDesc": "Toimitus suoraan kotiovellesi",
+      "school": "Kouluun",
+      "schoolDesc": "Toimitus kouluun tai päiväkotiin",
+      "city": "Kaupunkikeskusta",
+      "cityDesc": "Samana päivänä kaupunkikeskustaan",
+      "pickup": "Nouto liikkeestä",
+      "pickupDesc": "Nouda itse myymälästämme"
+    },
+    "info": {
+      "title": "Tietoa toimituksesta",
+      "item1": "Toimitus Helsinki kaupunkikeskustaan samana päivänä tilattaessa ennen klo 14:00",
+      "item2": "Ennakkotilaus mahdollinen – valitse haluamasi toimituspäivä ja -aika",
+      "item3": "Saat vahvistuksen ja seurantatiedon sähköpostiisi",
+      "item4": "Kukat pakataan huolellisesti tuoreena",
+      "item5": "Toimitus kouluihin ja päiväkoteihin onnistuu"
     }
   },
   "contact": {

@@ -5,43 +5,10 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 
-interface HeroSectionProps {
-  t: {
-    heroTitle: string;
-    heroSubtitle: string;
-    heroShopNow: string;
-    heroBookMassage: string;
-    trustCustomers: string;
-    trustRating: string;
-    trustDelivery: string;
-    servicesTitle: string;
-    flowersTitle: string;
-    flowersDesc: string;
-    flowersLink: string;
-    massageTitle: string;
-    massageDesc: string;
-    massageLink: string;
-    deliveryTitle: string;
-    deliveryDesc: string;
-    deliveryLink: string;
-    whyUsTitle: string;
-    whyFresh: string;
-    whyFreshDesc: string;
-    whyFast: string;
-    whyFastDesc: string;
-    whyPersonal: string;
-    whyPersonalDesc: string;
-    giftCardTitle: string;
-    giftCardSubtitle: string;
-    giftCardButton: string;
-  };
-}
-
-const SLIDES = [
+const SLIDES_DATA = [
   {
-    tag: 'Premium Collection',
-    headline: ['Kauneutta ja', 'hyvinvointia'],
     price: '45,00 €',
     priceLabel: 'Premium Collection',
     href: '/flowers',
@@ -49,8 +16,6 @@ const SLIDES = [
     bg: 'var(--soft-pink)',
   },
   {
-    tag: 'Häät & Juhlat',
-    headline: ['Täydellinen', 'hääkimppu'],
     price: '120,00 €',
     priceLabel: 'Wedding Special',
     href: '/flowers',
@@ -58,8 +23,6 @@ const SLIDES = [
     bg: '#fdf6f0',
   },
   {
-    tag: 'Kausikokoelma',
-    headline: ['Värikäs', 'kukkakokoelma'],
     price: '35,00 €',
     priceLabel: 'Seasonal Blooms',
     href: '/flowers',
@@ -67,8 +30,6 @@ const SLIDES = [
     bg: '#fdf2f5',
   },
   {
-    tag: 'Aromaterapia',
-    headline: ['Rentouttava', 'hieronta'],
     price: '65,00 €',
     priceLabel: 'Premium Massage',
     href: '/massage',
@@ -76,8 +37,6 @@ const SLIDES = [
     bg: '#f5f0ed',
   },
   {
-    tag: 'Lahjakortit',
-    headline: ['Täydellinen', 'lahja kaikille'],
     price: '50,00 €',
     priceLabel: 'Gift Card',
     href: '/gift-cards',
@@ -86,13 +45,19 @@ const SLIDES = [
   },
 ];
 
-const FEATURES = [
-  { icon: '🌱', fi: 'Tuoreet kukat', sub_fi: 'Poimittu päivittäin' },
-  { icon: '🚚', fi: 'Nopea toimitus', sub_fi: 'Samana päivänä' },
-  { icon: '🏆', fi: 'Korkea laatu', sub_fi: 'Sertifioidut asiantuntijat' },
-  { icon: '🎉', fi: 'Kaikki tilaisuudet', sub_fi: 'Syntymäpäivistä häihin' },
-  { icon: '🍃', fi: 'Ekologinen', sub_fi: 'Kestävä kehitys' },
-];
+const FEATURES_DATA = [
+  { icon: '🌱', key: 'fresh' },
+  { icon: '🚚', key: 'fast' },
+  { icon: '🏆', key: 'quality' },
+  { icon: '🎉', key: 'occasions' },
+  { icon: '🍃', key: 'eco' },
+] as const;
+
+const SPA_CARDS = [
+  { icon: '🌸', titleKey: 'spa.massage', descKey: 'services.massage.description' },
+  { icon: '💨', titleKey: 'spa.aromatherapy', descKey: 'spa.aromatherapyDesc' },
+  { icon: '✨', titleKey: 'spa.scalp', descKey: 'spa.scalpDesc' },
+] as const;
 
 function fadeUp(delay = 0) {
   return {
@@ -102,10 +67,11 @@ function fadeUp(delay = 0) {
   } as const;
 }
 
-export default function HeroSection({ t }: HeroSectionProps) {
+export default function HeroSection() {
+  const t = useTranslations('home');
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const total = SLIDES.length;
+  const total = SLIDES_DATA.length;
 
   const goTo = useCallback((idx: number, dir: number) => {
     setDirection(dir);
@@ -120,7 +86,15 @@ export default function HeroSection({ t }: HeroSectionProps) {
     return () => clearTimeout(timer);
   }, [current, goTo]);
 
-  const slide = SLIDES[current];
+  const slides = [
+    { ...SLIDES_DATA[0], headline: [t('slides.s1h1'), t('slides.s1h2')] },
+    { ...SLIDES_DATA[1], headline: [t('slides.s2h1'), t('slides.s2h2')] },
+    { ...SLIDES_DATA[2], headline: [t('slides.s3h1'), t('slides.s3h2')] },
+    { ...SLIDES_DATA[3], headline: [t('slides.s4h1'), t('slides.s4h2')] },
+    { ...SLIDES_DATA[4], headline: [t('slides.s5h1'), t('slides.s5h2')] },
+  ];
+
+  const slide = slides[current];
 
   const variants = {
     enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
@@ -176,7 +150,7 @@ export default function HeroSection({ t }: HeroSectionProps) {
             </div>
 
             <motion.p {...fadeUp(0.2)} className="text-gray-500 text-base lg:text-lg mb-8 lg:mb-12 leading-relaxed max-w-md">
-              {t.heroSubtitle}
+              {t('hero.subtitle')}
             </motion.p>
 
             <motion.div {...fadeUp(0.3)} className="flex items-center gap-4 lg:gap-8">
@@ -185,7 +159,7 @@ export default function HeroSection({ t }: HeroSectionProps) {
                 className="px-6 sm:px-10 py-3 sm:py-4 text-white rounded-full font-bold text-sm tracking-widest uppercase transition-all hover:shadow-xl hover:shadow-pink-200 hover:-translate-y-0.5 active:scale-95"
                 style={{ backgroundColor: 'var(--accent-pink)' }}
               >
-                {t.heroShopNow}
+                {t('hero.shopNow')}
               </Link>
 
               <div className="flex items-center gap-3">
@@ -215,7 +189,7 @@ export default function HeroSection({ t }: HeroSectionProps) {
 
             {/* Dot indicators */}
             <div className="flex gap-2 mt-6 lg:mt-8">
-              {SLIDES.map((_, i) => (
+              {slides.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => goTo(i, i > current ? 1 : -1)}
@@ -279,9 +253,9 @@ export default function HeroSection({ t }: HeroSectionProps) {
       {/* ── Features bar ── */}
       <section className="py-10 lg:py-20 bg-white border-b border-pink-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-10">
-          {FEATURES.map((item, i) => (
+          {FEATURES_DATA.map((item, i) => (
             <motion.div
-              key={item.fi}
+              key={item.key}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -295,8 +269,12 @@ export default function HeroSection({ t }: HeroSectionProps) {
                 {item.icon}
               </div>
               <div>
-                <h3 className="text-xs lg:text-sm font-bold text-gray-800 uppercase tracking-widest">{item.fi}</h3>
-                <p className="text-[9px] lg:text-[10px] text-gray-400 uppercase tracking-wider mt-1 hidden sm:block">{item.sub_fi}</p>
+                <h3 className="text-xs lg:text-sm font-bold text-gray-800 uppercase tracking-widest">
+                  {t(`features.${item.key}` as any)}
+                </h3>
+                <p className="text-[9px] lg:text-[10px] text-gray-400 uppercase tracking-wider mt-1 hidden sm:block">
+                  {t(`features.${item.key}Sub` as any)}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -314,22 +292,18 @@ export default function HeroSection({ t }: HeroSectionProps) {
             className="text-center mb-10 lg:mb-24"
           >
             <span className="text-[10px] font-black uppercase tracking-[0.4em] mb-4 block" style={{ color: 'var(--gold)' }}>
-              Luxury Wellness
+              {t('spa.label')}
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-6xl font-medium mb-6" style={{ color: 'var(--burgundy)' }}>
-              {t.massageTitle}
+              {t('services.massage.title')}
             </h2>
             <div className="w-16 h-1 mx-auto" style={{ backgroundColor: 'var(--gold)' }} />
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-5 lg:gap-10">
-            {[
-              { icon: '🌸', title: 'Rentouttava Hieronta', desc: t.massageDesc, href: '/massage' },
-              { icon: '💨', title: 'Aromaterapia', desc: 'Aistillinen parantaminen puhtailla kasvisesensseillä syvään palautumiseen.', href: '/massage' },
-              { icon: '✨', title: 'Päänahkahieronta', desc: 'Kosteuta ja elvytä hiuspohjaasi kasvishoitohieronnoilla.', href: '/massage' },
-            ].map((item, i) => (
+            {SPA_CARDS.map((item, i) => (
               <motion.div
-                key={item.title}
+                key={item.titleKey}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
@@ -345,10 +319,14 @@ export default function HeroSection({ t }: HeroSectionProps) {
                 >
                   {item.icon}
                 </div>
-                <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl mb-3" style={{ color: 'var(--burgundy)' }}>{item.title}</h3>
-                <p className="text-gray-500 text-sm lg:text-base mb-6 lg:mb-10 leading-relaxed">{item.desc}</p>
+                <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl mb-3" style={{ color: 'var(--burgundy)' }}>
+                  {t(item.titleKey as any)}
+                </h3>
+                <p className="text-gray-500 text-sm lg:text-base mb-6 lg:mb-10 leading-relaxed">
+                  {t(item.descKey as any)}
+                </p>
                 <Link
-                  href={item.href}
+                  href="/massage"
                   className="mt-auto px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest border transition-all active:scale-95"
                   style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }}
                   onMouseEnter={e => {
@@ -360,7 +338,7 @@ export default function HeroSection({ t }: HeroSectionProps) {
                     (e.currentTarget as HTMLElement).style.color = 'var(--gold)';
                   }}
                 >
-                  {t.heroBookMassage}
+                  {t('hero.bookMassage')}
                 </Link>
               </motion.div>
             ))}
