@@ -113,6 +113,14 @@ export const adminT = {
     analytics: {
       title: 'Analytiikka',
     },
+    orderStatus: {
+      PENDING: 'Uusi',
+      CONFIRMED: 'Vahvistettu',
+      PROCESSING: 'Kerätään',
+      READY: 'Valmis',
+      DELIVERED: 'Toimitettu',
+      CANCELLED: 'Peruutettu',
+    },
   },
   en: {
     nav: {
@@ -225,6 +233,14 @@ export const adminT = {
     },
     analytics: {
       title: 'Analytics',
+    },
+    orderStatus: {
+      PENDING: 'New',
+      CONFIRMED: 'Confirmed',
+      PROCESSING: 'Preparing',
+      READY: 'Ready',
+      DELIVERED: 'Delivered',
+      CANCELLED: 'Cancelled',
     },
   },
 } as const;

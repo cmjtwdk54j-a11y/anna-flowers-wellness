@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Search, Filter } from 'lucide-react';
-import OrderStatusBadge, { STATUS_CONFIG } from '@/components/admin/OrderStatusBadge';
+import OrderStatusBadge from '@/components/admin/OrderStatusBadge';
 import type { AdminOrder, OrderStatus } from '@/lib/admin/types';
 import { useAdminLang } from '@/components/admin/AdminLangContext';
 
@@ -94,7 +94,7 @@ export default function OrdersPage() {
             >
               <option value="">{lang === 'fi' ? 'Kaikki statukset' : 'All statuses'}</option>
               {STATUSES.map((s) => (
-                <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>
+                <option key={s} value={s}>{t.orderStatus[s]}</option>
               ))}
             </select>
           </div>

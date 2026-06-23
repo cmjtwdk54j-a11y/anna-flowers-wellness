@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, User, MapPin, Package, CreditCard } from 'lucide-react';
-import OrderStatusBadge, { STATUS_CONFIG } from '@/components/admin/OrderStatusBadge';
+import OrderStatusBadge from '@/components/admin/OrderStatusBadge';
 import type { AdminOrder, OrderStatus } from '@/lib/admin/types';
+import { useAdminLang } from '@/components/admin/AdminLangContext';
 
 function fmt(v: number) {
   return v.toLocaleString('fi-FI', { style: 'currency', currency: 'EUR' });
@@ -21,6 +22,7 @@ const STATUSES: OrderStatus[] = ['PENDING', 'CONFIRMED', 'PROCESSING', 'READY', 
 export default function OrderDetailPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
+  const { t } = useAdminLang();
   const [order, setOrder] = useState<AdminOrder | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -93,7 +95,7 @@ export default function OrderDetailPage() {
                     : 'border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-50'
                 }`}
               >
-                {STATUS_CONFIG[s].label}
+                {t.orderStatus[s]}
               </button>
             ))}
           </div>
