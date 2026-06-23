@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
@@ -328,23 +328,22 @@ export default function HeroSection() {
             ))}
           </div>
 
-          <div className="flex justify-center mt-10 lg:mt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex justify-center mt-12 lg:mt-20"
+          >
             <Link
               href="/massage"
-              className="px-10 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest border transition-all active:scale-95"
-              style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--gold)';
-                (e.currentTarget as HTMLElement).style.color = 'white';
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                (e.currentTarget as HTMLElement).style.color = 'var(--gold)';
-              }}
+              className="group inline-flex items-center gap-3 px-12 lg:px-16 py-5 lg:py-6 rounded-full text-sm lg:text-base font-bold uppercase tracking-widest text-white shadow-2xl transition-all duration-300 hover:scale-[1.04] active:scale-95 animate-pulse-glow"
+              style={{ backgroundColor: 'var(--gold)', boxShadow: '0 12px 40px -8px var(--gold)' }}
             >
+              <Sparkles className="w-5 h-5 transition-transform group-hover:rotate-12" />
               {t('hero.bookMassage')}
             </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
     </>

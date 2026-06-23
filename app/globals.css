@@ -52,6 +52,13 @@ html {
 }
 .animate-float { animation: float 8s ease-in-out infinite; }
 
+/* Attention-grabbing glow pulse for primary CTAs */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 12px 40px -8px var(--gold); }
+  50%      { box-shadow: 0 16px 56px -4px var(--gold); }
+}
+.animate-pulse-glow { animation: pulse-glow 2.4s ease-in-out infinite; }
+
 /* Eliminate 300ms tap delay on all interactive elements */
 a, button, [role="button"], input, select, textarea, label {
   touch-action: manipulation;
