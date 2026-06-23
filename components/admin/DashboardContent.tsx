@@ -134,7 +134,27 @@ export default function DashboardContent({ stats }: { stats: DashboardStats }) {
             {t.dashboard.viewAll} →
           </a>
         </div>
-        <div className="overflow-x-auto">
+        {/* Mobile cards */}
+        <div className="sm:hidden divide-y divide-stone-100">
+          {stats.recentOrders.length === 0 && (
+            <p className="px-4 py-8 text-center text-stone-400 text-sm">{t.dashboard.noOrders}</p>
+          )}
+          {stats.recentOrders.map((o) => (
+            <a key={o.id} href={`/admin/orders/${o.id}`} className="block px-4 py-3 hover:bg-stone-50 transition-colors">
+              <div className="flex items-start justify-between gap-3 mb-1">
+                <span className="font-medium text-stone-700 truncate">{o.customerName}</span>
+                <OrderStatusBadge status={o.status as OrderStatus} />
+              </div>
+              <div className="flex items-center justify-between gap-3 text-xs">
+                <span className="font-semibold text-stone-800">{fmt(o.total, lang)}</span>
+                <span className="text-stone-400 whitespace-nowrap">{fmtDate(o.createdAt, lang)}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-xs text-stone-400 uppercase tracking-wide bg-stone-50">

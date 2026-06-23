@@ -100,7 +100,58 @@ export default function ProductsPage() {
       </div>
 
       <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Mobile cards */}
+        <div className="lg:hidden divide-y divide-stone-100">
+          {loading && (
+            <div className="px-4 py-10 text-center text-stone-400 text-sm">{t.common.loading}</div>
+          )}
+          {!loading && products.length === 0 && (
+            <div className="px-4 py-10 text-center text-stone-400 text-sm">
+              {lang === 'fi' ? 'Ei tuotteita' : 'No products'}
+            </div>
+          )}
+          {!loading && products.map((p) => (
+            <div key={p.id} className="px-4 py-3.5">
+              <div className="flex items-start gap-3">
+                <div className="w-12 h-12 rounded-lg overflow-hidden bg-stone-100 flex-shrink-0">
+                  {p.imageUrl && (
+                    <Image src={p.imageUrl} alt={p.name_fi} width={48} height={48} className="w-full h-full object-cover" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-stone-800 truncate">{lang === 'fi' ? p.name_fi : p.name_en}</p>
+                  <p className="text-xs text-stone-400">{p.categoryName}</p>
+                  <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                    <span className="text-sm font-medium text-stone-700">{fmt(p.priceSmall)}</span>
+                    {p.priceLarge ? <span className="text-xs text-stone-400">/ {fmt(p.priceLarge)}</span> : null}
+                    {p.inStock
+                      ? <span className="flex items-center gap-1 text-xs text-emerald-600"><CheckCircle2 className="w-3.5 h-3.5" />{lang === 'fi' ? 'Varastossa' : 'In stock'}</span>
+                      : <span className="flex items-center gap-1 text-xs text-red-500"><XCircle className="w-3.5 h-3.5" />{lang === 'fi' ? 'Loppu' : 'Out'}</span>
+                    }
+                    {p.isFeatured && (
+                      <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">{lang === 'fi' ? 'Suosittu' : 'Featured'}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  <Link href={`/admin/products/${p.id}`} className="p-2 text-stone-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                    <Pencil className="w-4 h-4" />
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(p.id, p.name_fi)}
+                    disabled={deleting === p.id}
+                    className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-40"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-xs text-stone-400 uppercase tracking-wide bg-stone-50 border-b border-stone-200">
