@@ -127,10 +127,9 @@ export default function HeroSection() {
               <span className="text-[11px] font-bold tracking-[0.2em] text-gray-400 uppercase">325 Reviews</span>
             </motion.div>
 
-            {/* Fixed-height headline container — no layout shift */}
             <div
-              className="relative mb-6 lg:mb-8 overflow-hidden"
-              style={{ height: 'clamp(120px, 26vw, 220px)' }}
+              className="relative mb-6 lg:mb-8"
+              style={{ minHeight: 'clamp(120px, 26vw, 220px)', overflow: 'clip' }}
             >
               <AnimatePresence custom={direction}>
                 <motion.h1
