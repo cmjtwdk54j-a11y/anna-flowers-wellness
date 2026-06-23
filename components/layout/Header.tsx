@@ -153,31 +153,25 @@ export default function Header({ locale }: HeaderProps) {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="lg:hidden absolute top-full left-0 right-0 overflow-hidden bg-white border-b border-pink-50 shadow-sm"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-pink-50 shadow-sm"
           >
             <nav className="flex flex-col px-6 pt-3 pb-5">
-              {navLinks.map((link, i) => {
+              {navLinks.map((link) => {
                 const active = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
                 return (
-                  <motion.div
+                  <Link
                     key={link.href}
-                    initial={{ x: -12, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.04, duration: 0.2 }}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="block py-3 text-[11px] font-bold uppercase tracking-[0.2em] border-b border-pink-50 last:border-0 transition-colors"
+                    style={{ color: active ? 'var(--burgundy)' : '#6b7280' }}
                   >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block py-3 text-[11px] font-bold uppercase tracking-[0.2em] border-b border-pink-50 last:border-0 transition-colors"
-                      style={{ color: active ? 'var(--burgundy)' : '#6b7280' }}
-                    >
-                      {link.label}
-                    </Link>
-                  </motion.div>
+                    {link.label}
+                  </Link>
                 );
               })}
             </nav>

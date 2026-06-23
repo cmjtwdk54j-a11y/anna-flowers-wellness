@@ -112,7 +112,7 @@ export default function HeroSection() {
     <>
       {/* ── Hero Carousel ── */}
       <section
-        className="relative pt-32 pb-12 lg:pt-44 lg:pb-24 px-6 lg:px-10 overflow-hidden min-h-[85vh] lg:min-h-[90vh] flex items-center transition-colors duration-700"
+        className="relative pt-32 pb-12 lg:pt-44 lg:pb-24 px-6 lg:px-10 overflow-hidden min-h-[85vh] lg:min-h-[90vh] flex items-center"
         style={{ backgroundColor: slide.bg }}
       >
         <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-white/40 rounded-full blur-[100px] pointer-events-none" />
