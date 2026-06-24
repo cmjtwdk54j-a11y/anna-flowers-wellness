@@ -1,9 +1,11 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
-const prisma = new PrismaClient({ adapter } as any);
+const pool = new Pool({ connectionString: process.env.DATABASE_URL!, ssl: { rejectUnauthorized: false } });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log('Seeding database...');
@@ -182,9 +184,6 @@ async function main() {
       flowerCount: 18, heightCm: 50, popularity: 55, isFuneral: true,
     },
   ];
-
-  // Reset products to avoid stale rows from renamed slugs (safe: no orders in dev)
-  await prisma.product.deleteMany();
 
   for (const product of products) {
     const { isFeatured, isFuneral, isWedding, ...rest } = product as typeof product & {
