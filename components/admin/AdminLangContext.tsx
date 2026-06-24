@@ -15,16 +15,21 @@ const AdminLangContext = createContext<AdminLangContextValue>({
   t: adminT.fi,
 });
 
-export function AdminLangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<AdminLang>(() => {
-    if (typeof window === 'undefined') return 'fi';
-    const saved = localStorage.getItem('admin-lang');
-    return saved === 'fi' || saved === 'en' ? saved : 'fi';
-  });
+export function AdminLangProvider({
+  children,
+  initialLang = 'fi',
+}: {
+  children: React.ReactNode;
+  initialLang?: AdminLang;
+}) {
+  // Initialise from the server-provided cookie value so the first client
+  // render matches the SSR output (no hydration mismatch, no flash).
+  const [lang, setLangState] = useState<AdminLang>(initialLang);
 
   const setLang = (l: AdminLang) => {
     setLangState(l);
-    localStorage.setItem('admin-lang', l);
+    // Persist in a cookie so the server can read it on the next request.
+    document.cookie = `admin-lang=${l}; path=/; max-age=31536000; samesite=lax`;
   };
 
   return (
