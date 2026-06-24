@@ -282,7 +282,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
             </div>
             {uploadError && (
               <p className="text-xs text-red-500 mt-1.5">
-                {uploadError.includes('Blob Storage') ? tf.uploadFailHint : uploadError}
+                {uploadError}
               </p>
             )}
             {errors.imageUrl && <p className="text-xs text-red-500 mt-1">{errors.imageUrl.message}</p>}
