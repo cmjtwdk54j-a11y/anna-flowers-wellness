@@ -25,9 +25,15 @@ export async function POST(req: NextRequest) {
     const ext = file.name.split('.').pop() || 'jpg';
     const filename = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
+    const token = process.env.PUBLIC_BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN;
+    if (!token) {
+      return NextResponse.json({ error: 'BLOB token not configured' }, { status: 500 });
+    }
+
     const blob = await put(filename, file, {
       access: 'public',
       contentType: file.type,
+      token,
     });
 
     return NextResponse.json({ url: blob.url });
