@@ -108,10 +108,15 @@ export async function POST(request: NextRequest) {
       scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
       subtotal, deliveryFee, total,
     };
-    await Promise.allSettled([
-      sendOrderConfirmationEmail(emailData),
-      sendAdminOrderNotification(emailData),
-    ]);
+    // For card payments the confirmation emails are sent by the Stripe webhook
+    // once payment succeeds, so we skip them here to avoid confirming an unpaid
+    // order. Other payment methods (settled manually) get emailed immediately.
+    if (paymentMethod !== 'card') {
+      await Promise.allSettled([
+        sendOrderConfirmationEmail(emailData),
+        sendAdminOrderNotification(emailData),
+      ]);
+    }
 
     return NextResponse.json({ order, orderNumber: order.orderNumber });
   } catch (error) {

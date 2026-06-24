@@ -123,6 +123,25 @@ export default function CheckoutClient() {
         setOrderError(t('orderError'));
         return;
       }
+
+      // Card payment → create a Stripe Checkout session and redirect to the
+      // hosted payment page. Other methods → in-page confirmation.
+      if (paymentMethod === 'card') {
+        const { order } = await res.json();
+        const payRes = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: order.id }),
+        });
+        const payData = await payRes.json();
+        if (payRes.ok && payData.url) {
+          window.location.href = payData.url;
+          return;
+        }
+        setOrderError(t('orderError'));
+        return;
+      }
+
       clearCart();
       setOrderPlaced(true);
     } catch {
