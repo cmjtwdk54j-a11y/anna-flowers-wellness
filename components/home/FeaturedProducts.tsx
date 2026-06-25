@@ -101,7 +101,7 @@ export default function FeaturedProducts({ locale, products }: { locale: string;
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleAdd(product)}
                   className="w-10 h-10 rounded-full border flex items-center justify-center transition-colors"
-                  style={{ borderColor: '#fce7f3', color: 'var(--burgundy)' }}
+                  style={{ borderColor: '#bae6fd', color: 'var(--burgundy)' }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--accent-pink)';
                     (e.currentTarget as HTMLElement).style.color = 'white';

@@ -3,12 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #4a4a4a;
-  --soft-pink: #fdf2f5;
-  --accent-pink: #ffb6d9;
-  --burgundy: #8B4555;
+  --soft-pink: #e0f2fe;
+  --accent-pink: #06b6d4;
+  --burgundy: #0f3a7d;
   --gold: #D4AF37;
   --warm-gray: #4a4a4a;
-  --light-gray: #f5f0ed;
+  --light-gray: #f0f9ff;
 }
 
 @theme inline {
@@ -41,7 +41,7 @@ html {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #fce7f3; border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: #bae6fd; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-pink); }
 
 /* Float animation for hero image */
@@ -106,4 +106,4 @@ a, button, [role="button"], input, select, textarea, label {
 .nav-link:hover::after { width: 100%; }
 
 /* Premium card shadow */
-.premium-shadow { box-shadow: 0 20px 50px -10px rgba(139, 69, 85, 0.08); }
+.premium-shadow { box-shadow: 0 20px 50px -10px rgba(15, 58, 125, 0.08); }

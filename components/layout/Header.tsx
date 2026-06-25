@@ -45,8 +45,8 @@ export default function Header({ locale }: HeaderProps) {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 py-4 flex items-center justify-between transition-all duration-300',
         scrolled
-          ? 'bg-white/85 backdrop-blur-md border-b border-pink-50 shadow-sm'
-          : 'bg-white/80 backdrop-blur-md border-b border-pink-50'
+          ? 'bg-white/85 backdrop-blur-md border-b border-blue-50 shadow-sm'
+          : 'bg-white/80 backdrop-blur-md border-b border-blue-50'
       )}
     >
       {/* Logo */}
@@ -157,7 +157,7 @@ export default function Header({ locale }: HeaderProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-pink-50 shadow-sm"
+            className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-blue-50 shadow-sm"
           >
             <nav className="flex flex-col px-6 pt-3 pb-5">
               {navLinks.map((link) => {
@@ -167,7 +167,7 @@ export default function Header({ locale }: HeaderProps) {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block py-3 text-[11px] font-bold uppercase tracking-[0.2em] border-b border-pink-50 last:border-0 transition-colors"
+                    className="block py-3 text-[11px] font-bold uppercase tracking-[0.2em] border-b border-blue-50 last:border-0 transition-colors"
                     style={{ color: active ? 'var(--burgundy)' : '#6b7280' }}
                   >
                     {link.label}

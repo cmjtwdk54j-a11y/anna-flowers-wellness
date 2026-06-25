@@ -13,35 +13,35 @@ const SLIDES_DATA = [
     priceLabel: 'Premium Collection',
     href: '/flowers',
     image: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop',
-    bg: 'var(--soft-pink)',
+    bg: '#e0f2fe',
   },
   {
     price: '120,00 €',
     priceLabel: 'Wedding Special',
     href: '/flowers',
     image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
-    bg: '#fdf6f0',
+    bg: '#f0f9ff',
   },
   {
     price: '35,00 €',
     priceLabel: 'Seasonal Blooms',
     href: '/flowers',
     image: 'https://images.unsplash.com/photo-1487530811015-780f25e19780?q=80&w=1000&auto=format&fit=crop',
-    bg: '#fdf2f5',
+    bg: '#e0f2fe',
   },
   {
     price: '65,00 €',
     priceLabel: 'Premium Massage',
     href: '/massage',
     image: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1000&auto=format&fit=crop',
-    bg: '#f5f0ed',
+    bg: '#f0f9ff',
   },
   {
     price: '50,00 €',
     priceLabel: 'Gift Card',
     href: '/gift-cards',
     image: 'https://images.unsplash.com/photo-1548094990-c16ca90f1f0d?q=80&w=1000&auto=format&fit=crop',
-    bg: '#fdf2f5',
+    bg: '#e0f2fe',
   },
 ];
 
@@ -197,7 +197,7 @@ export default function HeroSection() {
                   style={{
                     width: i === current ? '24px' : '6px',
                     height: '6px',
-                    backgroundColor: i === current ? 'var(--burgundy)' : '#fce7f3',
+                    backgroundColor: i === current ? 'var(--burgundy)' : '#bae6fd',
                   }}
                 />
               ))}
@@ -281,7 +281,7 @@ export default function HeroSection() {
       </section>
 
       {/* ── Spa Section ── */}
-      <section className="py-16 lg:py-32 px-6 lg:px-10" style={{ backgroundColor: 'rgba(245,240,237,0.4)' }}>
+      <section className="py-16 lg:py-32 px-6 lg:px-10" style={{ backgroundColor: 'rgba(224,242,254,0.4)' }}>
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -308,9 +308,9 @@ export default function HeroSection() {
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="bg-white p-6 sm:p-8 lg:p-12 rounded-[32px] lg:rounded-[48px] border flex flex-col items-center text-center group transition-all duration-500 hover:shadow-2xl"
-                style={{ borderColor: '#f0e8e0' }}
+                style={{ borderColor: '#bae6fd' }}
                 onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = 'var(--gold)')}
-                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = '#f0e8e0')}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = '#bae6fd')}
               >
                 <div
                   className="w-16 h-16 lg:w-24 lg:h-24 rounded-full flex items-center justify-center mb-6 lg:mb-10 text-2xl lg:text-4xl transition-colors duration-500"
