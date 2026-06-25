@@ -58,7 +58,7 @@ export default function Header({ locale }: HeaderProps) {
             alt="Aavafloristi"
             width={180}
             height={64}
-            className="h-14 md:h-16 w-auto object-contain"
+            className="h-16 md:h-20 w-auto object-contain"
             priority
           />
         </motion.div>
