@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
 import { BUSINESS_INFO } from '@/lib/utils';
@@ -9,21 +10,23 @@ export default function Footer() {
   const tFooter = useTranslations('footer');
 
   return (
-    <footer style={{ backgroundColor: 'var(--burgundy)' }} className="text-white/70">
+    <footer className="bg-white border-t border-blue-50 text-gray-500">
       {/* Main grid */}
       <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="mb-6">
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center mb-5"
-                style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-              >
-                <span className="font-serif text-xl font-bold text-white">AF</span>
-              </div>
-              <h3 className="font-serif text-2xl font-medium text-white mb-3">Aavafloristi</h3>
-              <p className="text-sm leading-relaxed text-white/60">{tFooter('tagline')}</p>
+              <Link href="/">
+                <Image
+                  src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/c9bcf547-73c8-42b2-a33d-7975169ae2e0/generated-images/generated-6b65d6fe-f789-4cd2-8b9d-9cff894413aa.png"
+                  alt="Aavafloristi"
+                  width={180}
+                  height={64}
+                  className="h-16 w-auto object-contain mb-4"
+                />
+              </Link>
+              <p className="text-sm leading-relaxed text-gray-400">{tFooter('tagline')}</p>
             </div>
 
             {/* Social links */}
@@ -32,7 +35,7 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center transition-all hover:bg-white/15 hover:border-white/40"
+                className="w-10 h-10 rounded-full border border-blue-100 flex items-center justify-center transition-all hover:bg-blue-50 hover:border-blue-300"
                 aria-label="Instagram"
               >
                 {/* Instagram SVG */}
@@ -44,7 +47,7 @@ export default function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center transition-all hover:bg-white/15 hover:border-white/40"
+                className="w-10 h-10 rounded-full border border-blue-100 flex items-center justify-center transition-all hover:bg-blue-50 hover:border-blue-300"
                 aria-label="Facebook"
               >
                 {/* Facebook SVG */}
@@ -56,7 +59,7 @@ export default function Footer() {
                 href={`https://wa.me/${BUSINESS_INFO.whatsapp.replace(/\s+/g, '').replace('+', '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center transition-all hover:bg-white/15 hover:border-white/40"
+                className="w-10 h-10 rounded-full border border-blue-100 flex items-center justify-center transition-all hover:bg-blue-50 hover:border-blue-300"
                 aria-label="WhatsApp"
               >
                 <MessageCircle className="w-4 h-4" />
@@ -66,7 +69,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-6">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6">
               {tFooter('pages')}
             </h4>
             <ul className="space-y-3">
@@ -79,7 +82,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/60 hover:text-white transition-colors"
+                    className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -90,23 +93,23 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-6">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6">
               {tContact('title')}
             </h4>
             <ul className="space-y-4">
               <li className="flex gap-3 items-start">
-                <MapPin className="w-4 h-4 text-white/30 mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-white/60">{BUSINESS_INFO.address}</span>
+                <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-gray-500">{BUSINESS_INFO.address}</span>
               </li>
               <li className="flex gap-3 items-center">
-                <Phone className="w-4 h-4 text-white/30 flex-shrink-0" />
-                <a href={`tel:${BUSINESS_INFO.phone}`} className="text-sm text-white/60 hover:text-white transition-colors">
+                <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <a href={`tel:${BUSINESS_INFO.phone}`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">
                   {BUSINESS_INFO.phone}
                 </a>
               </li>
               <li className="flex gap-3 items-center">
-                <Mail className="w-4 h-4 text-white/30 flex-shrink-0" />
-                <a href={`mailto:${BUSINESS_INFO.email}`} className="text-sm text-white/60 hover:text-white transition-colors">
+                <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <a href={`mailto:${BUSINESS_INFO.email}`} className="text-sm text-gray-500 hover:text-gray-900 transition-colors">
                   {BUSINESS_INFO.email}
                 </a>
               </li>
@@ -115,36 +118,36 @@ export default function Footer() {
 
           {/* Hours */}
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-6">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6">
               {tContact('openingHours')}
             </h4>
             <ul className="space-y-3">
               <li className="flex justify-between text-sm">
-                <span className="text-white/40">{tFooter('weekdays')}</span>
-                <span className="text-white/70">{BUSINESS_INFO.hours.weekdays}</span>
+                <span className="text-gray-400">{tFooter('weekdays')}</span>
+                <span className="text-gray-600">{BUSINESS_INFO.hours.weekdays}</span>
               </li>
               <li className="flex justify-between text-sm">
-                <span className="text-white/40">{tFooter('saturday')}</span>
-                <span className="text-white/70">{BUSINESS_INFO.hours.saturday}</span>
+                <span className="text-gray-400">{tFooter('saturday')}</span>
+                <span className="text-gray-600">{BUSINESS_INFO.hours.saturday}</span>
               </li>
               <li className="flex justify-between text-sm">
-                <span className="text-white/40">{tFooter('sunday')}</span>
-                <span className="text-white/70">{BUSINESS_INFO.hours.sunday}</span>
+                <span className="text-gray-400">{tFooter('sunday')}</span>
+                <span className="text-gray-600">{BUSINESS_INFO.hours.sunday}</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/10 mt-16 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-white/30">
+        <div className="border-t border-blue-50 mt-16 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-gray-400">
             © {new Date().getFullYear()} Aavafloristi. {tFooter('rights')}.
           </p>
           <div className="flex gap-6">
-            <Link href="/privacy" className="text-xs text-white/30 hover:text-white/60 transition-colors">
+            <Link href="/privacy" className="text-xs text-gray-400 hover:text-gray-500 transition-colors">
               {tFooter('privacy')}
             </Link>
-            <Link href="/terms" className="text-xs text-white/30 hover:text-white/60 transition-colors">
+            <Link href="/terms" className="text-xs text-gray-400 hover:text-gray-500 transition-colors">
               {tFooter('terms')}
             </Link>
           </div>

@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { ShoppingCart, Menu, X, Globe, Flower2 } from 'lucide-react';
+import { ShoppingCart, Menu, X, Globe } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
@@ -50,21 +51,17 @@ export default function Header({ locale }: HeaderProps) {
       )}
     >
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-3 group">
-        <motion.div
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-10 h-10 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: 'var(--soft-pink)' }}
-        >
-          <Flower2 className="w-5 h-5" style={{ color: 'var(--burgundy)' }} />
+      <Link href="/" className="flex items-center transition-opacity hover:opacity-80">
+        <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+          <Image
+            src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/c9bcf547-73c8-42b2-a33d-7975169ae2e0/generated-images/generated-6b65d6fe-f789-4cd2-8b9d-9cff894413aa.png"
+            alt="Aavafloristi"
+            width={180}
+            height={64}
+            className="h-14 md:h-16 w-auto object-contain"
+            priority
+          />
         </motion.div>
-        <span
-          className="font-serif text-2xl font-bold tracking-tight uppercase hidden sm:block"
-          style={{ color: 'var(--burgundy)' }}
-        >
-          Aavafloristi
-        </span>
       </Link>
 
       {/* Desktop Nav */}
