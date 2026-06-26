@@ -16,7 +16,7 @@ function createPrismaClient(): PrismaClient {
   }
   // Managed Postgres (Vercel/Neon) requires SSL; local Postgres usually doesn't support it.
   const isLocal = /localhost|127\.0\.0\.1/.test(connectionString);
-  const pool = new Pool({ connectionString, ssl: isLocal ? undefined : { rejectUnauthorized: false } });
+  const pool = new Pool({ connectionString, ssl: isLocal ? undefined : true });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
