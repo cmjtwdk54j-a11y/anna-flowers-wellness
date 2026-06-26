@@ -307,7 +307,7 @@ export default function HeroSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-white p-6 sm:p-8 lg:p-12 rounded-[32px] lg:rounded-[48px] border flex flex-col items-center text-center group transition-all duration-500 hover:shadow-2xl"
+                className="bg-white p-6 sm:p-8 lg:p-12 rounded-[32px] lg:rounded-[48px] border flex flex-col items-center text-center group transition-all duration-500"
                 style={{ borderColor: '#bae6fd' }}
                 onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = 'var(--gold)')}
                 onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = '#bae6fd')}
@@ -337,8 +337,8 @@ export default function HeroSection() {
           >
             <Link
               href="/massage"
-              className="group inline-flex items-center gap-3 px-12 lg:px-16 py-5 lg:py-6 rounded-full text-sm lg:text-base font-bold uppercase tracking-widest text-white transition-all duration-300 hover:scale-[1.04] active:scale-95"
-              style={{ backgroundColor: 'var(--accent-pink)' }}
+              className="group inline-flex items-center gap-3 px-12 lg:px-16 py-5 lg:py-6 rounded-full text-sm lg:text-base font-bold uppercase tracking-widest text-white shadow-2xl transition-all duration-300 hover:scale-[1.04] active:scale-95"
+              style={{ backgroundColor: 'var(--accent-pink)', boxShadow: '0 12px 40px -8px rgba(14,165,233,0.45)' }}
             >
               <Sparkles className="w-5 h-5 transition-transform group-hover:rotate-12" />
               {t('hero.bookMassage')}
