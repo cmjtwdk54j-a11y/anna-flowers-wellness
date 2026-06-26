@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Clock, MapPin, X, Calendar, User, Phone, Mail, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { MASSAGE_SERVICES, MASSAGE_CATEGORIES, cn } from '@/lib/utils';
@@ -14,6 +14,9 @@ interface ModalState {
 
 export default function MassagePageClient() {
   const t = useTranslations('massage');
+  const locale = useLocale();
+  const isFi = locale === 'fi';
+  const fromWord = isFi ? 'alkaen' : 'from';
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [modal, setModal] = useState<ModalState | null>(null);
   const [form, setForm] = useState({ name: '', phone: '', email: '', date: '', time: '', notes: '' });
@@ -93,10 +96,10 @@ export default function MassagePageClient() {
               >
                 <div>
                   <span className="font-semibold text-base" style={{ color: 'var(--burgundy)' }}>
-                    {cat.label}
+                    {isFi ? cat.label : cat.label_en}
                   </span>
                   {!isOpen && (
-                    <span className="ml-3 text-xs text-gray-400">от {minPrice} €</span>
+                    <span className="ml-3 text-xs text-gray-400">{fromWord} {minPrice} €</span>
                   )}
                 </div>
                 <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -128,7 +131,7 @@ export default function MassagePageClient() {
                             <Clock className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" />
                             {s.duration} min
                             {s.name_fi !== services[0].name_fi && (
-                              <span className="text-xs text-gray-400 ml-1">· {s.name_fi}</span>
+                              <span className="text-xs text-gray-400 ml-1">· {isFi ? s.name_fi : s.name_en}</span>
                             )}
                           </div>
                           <div className="flex items-center gap-4">
@@ -180,7 +183,7 @@ export default function MassagePageClient() {
                 <div>
                   <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-0.5">Varaa aika</p>
                   <p className="font-semibold text-base" style={{ color: 'var(--burgundy)' }}>
-                    {modal.service.name_fi}
+                    {isFi ? modal.service.name_fi : modal.service.name_en}
                   </p>
                   <p className="text-sm text-gray-400">{modal.service.duration} min · {modal.service.price} €</p>
                 </div>
