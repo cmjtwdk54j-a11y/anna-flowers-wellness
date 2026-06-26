@@ -141,7 +141,7 @@ export default function MassagePageClient() {
                             <button
                               onClick={() => openModal(s)}
                               className="text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full transition-all text-white"
-                              style={{ backgroundColor: 'var(--accent-pink)' }}
+                              style={{ backgroundColor: 'var(--burgundy)' }}
                             >
                               Varaa
                             </button>
