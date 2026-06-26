@@ -1,50 +1,59 @@
-﻿'use client';
+'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
-  Hand, Clock, CheckCircle2, Droplets, Wind, Zap, Brain, Smile, Heart,
-  Calendar, User, Mail, Phone, MessageSquare
+  Clock, CheckCircle2, Calendar, User, Mail, Phone,
+  MessageSquare, MapPin, ChevronRight,
 } from 'lucide-react';
-import { MASSAGE_SERVICES } from '@/lib/utils';
-import { cn } from '@/lib/utils';
+import { MASSAGE_SERVICES, MASSAGE_CATEGORIES, cn } from '@/lib/utils';
+
+type CategoryId = typeof MASSAGE_CATEGORIES[number]['id'];
+
+interface ServiceGroup {
+  name_fi: string;
+  desc_fi: string;
+  variants: typeof MASSAGE_SERVICES;
+}
+
+function groupByName(services: typeof MASSAGE_SERVICES): ServiceGroup[] {
+  const map = new Map<string, ServiceGroup>();
+  for (const s of services) {
+    if (!map.has(s.name_fi)) {
+      map.set(s.name_fi, { name_fi: s.name_fi, desc_fi: s.desc_fi, variants: [] });
+    }
+    map.get(s.name_fi)!.variants.push(s);
+  }
+  return Array.from(map.values());
+}
 
 export default function MassagePageClient() {
   const t = useTranslations('massage');
-  const [form, setForm] = useState({
-    name: '', email: '', phone: '', service: '', date: '', time: '', notes: '',
-  });
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const [activeCategory, setActiveCategory] = useState<CategoryId>('urh');
+  const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', date: '', time: '', notes: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [bookingError, setBookingError] = useState('');
 
-  const benefits = [
-    { icon: Droplets, key: 'circulation' },
-    { icon: Wind, key: 'stress' },
-    { icon: Zap, key: 'hair' },
-    { icon: Smile, key: 'relax' },
-    { icon: Heart, key: 'headache' },
-    { icon: Brain, key: 'focus' },
-  ];
-
   const availableTimes = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
   const today = new Date().toISOString().split('T')[0];
+
+  const selectService = (id: string) => {
+    setForm((f) => ({ ...f, service: id }));
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setBookingError('');
     try {
-      const service = MASSAGE_SERVICES.find((s) => s.id === form.service);
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          servicePrice: service?.price || 0,
-          duration: service?.duration || 30,
-          date: new Date(form.date).toISOString(),
-        }),
+        body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
@@ -55,236 +64,264 @@ export default function MassagePageClient() {
     }
   };
 
+  const categoryServices = MASSAGE_SERVICES.filter((s) => s.category === activeCategory);
+  const groups = groupByName(categoryServices);
+  const selectedServiceInfo = MASSAGE_SERVICES.find((s) => s.id === form.service);
+
   return (
-    <div>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--light-gray)' }}>
+
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#fdf2f5] via-white to-[#f5f0ed] py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-soft-pink text-burgundy text-xs font-medium px-3 py-1.5 rounded-full mb-4">
-              <Hand className="w-3.5 h-3.5" />
-              {t('booking.wellness')}
-            </div>
-            <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4" style={{ color: 'var(--burgundy)' }}>{t('title')}</h1>
-            <p className="text-lg text-gray-500 mb-6">{t('subtitle')}</p>
-            <p className="text-gray-500 text-sm leading-relaxed">{t('description')}</p>
+      <section className="pt-28 pb-12 lg:pt-36 lg:pb-16" style={{ backgroundColor: 'var(--soft-pink)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
+          <p className="text-xs font-black uppercase tracking-[0.25em] mb-3" style={{ color: 'var(--accent-pink)' }}>
+            Aava Floristi · Sincere 9-Master
+          </p>
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-medium mb-4" style={{ color: 'var(--burgundy)' }}>
+            {t('title')}
+          </h1>
+          <p className="text-gray-500 text-lg mb-6 max-w-xl">{t('subtitle')}</p>
+          <div className="flex items-center gap-2 text-sm text-gray-400">
+            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <span>Puistolantori 1 · Puistola · Helsinki</span>
           </div>
+          <button
+            onClick={() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+            className="mt-6 inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold text-white transition-all hover:opacity-90"
+            style={{ backgroundColor: 'var(--burgundy)' }}
+          >
+            {t('booking.title')}
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </section>
 
-      {/* Benefits */}
-      <section className="py-14 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-8">{t('benefits.title')}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {benefits.map(({ icon: Icon, key }) => (
-              <div key={key} className="flex items-start gap-3 p-4 bg-soft-pink rounded-xl">
-                <div className="w-9 h-9 bg-soft-pink rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-[18px] h-[18px] text-burgundy" />
-                </div>
-                <p className="text-sm font-medium text-gray-700 leading-snug">
-                  {t(`benefits.${key}` as any)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Services & Pricing */}
-      <section className="py-14 bg-soft-pink">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-8">{t('services.title')}</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { id: 'basic', nameKey: 'basic', durationKey: 'basic_duration', priceKey: 'basic_price', descKey: 'basic_desc', featured: false },
-              { id: 'premium', nameKey: 'premium', durationKey: 'premium_duration', priceKey: 'premium_price', descKey: 'premium_desc', featured: true },
-              { id: 'treatment', nameKey: 'treatment', durationKey: 'treatment_duration', priceKey: 'treatment_price', descKey: 'treatment_desc', featured: false },
-            ].map((service) => (
-              <div
-                key={service.id}
+      {/* Category tabs */}
+      <div className="sticky top-16 z-30 bg-white border-b border-blue-50 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="flex gap-1 overflow-x-auto py-3 scrollbar-hide">
+            {MASSAGE_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id as CategoryId)}
                 className={cn(
-                  'rounded-[32px] p-8 border transition-all',
-                  service.featured
-                    ? 'border-transparent text-white shadow-2xl shadow-pink-200'
-                    : 'bg-white border-pink-100 hover:border-accent-pink/50 hover:shadow-md'
+                  'flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap',
+                  activeCategory === cat.id
+                    ? 'text-white'
+                    : 'text-gray-500 hover:text-gray-800 hover:bg-blue-50'
                 )}
-                style={service.featured ? { backgroundColor: 'var(--burgundy)' } : undefined}
+                style={activeCategory === cat.id ? { backgroundColor: 'var(--burgundy)' } : undefined}
               >
-                {service.featured && (
-                  <span className="inline-block bg-white/20 text-white text-xs font-medium px-2 py-0.5 rounded-full mb-3">
-                    {t('booking.popular')}
-                  </span>
-                )}
-                <h3 className={cn('font-semibold text-lg mb-1', service.featured ? 'text-white' : 'text-gray-800')}>
-                  {t(`services.${service.nameKey}` as any)}
-                </h3>
-                <div className={cn('flex items-center gap-2 mb-3', service.featured ? 'text-white/70' : 'text-gray-400')}>
-                  <Clock className="w-3.5 h-3.5" />
-                  <span className="text-sm">{t(`services.${service.durationKey}` as any)}</span>
-                </div>
-                <p className={cn('text-sm leading-relaxed mb-4', service.featured ? 'text-white/70' : 'text-gray-500')}>
-                  {t(`services.${service.descKey}` as any)}
-                </p>
-                <div className={cn('text-2xl font-bold', service.featured ? 'text-white' : 'text-gray-800')}>
-                  {t(`services.${service.priceKey}` as any)}
-                </div>
-              </div>
+                {cat.label}
+              </button>
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Booking Form */}
-      <section className="py-14 bg-white" id="booking">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('booking.title')}</h2>
-          <p className="text-gray-500 text-sm mb-8">{t('booking.formDesc')}</p>
+      {/* Service cards */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
+        <div className="grid sm:grid-cols-2 gap-5">
+          {groups.map((group) => (
+            <div
+              key={group.name_fi}
+              className="bg-white rounded-[24px] p-6"
+              style={{ boxShadow: '0 4px 20px rgba(15,58,125,0.06)' }}
+            >
+              <h3 className="font-serif text-xl font-medium mb-2" style={{ color: 'var(--burgundy)' }}>
+                {group.name_fi}
+              </h3>
+              {group.desc_fi && (
+                <p className="text-sm text-gray-400 leading-relaxed mb-5">{group.desc_fi}</p>
+              )}
+
+              <div className="space-y-2">
+                {group.variants.map((v) => (
+                  <button
+                    key={v.id}
+                    onClick={() => selectService(v.id)}
+                    className={cn(
+                      'w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all text-left',
+                      form.service === v.id
+                        ? 'border-transparent text-white'
+                        : 'border-blue-100 hover:border-blue-300 bg-white'
+                    )}
+                    style={form.service === v.id ? { backgroundColor: 'var(--burgundy)' } : undefined}
+                  >
+                    <span className={cn('flex items-center gap-2 text-sm font-medium', form.service === v.id ? 'text-white' : 'text-gray-700')}>
+                      <Clock className="w-3.5 h-3.5 opacity-60 flex-shrink-0" />
+                      {v.duration} min
+                    </span>
+                    <span className={cn('text-base font-bold', form.service === v.id ? 'text-white' : '')} style={form.service !== v.id ? { color: 'var(--burgundy)' } : undefined}>
+                      {v.price} €
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {group.variants.some((v) => form.service === v.id) && (
+                <button
+                  onClick={() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                  className="mt-4 w-full py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider border-2 transition-all"
+                  style={{ borderColor: 'var(--accent-pink)', color: 'var(--accent-pink)' }}
+                >
+                  Varaa aika →
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Booking form */}
+      <div ref={formRef} className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 pb-20">
+        <div className="bg-white rounded-[32px] p-8 lg:p-10" style={{ boxShadow: '0 8px 40px rgba(15,58,125,0.08)' }}>
+          <h2 className="font-serif text-3xl font-medium mb-1" style={{ color: 'var(--burgundy)' }}>
+            {t('booking.title')}
+          </h2>
+          <p className="text-sm text-gray-400 mb-8">{t('booking.formDesc')}</p>
 
           {submitted ? (
             <div className="flex flex-col items-center text-center py-10">
-              <div className="w-16 h-16 bg-soft-pink rounded-full flex items-center justify-center mb-4">
-                <CheckCircle2 className="w-8 h-8 text-burgundy" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-5" style={{ backgroundColor: 'var(--soft-pink)' }}>
+                <CheckCircle2 className="w-8 h-8" style={{ color: 'var(--burgundy)' }} />
               </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">{t('booking.thanks')}</h3>
-              <p className="text-gray-500 text-sm">{t('booking.success')}</p>
+              <h3 className="font-serif text-2xl mb-2" style={{ color: 'var(--burgundy)' }}>{t('booking.thanks')}</h3>
+              <p className="text-gray-400 text-sm max-w-sm">{t('booking.success')}</p>
               <button
                 onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', service: '', date: '', time: '', notes: '' }); }}
-                className="mt-6 text-sm text-burgundy hover:text-burgundy font-medium"
+                className="mt-6 text-sm font-bold uppercase tracking-wider"
+                style={{ color: 'var(--accent-pink)' }}
               >
                 {t('booking.newBooking')}
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+              {/* Selected service display */}
+              {selectedServiceInfo && (
+                <div className="flex items-center justify-between px-5 py-4 rounded-2xl border-2" style={{ borderColor: 'var(--accent-pink)', backgroundColor: 'var(--soft-pink)' }}>
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-0.5">Valittu palvelu</p>
+                    <p className="font-semibold text-sm" style={{ color: 'var(--burgundy)' }}>
+                      {selectedServiceInfo.name_fi} · {selectedServiceInfo.duration} min
+                    </p>
+                  </div>
+                  <p className="text-xl font-bold" style={{ color: 'var(--burgundy)' }}>{selectedServiceInfo.price} €</p>
+                </div>
+              )}
+
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600 mb-1.5">
-                    <User className="w-3.5 h-3.5" />
-                    {t('booking.name')} *
+                  <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
+                    <User className="w-3.5 h-3.5" />{t('booking.name')} *
                   </label>
                   <input
-                    type="text"
-                    required
-                    value={form.name}
+                    type="text" required value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full border border-pink-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink transition-colors"
                     placeholder="Etunimi Sukunimi"
+                    className="w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-300 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600 mb-1.5">
-                    <Phone className="w-3.5 h-3.5" />
-                    {t('booking.phone')} *
+                  <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
+                    <Phone className="w-3.5 h-3.5" />{t('booking.phone')} *
                   </label>
                   <input
-                    type="tel"
-                    required
-                    value={form.phone}
+                    type="tel" required value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    className="w-full border border-pink-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink transition-colors"
                     placeholder="+358 50 000 0000"
+                    className="w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-300 transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600 mb-1.5">
-                  <Mail className="w-3.5 h-3.5" />
-                  {t('booking.email')} *
+                <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
+                  <Mail className="w-3.5 h-3.5" />{t('booking.email')} *
                 </label>
                 <input
-                  type="email"
-                  required
-                  value={form.email}
+                  type="email" required value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full border border-pink-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink transition-colors"
                   placeholder="etunimi@esimerkki.fi"
+                  className="w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-300 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-gray-600 mb-1.5 block">
+                <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
                   {t('booking.service')} *
                 </label>
                 <select
-                  required
-                  value={form.service}
+                  required value={form.service}
                   onChange={(e) => setForm({ ...form, service: e.target.value })}
-                  className="w-full border border-pink-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink transition-colors"
+                  className="w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-300 transition-colors"
                 >
                   <option value="">{t('booking.selectService')}</option>
-                  {MASSAGE_SERVICES.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name_fi} – {s.duration} min – {s.price} €
-                    </option>
+                  {MASSAGE_CATEGORIES.map((cat) => (
+                    <optgroup key={cat.id} label={cat.label}>
+                      {MASSAGE_SERVICES.filter((s) => s.category === cat.id).map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name_fi} – {s.duration} min – {s.price} €
+                        </option>
+                      ))}
+                    </optgroup>
                   ))}
                 </select>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600 mb-1.5">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {t('booking.date')} *
+                  <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
+                    <Calendar className="w-3.5 h-3.5" />{t('booking.date')} *
                   </label>
                   <input
-                    type="date"
-                    required
-                    min={today}
-                    value={form.date}
+                    type="date" required min={today} value={form.date}
                     onChange={(e) => setForm({ ...form, date: e.target.value })}
-                    className="w-full border border-pink-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink transition-colors"
+                    className="w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-300 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600 mb-1.5">
-                    <Clock className="w-3.5 h-3.5" />
-                    {t('booking.time')} *
+                  <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
+                    <Clock className="w-3.5 h-3.5" />{t('booking.time')} *
                   </label>
                   <select
-                    required
-                    value={form.time}
+                    required value={form.time}
                     onChange={(e) => setForm({ ...form, time: e.target.value })}
-                    className="w-full border border-pink-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink transition-colors"
+                    className="w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-300 transition-colors"
                   >
                     <option value="">{t('booking.selectTime')}</option>
-                    {availableTimes.map((time) => (
-                      <option key={time} value={time}>{time}</option>
-                    ))}
+                    {availableTimes.map((time) => <option key={time} value={time}>{time}</option>)}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600 mb-1.5">
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  {t('booking.notes')}
+                <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
+                  <MessageSquare className="w-3.5 h-3.5" />{t('booking.notes')}
                 </label>
                 <textarea
-                  rows={3}
-                  value={form.notes}
+                  rows={3} value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                  className="w-full border border-pink-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink transition-colors resize-none"
                   placeholder="Lisätietoja, erityistoiveet..."
+                  className="w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-300 transition-colors resize-none"
                 />
               </div>
 
-              {bookingError && (
-                <p className="text-xs text-red-500 text-center">{bookingError}</p>
-              )}
+              {bookingError && <p className="text-xs text-red-500 text-center">{bookingError}</p>}
+
               <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-burgundy hover:bg-burgundy/90 disabled:bg-burgundy/40 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+                type="submit" disabled={loading}
+                className="w-full py-4 rounded-2xl text-sm font-bold uppercase tracking-wider text-white transition-all hover:opacity-90 disabled:opacity-50"
+                style={{ backgroundColor: 'var(--burgundy)' }}
               >
-                <Hand className="w-4 h-4" />
                 {loading ? t('booking.sending') : t('booking.submit')}
               </button>
             </form>
           )}
         </div>
-      </section>
+      </div>
     </div>
   );
 }

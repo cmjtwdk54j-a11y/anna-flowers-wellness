@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import MassagePageClient from './MassagePageClient';
 
 export const metadata: Metadata = {
-  title: 'Päänahkahieronta',
-  description: 'Rentouttava päänahkahieronta Helsingissä. Varaa aika online – perus, premium ja hoitava hieronta.',
+  title: 'Hieronta & Head Spa',
+  description: 'Varaa hieronta-aika verkossa Helsingissä. Urheiluhieronta, thaihieronta, vietnamilainen hieronta, klassinen öljy, jalkahieronta, Head Spa ja paljon muuta. Puistolantori 1, Puistola.',
 };
 
 export default function MassagePage() {

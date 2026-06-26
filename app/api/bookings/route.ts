@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
     const serviceInfo = MASSAGE_SERVICES.find((s) => s.id === service);
     if (!serviceInfo) {
-      return NextResponse.json({ error: 'Invalid service' }, { status: 400 });
+      return NextResponse.json({ error: 'Palvelua ei löydy' }, { status: 400 });
     }
 
     const booking = await prisma.massageBooking.create({
@@ -17,12 +17,12 @@ export async function POST(request: NextRequest) {
         name,
         email,
         phone,
-        service: serviceInfo.name_fi,
+        service: `${serviceInfo.name_fi} (${serviceInfo.duration} min)`,
         servicePrice: serviceInfo.price,
         duration: serviceInfo.duration,
         date: new Date(date),
         time,
-        notes,
+        notes: notes || null,
       },
     });
 
