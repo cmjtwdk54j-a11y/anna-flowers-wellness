@@ -166,28 +166,51 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
       {/* Main content: sidebar + grid */}
       <div className="flex gap-6 items-start">
 
-        {/* Sidebar */}
+        {/* Mobile overlay backdrop */}
+        <AnimatePresence>
+          {sidebarOpen && (
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSidebarOpen(false)}
+              className="fixed inset-0 bg-black/40 z-40 sm:hidden"
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Sidebar — mobile: fixed drawer, desktop: inline panel */}
         <AnimatePresence initial={false}>
           {sidebarOpen && (
             <motion.aside
               key="sidebar"
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 256, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
-              className="flex-shrink-0 overflow-hidden hidden sm:block"
+              initial={{ x: '-100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '-100%', opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+              className="fixed top-0 left-0 h-full z-50 sm:static sm:h-auto sm:z-auto flex-shrink-0 overflow-hidden sm:w-64"
+              style={{ width: '280px' }}
             >
               <div
-                className="w-64 bg-white rounded-[22px] p-5 sticky top-28"
+                className="h-full sm:h-auto bg-white sm:rounded-[22px] p-5 sm:sticky sm:top-28 overflow-y-auto"
                 style={{ boxShadow: '0 4px 24px rgba(15,58,125,0.08)' }}
               >
-                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 mb-4">
-                  Kategoriat
-                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">
+                    Kategoriat
+                  </p>
+                  <button
+                    onClick={() => setSidebarOpen(false)}
+                    className="sm:hidden p-1.5 rounded-full bg-gray-100 text-gray-500"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
 
                 {/* All */}
                 <button
-                  onClick={() => setActiveCategory('all')}
+                  onClick={() => { setActiveCategory('all'); if (window.innerWidth < 640) setSidebarOpen(false); }}
                   className={cn(
                     'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all mb-1',
                     activeCategory === 'all'
@@ -208,6 +231,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
                         onClick={() => {
                           setActiveCategory(cat.slug);
                           setExpandedCategory(expandedCategory === cat.id ? null : cat.id);
+                          if (window.innerWidth < 640) setSidebarOpen(false);
                         }}
                         className={cn(
                           'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all',

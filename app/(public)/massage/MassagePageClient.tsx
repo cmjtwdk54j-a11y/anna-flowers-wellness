@@ -210,8 +210,8 @@ export default function MassagePageClient() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="col-span-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="sm:col-span-2">
                         <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">
                           <User className="w-3 h-3" /> {t('booking.name')} *
                         </label>
@@ -267,7 +267,7 @@ export default function MassagePageClient() {
                           {times.map((t) => <option key={t} value={t}>{t}</option>)}
                         </select>
                       </div>
-                      <div className="col-span-2">
+                      <div className="sm:col-span-2">
                         <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">
                           <MessageSquare className="w-3 h-3" /> {t('booking.notes')}
                         </label>
