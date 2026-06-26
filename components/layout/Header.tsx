@@ -18,11 +18,22 @@ export default function Header({ locale }: HeaderProps) {
   const t = useTranslations('nav');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const { totalItems, toggleCart } = useCart();
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      if (y > lastY && y > 80) {
+        setHidden(true);
+      } else if (y < lastY) {
+        setHidden(false);
+      }
+      lastY = y;
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -49,6 +60,7 @@ export default function Header({ locale }: HeaderProps) {
           ? 'bg-white/85 backdrop-blur-md border-b border-blue-50 shadow-sm'
           : 'bg-white/80 backdrop-blur-md border-b border-blue-50'
       )}
+      style={{ transform: hidden ? 'translateY(-100%)' : 'translateY(0)' }}
     >
       {/* Logo */}
       <Link href="/" className="flex items-center transition-opacity hover:opacity-80">

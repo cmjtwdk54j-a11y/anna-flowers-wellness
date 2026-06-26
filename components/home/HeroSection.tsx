@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 
 const SLIDES_DATA = [
@@ -96,23 +96,6 @@ export default function HeroSection() {
 
   const slide = slides[current];
 
-  const heroRef = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const el = heroRef.current;
-    if (!el) return;
-    const onScroll = () => {
-      const y = window.scrollY || document.documentElement.scrollTop || 0;
-      el.style.transform = `translateY(${y * -0.22}px)`;
-      el.style.opacity = String(Math.max(0, 1 - y / 380));
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      document.removeEventListener('scroll', onScroll);
-    };
-  }, []);
-
   const variants = {
     enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
     center: { x: 0, opacity: 1 },
@@ -129,9 +112,8 @@ export default function HeroSection() {
     <>
       {/* ── Hero Carousel ── */}
       <section
-        ref={heroRef}
         className="relative pt-32 pb-12 lg:pt-44 lg:pb-24 px-6 lg:px-10 overflow-hidden min-h-[85vh] lg:min-h-[90vh] flex items-center"
-        style={{ backgroundColor: slide.bg, willChange: 'transform, opacity' }}
+        style={{ backgroundColor: slide.bg }}
       >
         <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-white/40 rounded-full blur-[100px] pointer-events-none" />
 
