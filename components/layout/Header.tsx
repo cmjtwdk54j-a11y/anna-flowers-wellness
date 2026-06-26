@@ -53,14 +53,15 @@ export default function Header({ locale }: HeaderProps) {
   };
 
   return (
-    <header
+    <motion.header
+      animate={{ y: hidden ? '-100%' : '0%' }}
+      transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 py-4 flex items-center justify-between transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 py-4 flex items-center justify-between transition-colors duration-300',
         scrolled
           ? 'bg-white/85 backdrop-blur-md border-b border-blue-50 shadow-sm'
           : 'bg-white/80 backdrop-blur-md border-b border-blue-50'
       )}
-      style={{ transform: hidden ? 'translateY(-100%)' : 'translateY(0)' }}
     >
       {/* Logo */}
       <Link href="/" className="flex items-center transition-opacity hover:opacity-80">
@@ -187,6 +188,6 @@ export default function Header({ locale }: HeaderProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }
