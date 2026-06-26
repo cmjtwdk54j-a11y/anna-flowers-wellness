@@ -337,8 +337,8 @@ export default function HeroSection() {
           >
             <Link
               href="/massage"
-              className="group inline-flex items-center gap-3 px-12 lg:px-16 py-5 lg:py-6 rounded-full text-sm lg:text-base font-bold uppercase tracking-widest text-white shadow-2xl transition-all duration-300 hover:scale-[1.04] active:scale-95 animate-pulse-glow"
-              style={{ backgroundColor: 'var(--gold)', boxShadow: '0 12px 40px -8px var(--gold)' }}
+              className="group inline-flex items-center gap-3 px-12 lg:px-16 py-5 lg:py-6 rounded-full text-sm lg:text-base font-bold uppercase tracking-widest text-white shadow-2xl transition-all duration-300 hover:scale-[1.04] active:scale-95"
+              style={{ backgroundColor: 'var(--burgundy)', boxShadow: '0 12px 40px -8px rgba(30,58,138,0.35)' }}
             >
               <Sparkles className="w-5 h-5 transition-transform group-hover:rotate-12" />
               {t('hero.bookMassage')}
