@@ -28,12 +28,29 @@ model ProductCategory {
   description_fi String?
   description_en String?
   imageUrl       String?
+  icon           String?
+  isVisible      Boolean  @default(true)
   sortOrder      Int      @default(0)
   createdAt      DateTime @default(now())
 
-  products Product[]
+  products      Product[]
+  subcategories ProductSubcategory[]
 
   @@map("product_categories")
+}
+
+model ProductSubcategory {
+  id         String   @id @default(cuid())
+  categoryId String
+  name_fi    String
+  name_en    String
+  sortOrder  Int      @default(0)
+  isVisible  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  category ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("product_subcategories")
 }
 
 model Product {

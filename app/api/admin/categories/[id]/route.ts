@@ -5,7 +5,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const body = await req.json();
-    const { slug, name_fi, name_en, description_fi, description_en, imageUrl, sortOrder } = body;
+    const { slug, name_fi, name_en, description_fi, description_en, imageUrl, icon, isVisible, sortOrder } = body;
 
     if (!slug || !name_fi || !name_en) {
       return NextResponse.json({ error: 'Slug, nimi FI ja EN ovat pakollisia' }, { status: 400 });
@@ -21,6 +21,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         description_fi: description_fi || null,
         description_en: description_en || null,
         imageUrl: imageUrl || null,
+        icon: icon || null,
+        isVisible: isVisible ?? true,
         sortOrder: sortOrder ? parseInt(sortOrder) : 0,
       },
     });

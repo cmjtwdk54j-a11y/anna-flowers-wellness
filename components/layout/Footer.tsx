@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, Flower2 } from 'lucide-react';
 import { BUSINESS_INFO } from '@/lib/utils';
 
 export default function Footer() {
@@ -17,14 +16,17 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="mb-6">
-              <Link href="/">
-                <Image
-                  src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/c9bcf547-73c8-42b2-a33d-7975169ae2e0/generated-images/generated-6b65d6fe-f789-4cd2-8b9d-9cff894413aa.png"
-                  alt="Aavafloristi"
-                  width={180}
-                  height={64}
-                  className="h-16 w-auto object-contain mb-4"
+              <Link href="/" className="inline-flex items-center gap-2.5 mb-4 hover:opacity-80 transition-opacity">
+                <Flower2
+                  className="w-10 h-10 flex-shrink-0"
+                  style={{ color: 'var(--accent-pink)', strokeWidth: 1.4 }}
                 />
+                <span
+                  className="font-serif text-xl font-semibold tracking-wide"
+                  style={{ color: 'var(--burgundy)' }}
+                >
+                  Aavafloristi
+                </span>
               </Link>
               <p className="text-sm leading-relaxed text-gray-400">{tFooter('tagline')}</p>
             </div>

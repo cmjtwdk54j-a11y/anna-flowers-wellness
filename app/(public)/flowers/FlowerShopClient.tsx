@@ -1,10 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { Plus, AlertCircle, X } from 'lucide-react';
+import { Plus, AlertCircle, X, Menu, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { cn } from '@/lib/utils';
@@ -13,10 +13,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 type SortKey = 'popular' | 'priceAsc' | 'priceDesc' | 'newest';
 
+interface ShopSubcategory { id: string; name_fi: string; name_en: string; }
+interface ShopCategory { id: string; slug: string; name_fi: string; name_en: string; icon?: string | null; productCount: number; subcategories: ShopSubcategory[]; }
+
 export default function FlowerShopClient({ products }: { products: CatalogProduct[] }) {
   const t = useTranslations('flowers');
   const tCommon = useTranslations('common');
   const { addItem, openCart } = useCart();
+
   const [activeCategory, setActiveCategory] = useState('all');
   const [occasion, setOccasion] = useState('all');
   const [color, setColor] = useState('all');
@@ -24,12 +28,16 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
   const [sort, setSort] = useState<SortKey>('popular');
   const [showFuneralNotice, setShowFuneralNotice] = useState<string | null>(null);
 
-  const categories = [
-    { key: 'all', label: t('categories.all') },
-    { key: 'bouquets', label: t('categories.bouquets') },
-    { key: 'wedding', label: t('categories.wedding') },
-    { key: 'funeral', label: t('categories.funeral') },
-  ];
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [shopCategories, setShopCategories] = useState<ShopCategory[]>([]);
+
+  useEffect(() => {
+    fetch('/api/shop/categories')
+      .then((r) => r.json())
+      .then((data) => Array.isArray(data) && setShopCategories(data))
+      .catch(() => {});
+  }, []);
 
   const occasionOptions = useMemo(
     () => Array.from(new Set(products.flatMap((p) => p.occasions))).sort(),
@@ -69,41 +77,18 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
   }, [products, activeCategory, occasion, color, maxPrice, sort]);
 
   const handleAddToCart = (product: CatalogProduct) => {
-    if (product.isFuneral) {
-      setShowFuneralNotice(product.id);
-      return;
-    }
-    addItem({
-      id: uuidv4(),
-      productId: product.id,
-      name_fi: product.name_fi,
-      name_en: product.name_en,
-      price: product.priceSmall,
-      size: 'SMALL',
-      quantity: 1,
-      imageUrl: product.imageUrl,
-      isFuneral: product.isFuneral,
-    });
+    if (product.isFuneral) { setShowFuneralNotice(product.id); return; }
+    addItem({ id: uuidv4(), productId: product.id, name_fi: product.name_fi, name_en: product.name_en, price: product.priceSmall, size: 'SMALL', quantity: 1, imageUrl: product.imageUrl, isFuneral: product.isFuneral });
     openCart();
   };
 
   const confirmFuneralAdd = (product: CatalogProduct) => {
-    addItem({
-      id: uuidv4(),
-      productId: product.id,
-      name_fi: product.name_fi,
-      name_en: product.name_en,
-      price: product.priceSmall,
-      size: 'SMALL',
-      quantity: 1,
-      imageUrl: product.imageUrl,
-      isFuneral: true,
-    });
+    addItem({ id: uuidv4(), productId: product.id, name_fi: product.name_fi, name_en: product.name_en, price: product.priceSmall, size: 'SMALL', quantity: 1, imageUrl: product.imageUrl, isFuneral: true });
     setShowFuneralNotice(null);
     openCart();
   };
 
-  const selectClass = 'border border-pink-100 rounded-full px-3 sm:px-5 py-2 text-xs font-semibold uppercase tracking-wider bg-white outline-none focus:border-pink-300 transition-colors text-gray-600';
+  const selectClass = 'border border-blue-100 rounded-full px-3 sm:px-5 py-2 text-xs font-semibold uppercase tracking-wider bg-white outline-none focus:border-blue-300 transition-colors text-gray-600';
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-28 pb-12 lg:pt-36 lg:pb-24">
@@ -112,7 +97,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-8 lg:mb-16"
+        className="text-center mb-8 lg:mb-12"
       >
         <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-medium mb-3" style={{ color: 'var(--burgundy)' }}>
           {t('title')}
@@ -120,69 +105,42 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
         <p className="text-gray-400 text-sm italic">{t('subtitle')}</p>
       </motion.div>
 
-      {/* Category pills */}
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6 lg:mb-8">
-        {categories.map((cat) => (
-          <button
-            key={cat.key}
-            onClick={() => setActiveCategory(cat.key)}
-            className={cn(
-              'px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all',
-              activeCategory === cat.key
-                ? 'text-white shadow-sm'
-                : 'bg-white border border-pink-100 text-gray-500 hover:border-pink-300'
-            )}
-            style={activeCategory === cat.key ? { backgroundColor: 'var(--burgundy)' } : undefined}
-          >
-            {cat.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Filters bar */}
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-        <select
-          value={occasion}
-          onChange={(e) => setOccasion(e.target.value)}
-          aria-label={t('filters.occasion')}
-          className={selectClass}
+      {/* Toolbar: hamburger + filters */}
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6 justify-center">
+        {/* Hamburger button */}
+        <button
+          onClick={() => setSidebarOpen((o) => !o)}
+          className={cn(
+            'flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all border',
+            sidebarOpen
+              ? 'text-white border-transparent shadow-sm'
+              : 'bg-white border-blue-100 text-gray-600 hover:border-blue-300'
+          )}
+          style={sidebarOpen ? { backgroundColor: 'var(--burgundy)' } : undefined}
+          aria-label="Toggle categories"
         >
+          <Menu className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Kategoriat</span>
+        </button>
+
+        <select value={occasion} onChange={(e) => setOccasion(e.target.value)} className={selectClass}>
           <option value="all">{t('filters.allOccasions')}</option>
-          {occasionOptions.map((o) => (
-            <option key={o} value={o}>{t(`occasions.${o}` as any)}</option>
-          ))}
+          {occasionOptions.map((o) => <option key={o} value={o}>{t(`occasions.${o}` as any)}</option>)}
         </select>
 
-        <select
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          aria-label={t('filters.color')}
-          className={selectClass}
-        >
+        <select value={color} onChange={(e) => setColor(e.target.value)} className={selectClass}>
           <option value="all">{t('filters.allColors')}</option>
-          {colorOptions.map((c) => (
-            <option key={c} value={c}>{t(`colors.${c}` as any)}</option>
-          ))}
+          {colorOptions.map((c) => <option key={c} value={c}>{t(`colors.${c}` as any)}</option>)}
         </select>
 
-        <select
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-          aria-label={t('filters.maxPrice')}
-          className={selectClass}
-        >
+        <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className={selectClass}>
           <option value="all">{t('filters.anyPrice')}</option>
           <option value="30">≤ 30 €</option>
           <option value="50">≤ 50 €</option>
           <option value="100">≤ 100 €</option>
         </select>
 
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as SortKey)}
-          aria-label={t('filters.sort')}
-          className={selectClass}
-        >
+        <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className={selectClass}>
           <option value="popular">{t('sort.popular')}</option>
           <option value="priceAsc">{t('sort.priceAsc')}</option>
           <option value="priceDesc">{t('sort.priceDesc')}</option>
@@ -201,134 +159,184 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
         )}
       </div>
 
-      {/* Result count */}
-      <p className="text-center text-xs text-gray-400 uppercase tracking-widest mb-12">
+      <p className="text-center text-xs text-gray-400 uppercase tracking-widest mb-8">
         {t('filters.results', { count: filtered.length })}
       </p>
 
-      {/* Empty state */}
-      {filtered.length === 0 && (
-        <div className="text-center py-24">
-          <p className="font-serif text-2xl mb-4" style={{ color: 'var(--burgundy)' }}>{t('filters.noResults')}</p>
-          <button
-            onClick={resetFilters}
-            className="text-xs font-bold uppercase tracking-widest transition-colors"
-            style={{ color: 'var(--accent-pink)' }}
-          >
-            {t('filters.clear')}
-          </button>
-        </div>
-      )}
+      {/* Main content: sidebar + grid */}
+      <div className="flex gap-6 items-start">
 
-      {/* Products grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
-        <AnimatePresence>
-          {filtered.map((product) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="group"
+        {/* Sidebar */}
+        <AnimatePresence initial={false}>
+          {sidebarOpen && (
+            <motion.aside
+              key="sidebar"
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 256, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
+              className="flex-shrink-0 overflow-hidden hidden sm:block"
             >
-              {/* Funeral notice modal */}
-              {showFuneralNotice === product.id && (
-                <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
-                  <div className="bg-white rounded-[40px] p-8 max-w-sm w-full shadow-2xl">
-                    <div className="flex items-start gap-3 mb-6">
-                      <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <h3 className="font-serif text-xl mb-2" style={{ color: 'var(--burgundy)' }}>{t('notice')}</h3>
-                        <p className="text-sm text-gray-500 leading-relaxed">{t('funeralNotice')}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-3">
+              <div
+                className="w-64 bg-white rounded-[22px] p-5 sticky top-28"
+                style={{ boxShadow: '0 4px 24px rgba(15,58,125,0.08)' }}
+              >
+                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 mb-4">
+                  Kategoriat
+                </p>
+
+                {/* All */}
+                <button
+                  onClick={() => setActiveCategory('all')}
+                  className={cn(
+                    'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all mb-1',
+                    activeCategory === 'all'
+                      ? 'text-white'
+                      : 'text-gray-600 hover:bg-blue-50'
+                  )}
+                  style={activeCategory === 'all' ? { backgroundColor: 'var(--burgundy)' } : undefined}
+                >
+                  <span>Kaikki</span>
+                  <span className="text-xs opacity-60">{products.length}</span>
+                </button>
+
+                {/* Dynamic categories */}
+                <div className="space-y-0.5 max-h-[60vh] overflow-y-auto pr-1">
+                  {shopCategories.map((cat) => (
+                    <div key={cat.id}>
                       <button
-                        onClick={() => setShowFuneralNotice(null)}
-                        className="flex-1 px-4 py-3 border border-pink-100 rounded-full text-sm text-gray-500 hover:bg-gray-50 transition-colors"
+                        onClick={() => {
+                          setActiveCategory(cat.slug);
+                          setExpandedCategory(expandedCategory === cat.id ? null : cat.id);
+                        }}
+                        className={cn(
+                          'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all',
+                          activeCategory === cat.slug
+                            ? 'text-white'
+                            : 'text-gray-600 hover:bg-blue-50'
+                        )}
+                        style={activeCategory === cat.slug ? { backgroundColor: 'var(--burgundy)' } : undefined}
                       >
-                        {tCommon('cancel')}
+                        <span className="flex items-center gap-2">
+                          {cat.icon && <span>{cat.icon}</span>}
+                          {cat.name_fi}
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs opacity-60">{cat.productCount}</span>
+                          {cat.subcategories.length > 0 && (
+                            <ChevronRight
+                              className={cn('w-3.5 h-3.5 transition-transform duration-200', expandedCategory === cat.id && 'rotate-90')}
+                            />
+                          )}
+                        </div>
                       </button>
-                      <button
-                        onClick={() => confirmFuneralAdd(product)}
-                        className="flex-1 px-4 py-3 rounded-full text-sm font-bold text-white transition-all"
-                        style={{ backgroundColor: 'var(--burgundy)' }}
-                      >
-                        {t('addAnyway')}
-                      </button>
+
+                      {/* Subcategories */}
+                      <AnimatePresence initial={false}>
+                        {expandedCategory === cat.id && cat.subcategories.length > 0 && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="pl-4 pb-1 space-y-0.5">
+                              {cat.subcategories.map((sub) => (
+                                <button
+                                  key={sub.id}
+                                  className="w-full text-left px-3 py-2 rounded-lg text-xs text-gray-500 hover:text-gray-800 hover:bg-blue-50 transition-colors font-medium"
+                                >
+                                  {sub.name_fi}
+                                </button>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Card */}
-              <div>
-                <Link href={`/flowers/${product.slug}`}>
-                  <div
-                    className="aspect-[3/4] rounded-[20px] sm:rounded-[36px] overflow-hidden mb-3 sm:mb-5 premium-shadow transition-transform duration-300 lg:group-hover:-translate-y-2"
-                    style={{ backgroundColor: 'var(--soft-pink)' }}
-                  >
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.name_fi}
-                      width={400}
-                      height={533}
-                      className="w-full h-full object-cover lg:group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 640px) calc(50vw - 20px), (max-width: 1024px) calc(33vw - 24px), calc(25vw - 40px)"
-                    />
-                  </div>
-                </Link>
-
-                <Link href={`/flowers/${product.slug}`}>
-                  <h3
-                    className="font-serif text-sm sm:text-lg lg:text-xl mb-1 group-hover:opacity-70 transition-opacity leading-tight"
-                    style={{ color: 'var(--burgundy)' }}
-                  >
-                    {product.name_fi}
-                  </h3>
-                </Link>
-
-                {(product.isFuneral || product.isWedding) && (
-                  <span
-                    className="inline-block text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-2"
-                    style={{
-                      backgroundColor: product.isFuneral ? 'var(--light-gray)' : 'var(--soft-pink)',
-                      color: 'var(--warm-gray)',
-                    }}
-                  >
-                    {product.isFuneral ? t('categories.funeral') : t('categories.wedding')}
-                  </span>
-                )}
-
-                <div className="flex items-center justify-between mt-2">
-                  <span className="font-bold text-base" style={{ color: 'var(--gold)' }}>
-                    {product.priceSmall.toFixed(2).replace('.', ',')} €
-                  </span>
-                  <motion.button
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => handleAddToCart(product)}
-                    className="w-9 h-9 rounded-full border flex items-center justify-center transition-colors"
-                    style={{ borderColor: '#fce7f3', color: 'var(--burgundy)' }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--accent-pink)';
-                      (e.currentTarget as HTMLElement).style.color = 'white';
-                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent-pink)';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                      (e.currentTarget as HTMLElement).style.color = 'var(--burgundy)';
-                      (e.currentTarget as HTMLElement).style.borderColor = '#fce7f3';
-                    }}
-                    aria-label={t('addToCart')}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </motion.button>
+                  ))}
                 </div>
               </div>
-            </motion.div>
-          ))}
+            </motion.aside>
+          )}
         </AnimatePresence>
+
+        {/* Products */}
+        <div className="flex-1 min-w-0">
+          {filtered.length === 0 && (
+            <div className="text-center py-24">
+              <p className="font-serif text-2xl mb-4" style={{ color: 'var(--burgundy)' }}>{t('filters.noResults')}</p>
+              <button onClick={resetFilters} className="text-xs font-bold uppercase tracking-widest transition-colors" style={{ color: 'var(--accent-pink)' }}>
+                {t('filters.clear')}
+              </button>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-8">
+            <AnimatePresence>
+              {filtered.map((product) => (
+                <motion.div key={product.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="group">
+
+                  {showFuneralNotice === product.id && (
+                    <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+                      <div className="bg-white rounded-[40px] p-8 max-w-sm w-full shadow-2xl">
+                        <div className="flex items-start gap-3 mb-6">
+                          <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h3 className="font-serif text-xl mb-2" style={{ color: 'var(--burgundy)' }}>{t('notice')}</h3>
+                            <p className="text-sm text-gray-500 leading-relaxed">{t('funeralNotice')}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <button onClick={() => setShowFuneralNotice(null)} className="flex-1 px-4 py-3 border border-blue-100 rounded-full text-sm text-gray-500 hover:bg-gray-50 transition-colors">{tCommon('cancel')}</button>
+                          <button onClick={() => confirmFuneralAdd(product)} className="flex-1 px-4 py-3 rounded-full text-sm font-bold text-white transition-all" style={{ backgroundColor: 'var(--burgundy)' }}>{t('addAnyway')}</button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <Link href={`/flowers/${product.slug}`}>
+                      <div className="aspect-[3/4] rounded-[20px] sm:rounded-[36px] overflow-hidden mb-3 sm:mb-5 premium-shadow transition-transform duration-300 lg:group-hover:-translate-y-2" style={{ backgroundColor: 'var(--soft-pink)' }}>
+                        <Image src={product.imageUrl} alt={product.name_fi} width={400} height={533} className="w-full h-full object-cover lg:group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 640px) calc(50vw - 20px), (max-width: 1024px) calc(33vw - 24px), calc(25vw - 40px)" />
+                      </div>
+                    </Link>
+
+                    <Link href={`/flowers/${product.slug}`}>
+                      <h3 className="font-serif text-sm sm:text-lg lg:text-xl mb-1 group-hover:opacity-70 transition-opacity leading-tight" style={{ color: 'var(--burgundy)' }}>
+                        {product.name_fi}
+                      </h3>
+                    </Link>
+
+                    {(product.isFuneral || product.isWedding) && (
+                      <span className="inline-block text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-2" style={{ backgroundColor: product.isFuneral ? 'var(--light-gray)' : 'var(--soft-pink)', color: 'var(--warm-gray)' }}>
+                        {product.isFuneral ? t('categories.funeral') : t('categories.wedding')}
+                      </span>
+                    )}
+
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="font-bold text-base" style={{ color: 'var(--gold)' }}>
+                        {product.priceSmall.toFixed(2).replace('.', ',')} €
+                      </span>
+                      <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => handleAddToCart(product)}
+                        className="w-9 h-9 rounded-full border flex items-center justify-center transition-colors"
+                        style={{ borderColor: '#bae6fd', color: 'var(--burgundy)' }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--accent-pink)'; (e.currentTarget as HTMLElement).style.color = 'white'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent-pink)'; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--burgundy)'; (e.currentTarget as HTMLElement).style.borderColor = '#bae6fd'; }}
+                        aria-label={t('addToCart')}
+                      >
+                        <Plus className="w-4 h-4" />
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
     </div>
   );

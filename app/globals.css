@@ -3,9 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #4a4a4a;
-  --soft-pink: #e0f2fe;
-  --accent-pink: #06b6d4;
-  --burgundy: #0f3a7d;
+  --soft-pink: #f0f9ff;
+  --accent-pink: #0ea5e9;
+  --burgundy: #1e3a8a;
   --gold: #D4AF37;
   --warm-gray: #4a4a4a;
   --light-gray: #f0f9ff;
@@ -27,7 +27,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans), 'Inter', sans-serif;
 }
 
 html {
@@ -35,7 +35,7 @@ html {
 }
 
 .font-serif {
-  font-family: var(--font-serif), 'Crimson Pro', Georgia, serif;
+  font-family: var(--font-serif), 'Playfair Display', Georgia, serif;
 }
 
 /* Scrollbar */
