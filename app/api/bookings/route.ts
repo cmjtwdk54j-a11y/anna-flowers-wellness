@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
   const parsed = bookingSchema.safeParse(body);
   if (!parsed.success) {
-    const message = parsed.error.errors[0]?.message ?? 'Tarkista lomakkeen tiedot';
+    const message = parsed.error.issues[0]?.message ?? 'Tarkista lomakkeen tiedot';
     return NextResponse.json({ error: message }, { status: 422 });
   }
 
