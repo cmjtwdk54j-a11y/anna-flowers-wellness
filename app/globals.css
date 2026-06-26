@@ -27,7 +27,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), 'Inter', sans-serif;
+  font-family: var(--font-sans), 'Plus Jakarta Sans', sans-serif;
 }
 
 html {
@@ -35,7 +35,7 @@ html {
 }
 
 .font-serif {
-  font-family: var(--font-serif), 'Playfair Display', Georgia, serif;
+  font-family: var(--font-serif), 'Crimson Pro', Georgia, serif;
 }
 
 /* Scrollbar */
