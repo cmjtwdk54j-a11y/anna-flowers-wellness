@@ -49,7 +49,10 @@ export default function CategoriesPage() {
     setExpanded((prev) => ({ ...prev, [catId]: nowOpen }));
     if (nowOpen && !subcats[catId]) {
       const res = await fetch(`/api/admin/categories/${catId}/subcategories`);
-      if (res.ok) setSubcats((prev) => ({ ...prev, [catId]: await res.json() }));
+      if (res.ok) {
+        const data = await res.json();
+        setSubcats((prev) => ({ ...prev, [catId]: data }));
+      }
     }
   };
 
