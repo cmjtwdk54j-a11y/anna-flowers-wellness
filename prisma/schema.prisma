@@ -123,7 +123,7 @@ model Order {
   cardMessage      String?
   paymentMethod    String
   paymentStatus    PaymentStatus @default(PENDING)
-  stripeSessionId  String?       @unique
+  paypalOrderId    String?       @unique
   addons           Json?
   giftCardCode     String?
   giftCardDiscount Decimal?      @db.Decimal(10, 2)

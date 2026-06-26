@@ -60,7 +60,7 @@ export interface AdminOrder {
   total: number;
   paymentMethod: string;
   paymentStatus: PaymentStatus;
-  stripeSessionId?: string | null;
+  paypalOrderId?: string | null;
   giftCardCode?: string | null;
   giftCardDiscount?: number | null;
   notes?: string | null;

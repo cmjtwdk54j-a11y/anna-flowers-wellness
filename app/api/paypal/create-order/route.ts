@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     await prisma.order.update({
       where: { id: order.id },
-      data: { stripeSessionId: paypalOrder.id },
+      data: { paypalOrderId: paypalOrder.id },
     });
 
     return NextResponse.json({ paypalOrderId: paypalOrder.id });

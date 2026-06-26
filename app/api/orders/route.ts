@@ -108,10 +108,12 @@ export async function POST(request: NextRequest) {
       scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
       subtotal, deliveryFee, total,
     };
-    // For card payments the confirmation emails are sent by the Stripe webhook
-    // once payment succeeds, so we skip them here to avoid confirming an unpaid
-    // order. Other payment methods (settled manually) get emailed immediately.
-    if (paymentMethod !== 'card') {
+    // For PayPal, the order is saved before the customer approves payment in the
+    // PayPal popup — emailing here would confirm an order that might never get
+    // paid. /api/paypal/capture-order sends the emails once capture succeeds.
+    // Other payment methods (MobilePay, Edenred) are settled manually, so we
+    // confirm by email immediately.
+    if (paymentMethod !== 'paypal') {
       await Promise.allSettled([
         sendOrderConfirmationEmail(emailData),
         sendAdminOrderNotification(emailData),

@@ -14,7 +14,9 @@ function createPrismaClient(): PrismaClient {
   if (!connectionString) {
     throw new Error('DATABASE_URL environment variable is not set');
   }
-  const pool = new Pool({ connectionString, ssl: { rejectUnauthorized: false } });
+  // Managed Postgres (Vercel/Neon) requires SSL; local Postgres usually doesn't support it.
+  const isLocal = /localhost|127\.0\.0\.1/.test(connectionString);
+  const pool = new Pool({ connectionString, ssl: isLocal ? undefined : { rejectUnauthorized: false } });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }

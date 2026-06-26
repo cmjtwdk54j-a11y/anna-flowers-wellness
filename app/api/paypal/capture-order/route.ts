@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { capturePayPalOrder } from '@/lib/paypal';
+import { sendOrderConfirmationEmail, sendAdminOrderNotification } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,10 +13,33 @@ export async function POST(request: NextRequest) {
     const capture = await capturePayPalOrder(String(paypalOrderId));
 
     if (capture.status === 'COMPLETED') {
-      await prisma.order.update({
+      const order = await prisma.order.update({
         where: { id: String(orderId) },
         data: { paymentStatus: 'PAID', status: 'CONFIRMED' },
+        include: { items: true },
       });
+
+      const emailData = {
+        orderNumber: order.orderNumber,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        customerPhone: order.customerPhone,
+        items: order.items.map((i) => ({
+          name_fi: i.name_fi, size: i.size, quantity: i.quantity, price: Number(i.price),
+        })),
+        deliveryType: order.deliveryType,
+        deliveryAddress: order.deliveryAddress ?? undefined,
+        deliveryCity: order.deliveryCity ?? undefined,
+        scheduledAt: order.scheduledAt,
+        subtotal: Number(order.subtotal),
+        deliveryFee: Number(order.deliveryFee),
+        total: Number(order.total),
+      };
+      await Promise.allSettled([
+        sendOrderConfirmationEmail(emailData),
+        sendAdminOrderNotification(emailData),
+      ]);
+
       return NextResponse.json({ success: true });
     }
 

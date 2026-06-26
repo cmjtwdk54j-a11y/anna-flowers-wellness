@@ -12,16 +12,16 @@ interface Props {
 }
 
 export default async function CheckoutSuccessPage({ searchParams }: Props) {
-  const { session_id } = await searchParams;
+  const { session_id: paypalOrderId } = await searchParams;
   const t = await getTranslations('success');
   const tCart = await getTranslations('cart');
 
   let order: Awaited<ReturnType<typeof prisma.order.findFirst>> & { items: any[] } | null = null;
 
-  if (session_id) {
+  if (paypalOrderId) {
     try {
       order = await prisma.order.findFirst({
-        where: { stripeSessionId: session_id } as any,
+        where: { paypalOrderId },
         include: { items: true },
       }) as any;
     } catch {
