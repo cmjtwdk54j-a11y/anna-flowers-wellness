@@ -8,7 +8,7 @@ const content = {
   fi: {
     badge: 'Oikeudelliset tiedot',
     title: 'Tietosuojaseloste',
-    effective: 'Aavafloristi · Voimassa 1.1.2025 alkaen · Helsinki',
+    effective: 'Aavafloristi · Voimassa 1.1.2026 alkaen · Helsinki',
     sections: [
       {
         title: '1. Rekisterinpitäjä',
@@ -59,7 +59,8 @@ const content = {
           <>
             <p className="mb-3">Emme myy tai luovuta henkilötietojasi kolmansille osapuolille markkinointitarkoituksiin. Käytämme seuraavia alihankkijoita:</p>
             <ul className="space-y-2 list-disc list-inside text-stone-500">
-              <li><strong className="text-stone-600">Resend</strong> — sähköpostien toimitus (tilausvahvistukset)</li>
+              <li><strong className="text-stone-600">PayPal (PayPal Holdings, Inc.)</strong> — maksutapahtumien käsittely. PayPal sijaitsee Yhdysvalloissa; tietojen siirto tapahtuu EU:n vakiosopimuslausekkeiden (SCC) nojalla. <a href="https://www.paypal.com/fi/legalhub/privacy-full" target="_blank" rel="noopener noreferrer" className="text-rose-500 hover:underline">PayPalin tietosuojaseloste</a>.</li>
+              <li><strong className="text-stone-600">Resend</strong> — sähköpostien toimitus (tilausvahvistukset ja varausvahvistukset)</li>
               <li><strong className="text-stone-600">Vercel</strong> — web-hosting</li>
               <li><strong className="text-stone-600">Neon / PostgreSQL</strong> — tietokannan tallennus EU-alueella</li>
             </ul>
@@ -130,7 +131,7 @@ const content = {
   en: {
     badge: 'Legal information',
     title: 'Privacy Policy',
-    effective: 'Aavafloristi · Effective 1 January 2025 · Helsinki',
+    effective: 'Aavafloristi · Effective 1 January 2026 · Helsinki',
     sections: [
       {
         title: '1. Data Controller',
@@ -181,7 +182,8 @@ const content = {
           <>
             <p className="mb-3">We do not sell or share your personal data with third parties for marketing purposes. We use the following sub-processors:</p>
             <ul className="space-y-2 list-disc list-inside text-stone-500">
-              <li><strong className="text-stone-600">Resend</strong> — email delivery (order confirmations)</li>
+              <li><strong className="text-stone-600">PayPal (PayPal Holdings, Inc.)</strong> — payment processing. PayPal is based in the United States; data transfer takes place under EU Standard Contractual Clauses (SCCs). <a href="https://www.paypal.com/fi/legalhub/privacy-full" target="_blank" rel="noopener noreferrer" className="text-rose-500 hover:underline">PayPal Privacy Policy</a>.</li>
+              <li><strong className="text-stone-600">Resend</strong> — email delivery (order and booking confirmations)</li>
               <li><strong className="text-stone-600">Vercel</strong> — web hosting</li>
               <li><strong className="text-stone-600">Neon / PostgreSQL</strong> — database storage within the EU</li>
             </ul>
