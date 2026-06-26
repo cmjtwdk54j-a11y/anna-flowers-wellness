@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 
 const SLIDES_DATA = [
@@ -96,13 +96,9 @@ export default function HeroSection() {
 
   const slide = slides[current];
 
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 500], [0, -120]);
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
 
   const variants = {
     enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
@@ -120,7 +116,6 @@ export default function HeroSection() {
     <>
       {/* ── Hero Carousel ── */}
       <motion.section
-        ref={heroRef}
         className="relative pt-32 pb-12 lg:pt-44 lg:pb-24 px-6 lg:px-10 overflow-hidden min-h-[85vh] lg:min-h-[90vh] flex items-center"
         style={{ backgroundColor: slide.bg, y: heroY, opacity: heroOpacity }}
       >
