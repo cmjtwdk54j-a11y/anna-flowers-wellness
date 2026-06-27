@@ -1,35 +1,11 @@
 ﻿'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { MapPin, Phone, Mail, MessageCircle, Clock, Car, CheckCircle2 } from 'lucide-react';
 import { BUSINESS_INFO } from '@/lib/utils';
 
 export default function ContactClient() {
   const t = useTranslations('contact');
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [sendError, setSendError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSending(true);
-    setSendError('');
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error('Failed');
-      setSent(true);
-    } catch {
-      setSendError(t('sendError'));
-    } finally {
-      setSending(false);
-    }
-  };
 
   return (
     <div>
@@ -125,9 +101,12 @@ export default function ContactClient() {
                   <span className="font-medium">WhatsApp: {BUSINESS_INFO.whatsapp}</span>
                 </a>
               </div>
+            </div>
 
+            {/* Right column: Opening hours + Parking */}
+            <div className="space-y-6">
               {/* Opening hours */}
-              <div className="bg-stone-50 rounded-2xl p-5 mb-6">
+              <div className="bg-stone-50 rounded-2xl p-6">
                 <h3 className="font-semibold text-stone-800 flex items-center gap-2 mb-4">
                   <Clock className="w-4 h-4 text-accent-pink" />
                   {t('openingHours')}
@@ -149,7 +128,7 @@ export default function ContactClient() {
               </div>
 
               {/* Parking */}
-              <div className="bg-soft-pink rounded-2xl p-5">
+              <div className="bg-soft-pink rounded-2xl p-6">
                 <h3 className="font-semibold text-stone-800 flex items-center gap-2 mb-3">
                   <Car className="w-4 h-4 text-gold" />
                   {t('parking.title')}
@@ -164,58 +143,6 @@ export default function ContactClient() {
                     <p className="text-sm text-stone-600">{t('parking.spot2')}</p>
                   </li>
                 </ul>
-              </div>
-            </div>
-
-            {/* Right column: Contact form */}
-            <div className="space-y-6">
-              {/* Contact form */}
-              <div className="bg-stone-50 rounded-2xl p-6 border border-stone-100">
-                <h2 className="font-semibold text-stone-800 mb-5">{t('sendMessage')}</h2>
-                {sent ? (
-                  <div className="flex flex-col items-center text-center py-6">
-                    <CheckCircle2 className="w-10 h-10 text-emerald-400 mb-3" />
-                    <p className="text-stone-700 font-medium">{t('sent')}</p>
-                    <p className="text-stone-400 text-sm mt-1">{t('sentDesc')}</p>
-                    <button onClick={() => { setSent(false); setForm({ name: '', email: '', message: '' }); }} className="mt-4 text-sm text-burgundy hover:text-burgundy">
-                      {t('newMessage')}
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <input
-                      type="text" required
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      placeholder={t('name')}
-                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink bg-white"
-                    />
-                    <input
-                      type="email" required
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      placeholder={t('yourEmail')}
-                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink bg-white"
-                    />
-                    <textarea
-                      rows={4} required
-                      value={form.message}
-                      onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      placeholder={t('message')}
-                      className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent-pink bg-white resize-none"
-                    />
-                    {sendError && (
-                      <p className="text-xs text-red-500">{sendError}</p>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={sending}
-                      className="w-full bg-burgundy hover:bg-burgundy/90 disabled:bg-burgundy/40 text-white font-medium py-3 rounded-full transition-colors"
-                    >
-                      {sending ? t('sending') : t('send')}
-                    </button>
-                  </form>
-                )}
               </div>
             </div>
           </div>

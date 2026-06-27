@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { MASSAGE_SERVICES } from '@/lib/utils';
 import { rateLimit } from '@/lib/rateLimit';
+import { sendBookingConfirmationEmail, sendAdminBookingNotification } from '@/lib/email';
 
 const VALID_TIMES = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'] as const;
 const VALID_IDS = MASSAGE_SERVICES.map((s) => s.id) as [string, ...string[]];
@@ -57,6 +58,22 @@ export async function POST(request: NextRequest) {
         notes: notes || null,
       },
     });
+
+    const emailData = {
+      customerName: name,
+      customerEmail: email,
+      customerPhone: phone,
+      service: booking.service,
+      servicePrice: serviceInfo.price,
+      duration: serviceInfo.duration,
+      date: booking.date,
+      time,
+      notes: notes || null,
+    };
+    await Promise.allSettled([
+      sendBookingConfirmationEmail(emailData),
+      sendAdminBookingNotification(emailData),
+    ]);
 
     return NextResponse.json({ booking });
   } catch (error) {

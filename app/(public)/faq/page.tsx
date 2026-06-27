@@ -23,7 +23,7 @@ const content = {
         title: 'Tilaukset',
         items: [
           { q: 'Miten teen tilauksen?', a: 'Selaa tuotevalikoimaamme Kukat-sivulla, lisää haluamasi tuotteet ostoskoriin ja siirry kassalle. Syötä yhteystietosi ja valitse toimitustapa. Saat tilausvahvistuksen sähköpostiisi heti tilauksen jälkeen.' },
-          { q: 'Voinko muuttaa tai peruuttaa tilaukseni?', a: 'Voit peruuttaa tai muuttaa tilaustasi ottamalla yhteyttä meille mahdollisimman pian puhelimitse tai WhatsAppilla numeroon +358 50 123 4567. Peruutus on mahdollista ennen kuin toimitus on aloitettu.' },
+          { q: 'Voinko muuttaa tai peruuttaa tilaukseni?', a: 'Voit peruuttaa tai muuttaa tilaustasi ottamalla yhteyttä meille mahdollisimman pian puhelimitse tai WhatsAppilla numeroon +358 41 319 1686. Peruutus on mahdollista ennen kuin toimitus on aloitettu.' },
           { q: 'Mistä tiedän, että tilaukseni on vastaanotettu?', a: 'Saat automaattisen tilausvahvistuksen sähköpostiisi heti tilauksen tekemisen jälkeen. Sähköposti sisältää tilausnumeron, tilatut tuotteet, hinnan ja toimitustiedot.' },
           { q: 'Voiko tilata lahjaksi toiselle henkilölle?', a: 'Kyllä! Kassalla voit syöttää vastaanottajan nimen, puhelinnumeron ja toimitusosoitteen erikseen. Voit myös lisätä henkilökohtaisen korttiviestin kimpun mukaan.' },
         ],
@@ -68,7 +68,7 @@ const content = {
         items: [
           { q: 'Mitä päänahkahieronta on?', a: 'Päänahkahieronta on rentouttava hoito, joka stimuloi hiuspohjaa, lievittää jännitystä ja edistää verenkiertoa. Se sopii erinomaisesti stressin lievitykseen.' },
           { q: 'Kuinka kauan hierontaistunto kestää?', a: 'Hierontaistunto kestää noin 45–60 minuuttia.' },
-          { q: 'Miten varaan hieronta-ajan?', a: 'Varaukset tehdään puhelimitse tai WhatsAppilla numeroon +358 50 123 4567 tai sähköpostitse info@annaflowers.fi.' },
+          { q: 'Miten varaan hieronta-ajan?', a: 'Varaukset tehdään puhelimitse tai WhatsAppilla numeroon +358 41 319 1686 tai sähköpostitse info@annaflowers.fi.' },
           { q: 'Onko hierontaan vasta-aiheita?', a: 'Hieronta ei sovi jos sinulla on akuutti infektio, ihottuma päänahan alueella tai äskettäinen leikkaus. Epäselvissä tapauksissa suosittelemme konsultoimaan lääkäriä.' },
         ],
       },
@@ -87,7 +87,7 @@ const content = {
         title: 'Orders',
         items: [
           { q: 'How do I place an order?', a: 'Browse our selection on the Flowers page, add items to your cart and proceed to checkout. Enter your details and choose a delivery method. You\'ll receive an order confirmation email immediately after placing your order.' },
-          { q: 'Can I change or cancel my order?', a: 'You can cancel or modify your order by contacting us as soon as possible by phone or WhatsApp at +358 50 123 4567. Cancellation is possible before the delivery has started.' },
+          { q: 'Can I change or cancel my order?', a: 'You can cancel or modify your order by contacting us as soon as possible by phone or WhatsApp at +358 41 319 1686. Cancellation is possible before the delivery has started.' },
           { q: 'How do I know my order was received?', a: 'You\'ll receive an automatic order confirmation email right after placing your order. It includes the order number, items ordered, price, and delivery details.' },
           { q: 'Can I order as a gift for someone else?', a: 'Absolutely! At checkout you can enter the recipient\'s name, phone number, and delivery address separately. You can also add a personal card message with the bouquet.' },
         ],
@@ -132,7 +132,7 @@ const content = {
         items: [
           { q: 'What is head massage?', a: 'Head massage is a relaxing treatment that stimulates the scalp, relieves tension, and promotes blood circulation. It\'s excellent for stress relief and overall well-being.' },
           { q: 'How long is a massage session?', a: 'A massage session lasts approximately 45–60 minutes.' },
-          { q: 'How do I book a massage?', a: 'Bookings are made by phone or WhatsApp at +358 50 123 4567, or by email at info@annaflowers.fi.' },
+          { q: 'How do I book a massage?', a: 'Bookings are made by phone or WhatsApp at +358 41 319 1686, or by email at info@annaflowers.fi.' },
           { q: 'Are there any contraindications for massage?', a: 'Massage is not recommended for those with an acute infection, scalp rash, or recent surgery in that area. If in doubt, we recommend consulting a doctor first.' },
         ],
       },
@@ -216,7 +216,7 @@ export default function FaqPage() {
             <Link href="/contact" className="inline-flex items-center justify-center gap-2 bg-burgundy hover:bg-burgundy/90 text-white font-bold px-8 py-3 rounded-full uppercase tracking-widest text-xs transition-colors text-sm">
               {t.contact}
             </Link>
-            <a href="https://wa.me/358501234567" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 border border-burgundy text-burgundy hover:bg-soft-pink font-bold px-8 py-3 rounded-full uppercase tracking-widest text-xs transition-colors text-sm">
+            <a href="https://wa.me/358413191686" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 border border-burgundy text-burgundy hover:bg-soft-pink font-bold px-8 py-3 rounded-full uppercase tracking-widest text-xs transition-colors text-sm">
               WhatsApp
             </a>
           </div>

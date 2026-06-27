@@ -136,7 +136,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
         <div className="mt-4 pt-4 border-t border-rose-100 flex items-center gap-2 text-sm text-stone-600">
           <Phone className="w-4 h-4 text-stone-400 flex-shrink-0" />
           <span>
-            {t('questions')} <strong>+358 50 123 4567</strong>
+            {t('questions')} <strong>+358 41 319 1686</strong>
           </span>
         </div>
       </div>

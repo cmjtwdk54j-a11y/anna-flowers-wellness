@@ -17,7 +17,7 @@ const content = {
             <strong className="text-stone-700">Aavafloristi</strong><br />
             Puistolantori 1, 00760 Helsinki, Suomi<br />
             Sähköposti: <a href="mailto:info@aavafloristi.fi" className="text-rose-500 hover:underline">info@aavafloristi.fi</a><br />
-            Puhelin: <a href="tel:+358501234567" className="text-rose-500 hover:underline">+358 50 123 4567</a>
+            Puhelin: <a href="tel:+358413191686" className="text-rose-500 hover:underline">+358 41 319 1686</a>
           </p>
         ),
       },
@@ -140,7 +140,7 @@ const content = {
             <strong className="text-stone-700">Aavafloristi</strong><br />
             Puistolantori 1, 00760 Helsinki, Finland<br />
             Email: <a href="mailto:info@aavafloristi.fi" className="text-rose-500 hover:underline">info@aavafloristi.fi</a><br />
-            Phone: <a href="tel:+358501234567" className="text-rose-500 hover:underline">+358 50 123 4567</a>
+            Phone: <a href="tel:+358413191686" className="text-rose-500 hover:underline">+358 41 319 1686</a>
           </p>
         ),
       },

@@ -19,8 +19,9 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      // Next.js needs unsafe-inline for styles; PayPal needs its own script domain
-      "script-src 'self' 'unsafe-inline' https://*.paypal.com https://*.paypalobjects.com",
+      // Next.js needs unsafe-inline for styles; PayPal needs its own script domain.
+      // unsafe-eval is only needed in dev (React Fast Refresh / devtools), never in production.
+      `script-src 'self' 'unsafe-inline' ${process.env.NODE_ENV !== 'production' ? "'unsafe-eval'" : ''} https://*.paypal.com https://*.paypalobjects.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       // Allow images from all known sources

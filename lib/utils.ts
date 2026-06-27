@@ -112,9 +112,9 @@ export const MASSAGE_SERVICES = [
 export const BUSINESS_INFO = {
   name: 'Aavafloristi',
   address: 'Puistolantori 1, 00760 Helsinki',
-  phone: '+358 50 123 4567',
+  phone: '+358 41 319 1686',
   email: 'info@aavafloristi.fi',
-  whatsapp: '+358 50 123 4567',
+  whatsapp: '+358 41 319 1686',
   googleMapsUrl: 'https://maps.google.com',
   parking: {
     spot1: '1 pysäköintipaikka – 3 tunnin aikaraja',
