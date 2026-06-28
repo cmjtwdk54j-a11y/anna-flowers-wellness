@@ -70,7 +70,7 @@ export default function MassagePageClient() {
   const today = new Date().toISOString().split('T')[0];
   const times = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
 
-  const openModal = (service: ServiceVariant) => {
+  const openModal = (service: DisplayService) => {
     setModal({ service });
     setSubmitted(false);
     setError('');
