@@ -29,7 +29,7 @@ const securityHeaders = [
       // API calls: own backend + PayPal
       "connect-src 'self' https://*.paypal.com https://api-m.sandbox.paypal.com https://api-m.paypal.com https://*.public.blob.vercel-storage.com",
       // PayPal popup/iframe
-      "frame-src https://*.paypal.com",
+      "frame-src https://*.paypal.com https://www.openstreetmap.org",
       // Block plugins (Flash etc.)
       "object-src 'none'",
       // Lock down <base> tag

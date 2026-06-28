@@ -17,19 +17,16 @@ export default function ContactClient() {
         </div>
       </section>
 
-      {/* Full-width Google Maps */}
+      {/* Full-width OpenStreetMap */}
       <div className="w-full h-96 relative border-b border-stone-100">
         <iframe
-          src="https://maps.google.com/maps?q=Puistolantori+1,+00760+Helsinki&hl=fi&z=17&output=embed"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=25.072%2C60.285%2C25.092%2C60.295&layer=mapnik&marker=60.2897%2C25.0820"
           width="100%"
           height="100%"
           style={{ border: 0, display: 'block' }}
-          allowFullScreen
           loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
           title="Aavafloristi – Puistolantori 1, 00760 Helsinki"
         />
-        {/* Overlay badge */}
         <div className="absolute bottom-4 left-4 bg-white rounded-xl shadow-lg px-4 py-2.5 flex items-center gap-2">
           <MapPin className="w-4 h-4 text-burgundy flex-shrink-0" />
           <span className="text-sm font-medium text-stone-700">Puistolantori 1, 00760 Helsinki</span>
