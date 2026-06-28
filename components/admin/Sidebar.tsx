@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Package, ShoppingBag, Tag, FolderTree,
-  BarChart2, Settings, LogOut, Flower2, X, Menu,
+  BarChart2, Settings, LogOut, Flower2, X, Menu, Images,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,7 @@ export default function Sidebar() {
     { href: '/admin/orders', label: t.nav.orders, icon: ShoppingBag },
     { href: '/admin/promo-codes', label: t.nav.promoCodes, icon: Tag },
     { href: '/admin/categories', label: t.nav.categories, icon: FolderTree },
+    { href: '/admin/hero-slides', label: 'Hero слайды', icon: Images },
     { href: '/admin/analytics', label: t.nav.analytics, icon: BarChart2 },
     { href: '/admin/settings', label: t.nav.settings, icon: Settings },
   ];

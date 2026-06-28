@@ -225,6 +225,19 @@ model PromoCode {
   @@map("promo_codes")
 }
 
+model HeroSlide {
+  id         String  @id @default(cuid())
+  order      Int     @default(0)
+  imageUrl   String
+  bgColor    String  @default("#e0f2fe")
+  href       String  @default("/flowers")
+  price      String  @default("")
+  priceLabel String  @default("")
+  isActive   Boolean @default(true)
+
+  @@map("hero_slides")
+}
+
 model StoreSettings {
   id        String   @id @default("singleton")
   data      Json

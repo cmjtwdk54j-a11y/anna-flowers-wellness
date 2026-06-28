@@ -1,0 +1,433 @@
+
+> anna-flowers@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.20.10.7:3000
+- Environments: .env.local, .env
+✓ Ready in 1164ms
+
+ GET / 200 in 4.4s (next.js: 593ms, application-code: 3.8s)
+getFeaturedProducts failed: Error [PrismaClientKnownRequestError]: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].product.findMany()` invocation in
+c:\Users\Sofija\Desktop\сайт для анны\anna-flowers\.next\dev\server\chunks\ssr\[root-of-the-server]__0q5rnlz._.js:182:160
+
+  179 }
+  180 async function getFeaturedProducts(limit = 4) {
+  181     try {
+→ 182         const products = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].product.findMany(
+Authentication failed against the database server, the provided database credentials for `postgres` are not valid
+    at <unknown> (lib\products.ts:81:43)
+    at async getFeaturedProducts (lib\products.ts:81:22)
+    at async HomePage (app\(public)\page.tsx:13:28)
+  79 | export async function getFeaturedProducts(limit = 4): Promise<CatalogProduct[]> {
+  80 |   try {
+> 81 |     const products = await prisma.product.findMany({
+     |                                           ^
+  82 |       where: { inStock: true, isFeatured: true },
+  83 |       include: { category: true },
+  84 |       orderBy: [{ popularity: 'desc' }, { createdAt: 'desc' }], {
+  code: 'P1000',
+  meta: {
+    modelName: 'Product',
+    driverAdapterError: Error [DriverAdapterError]: AuthenticationFailed
+        at async getFeaturedProducts (lib\products.ts:81:22)
+        at async HomePage (app\(public)\page.tsx:13:28)
+      79 | export async function getFeaturedProducts(limit = 4): Promise<CatalogProduct[]> {
+      80 |   try {
+    > 81 |     const products = await prisma.product.findMany({
+         |                      ^
+      82 |       where: { inStock: true, isFeatured: true },
+      83 |       include: { category: true },
+      84 |       orderBy: [{ popularity: 'desc' }, { createdAt: 'desc' }], {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.8.0'
+}
+
+<--- Last few GCs --->
+
+[83532:0000026EBE860000]     6090 ms: Scavenge 8.9 (11.5) -> 7.6 (11.2) MB, pooled: 0 MB, 164.16 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[83532:0000026EBE860000]     6309 ms: Scavenge 9.7 (12.4) -> 9.0 (17.4) MB, pooled: 0 MB, 53.29 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+
+<--- Last few GCs --->
+
+[86864:000001516316D000]     6352 ms: Scavenge 6.8 (8.9) -> 6.0 (8.3) MB, pooled: 0 MB, 1.16 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[86864:000001516316D000]     6363 ms: Scavenge 6.6 (8.3) -> 6.4 (10.8) MB, pooled: 0 MB, 1.00 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+ 1: 00007FF76E32403F node::OnFatalError+1343
+ 2: 00007FF76EF6FAA7 v8::Function::NewInstance+423
+ 3: 00007FF76E8E9986 v8::SnapshotCreator::GetIsolate+56566
+ 4: 00007FF76E713A52 SSL_CTX_get_client_CA_list+11538
+ 5: 00007FF76E713A12 SSL_CTX_get_client_CA_list+11474
+ 6: 00007FF76E713A12 SSL_CTX_get_client_CA_list+11474
+ 7: 00007FF76E713A12 SSL_CTX_get_client_CA_list+11474
+ 8: 00007FF76E713913 SSL_CTX_get_client_CA_list+11219
+ 9: 00007FF76E71385D SSL_CTX_get_client_CA_list+11037
+10: 00007FF76E70DD74 v8::internal::OptimizingCompileInputQueue::OptimizingCompileInputQueue+196644
+11: 00007FF76E715E2E SSL_CTX_get_client_CA_list+20718
+12: 00007FF76E715BA3 SSL_CTX_get_client_CA_list+20067
+13: 00007FF76E7785F4 SSL_CTX_get_client_CA_list+424116
+14: 00007FF76E778EF0 SSL_CTX_get_client_CA_list+426416
+15: 00007FF76E777D21 SSL_CTX_get_client_CA_list+421857
+16: 00007FF76E775D33 SSL_CTX_get_client_CA_list+413683
+17: 00007FF76E74AB0B SSL_CTX_get_client_CA_list+237003
+18: 00007FF76E7C2C76 SSL_CTX_get_client_CA_list+728886
+19: 00007FF76E7C1990 SSL_CTX_get_client_CA_list+724048
+20: 00007FF76E7BF78A SSL_CTX_get_client_CA_list+715338
+21: 00007FF76EEE376F EVP_MD_CTX_set_update_fn+200559
+22: 00007FF76E7C126B SSL_CTX_get_client_CA_list+722219
+23: 00007FF76F750C5F v8::platform::DefaultJobHandle::UpdatePriority+591
+24: 00007FF76E272E0E node::GetNodeReport+90430
+25: 00007FF76EFC4A36 uv_thread_detach+150
+26: 00007FF770225A73 v8::base::UnsignedDivisionByConstant<unsigned __int64>+2907235
+27: 00007FF8D6FEE957 BaseThreadInitThunk+23
+28: 00007FF8D8F07C1C 
+ 1: 00007FF76E32403F node::OnFatalError+1343
+ 2: 00007FF76EF6FAA7 v8::Function::NewInstance+423
+ 3: 00007FF76E8E9986 v8::SnapshotCreator::GetIsolate+56566
+ 4: 00007FF76EF56AC6 EVP_MD_CTX_set_update_fn+672454
+ 5: 00007FF76EA0D1D3 EC_KEY_METHOD_set_verify+181667
+ 6: 00007FF76EA0A86E EC_KEY_METHOD_set_verify+171070
+ 7: 00007FF76E9FBD53 EC_KEY_METHOD_set_verify+110883
+ 8: 00007FF76EA0D7DF EC_KEY_METHOD_set_verify+183215
+ 9: 00007FF76EA0A86E EC_KEY_METHOD_set_verify+171070
+10: 00007FF76E9FBD53 EC_KEY_METHOD_set_verify+110883
+11: 00007FF76EA0C9A3 EC_KEY_METHOD_set_verify+179571
+12: 00007FF76E9FBE11 EC_KEY_METHOD_set_verify+111073
+13: 00007FF76E9FB37D EC_KEY_METHOD_set_verify+108365
+14: 00007FF76E9F9AAB EC_KEY_METHOD_set_verify+102011
+15: 00007FF76E9F8DE6 EC_KEY_METHOD_set_verify+98742
+16: 00007FF76EA23948 EC_KEY_METHOD_set_verify+273688
+17: 00007FF76EA17960 EC_KEY_METHOD_set_verify+224560
+18: 00007FF76EA3BEE3 EC_KEY_METHOD_set_verify+373427
+19: 00007FF76EA1C354 EC_KEY_METHOD_set_verify+243492
+20: 00007FF76EA24DEB EC_KEY_METHOD_set_verify+278971
+21: 00007FF76EA242EA EC_KEY_METHOD_set_verify+276154
+22: 00007FF76EA179E7 EC_KEY_METHOD_set_verify+224695
+23: 00007FF76EA16BB4 EC_KEY_METHOD_set_verify+221060
+24: 00007FF76EA15EA2 EC_KEY_METHOD_set_verify+217714
+25: 00007FF76EA15B4A EC_KEY_METHOD_set_verify+216858
+26: 00007FF76EA11179 EC_KEY_METHOD_set_verify+197961
+27: 00007FF76EEED4EF EVP_MD_CTX_set_update_fn+240879
+28: 00007FF76EEF02F1 EVP_MD_CTX_set_update_fn+252657
+29: 00007FF76EF78F63 v8::ScriptCompiler::CompileFunction+1011
+30: 00007FF76E341563 node::GetCurrentEnvironment+20883
+31: 00007FF76E33FD0E node::GetCurrentEnvironment+14654
+32: 000001511FDCF64D 
+
+<--- Last few GCs --->
+
+
+
+
+<--- Last few GCs --->
+
+<--- Last few GCs --->
+
+[71528:000002357EDD1000]      927 ms: Scavenge 8.9 (11.5) -> 7.6 (11.4) MB, pooled: 0 MB, 30.21 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+#
+
+
+[71528:000002357EDD1000]     1100 ms: Scavenge 9.7 (12.4) -> 9.0 (17.7) MB, pooled: 0 MB, 2.37 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+# Fatal error in , line 0
+[89072:000001DC0A27A000]     1068 ms: Scavenge 8.9 (11.7) -> 7.6 (11.7) MB, pooled: 0 MB, 1.50 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[86820:000002106BB9F000]     9667 ms: Scavenge 6.6 (8.6) -> 6.4 (10.8) MB, pooled: 0 MB, 2.44 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+<--- Last few GCs --->
+[88600:000001C4F65DF000]     2303 ms: Scavenge 6.2 (7.3) -> 5.5 (10.1) MB, pooled: 0 MB, 2.10 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+[86820:000002106BB9F000]    10206 ms: Scavenge 10.2 (12.9) -> 9.2 (13.4) MB, pooled: 0 MB, 1.87 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[89072:000001DC0A27A000]     1106 ms: Scavenge 9.7 (12.4) -> 9.0 (17.7) MB, pooled: 0 MB, 1.80 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+# Out of memory: HashMap::Initialize
+
+
+[86820:000002106BB9F000]    10736 ms: Scavenge 10.7 (13.4) -> 9.9 (18.2) MB, pooled: 0 MB, 1.35 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+FATAL ERROR: Zone Allocation failed - process out of memory
+#
+FATAL ERROR: Zone Allocation failed - process out of memory
+
+#
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+----- Native stack trace -----
+FATAL ERROR: Zone Allocation failed - process out of memory
+#
+
+----- Native stack trace -----
+
+
+----- Native stack trace -----
+#FailureMessage Object: 00000056907F8A90
+ 1: 00007FF76E32403F 
+
+ 2: 00007FF76EF6FAA7 
+----- Native stack trace -----
+
+ 3: 00007FF76E8E9986 
+ 4: 00007FF76E4AAD33 
+ 5: 00007FF76FCCDA81 
+ 6: 00007FF76FCCD88E 
+ 7: 00007FF76F96C866 
+ 8: 00007FF76F96397B 
+ 9: 00007FF76F962DE0 
+10: 00007FF76EEE376F 
+11: 00007FF76EEA87FD 
+12: 00007FF76EEA84F5 
+13: 00007FF76F750C5F 
+14: 00007FF76E272E0E 
+15: 00007FF76EFC4A36 
+16: 00007FF770225A73 
+17: 00007FF8D6FEE957 
+18: 00007FF8D8F07C1C 
+
+<--- Last few GCs --->
+[2924:00000125FE6F1000]      980 ms: Scavenge 6.2 (7.3) -> 5.5 (10.1) MB, pooled: 0 MB, 31.82 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+ 1: 00007FF76E32403F node::OnFatalError+1343
+ 2: 00007FF76EF6FAA7 v8::Function::NewInstance+423
+ 3: 00007FF76E8E9986 v8::SnapshotCreator::GetIsolate+56566
+ 4: 00007FF76E713A52 SSL_CTX_get_client_CA_list+11538
+ 5: 00007FF76E713A24 SSL_CTX_get_client_CA_list+11492
+ 6: 00007FF76E713A12 SSL_CTX_get_client_CA_list+11474
+ 7: 00007FF76E713A24 SSL_CTX_get_client_CA_list+11492
+ 8: 00007FF76E713A24 SSL_CTX_get_client_CA_list+11492
+ 9: 00007FF76E713913 SSL_CTX_get_client_CA_list+11219
+10: 00007FF76E71385D SSL_CTX_get_client_CA_list+11037
+11: 00007FF76E70DD74 v8::internal::OptimizingCompileInputQueue::OptimizingCompileInputQueue+196644
+12: 00007FF76E715E2E SSL_CTX_get_client_CA_list+20718
+13: 00007FF76E715BA3 SSL_CTX_get_client_CA_list+20067
+14: 00007FF76E7790D4 SSL_CTX_get_client_CA_list+426900
+15: 00007FF76E778D07 SSL_CTX_get_client_CA_list+425927
+16: 00007FF76E7779AE SSL_CTX_get_client_CA_list+420974
+17: 00007FF76E7752E3 SSL_CTX_get_client_CA_list+411043
+18: 00007FF76E773F93 SSL_CTX_get_client_CA_list+406099
+19: 00007FF76E773D7B SSL_CTX_get_client_CA_list+405563
+20: 00007FF76E74AB98 SSL_CTX_get_client_CA_list+237144
+21: 00007FF76E74A6E2 SSL_CTX_get_client_CA_list+235938
+22: 00007FF76E74C695 SSL_CTX_get_client_CA_list+244053
+23: 00007FF76E74BB3E SSL_CTX_get_client_CA_list+241150
+24: 00007FF76E75F0A1 SSL_CTX_get_client_CA_list+320353
+25: 00007FF76E733F05 SSL_CTX_get_client_CA_list+143813
+26: 00007FF76E74F632 SSL_CTX_get_client_CA_list+256242
+27: 00007FF76E760CF6 SSL_CTX_get_client_CA_list+327606
+28: 00007FF76E761AF7 SSL_CTX_get_client_CA_list+331191
+29: 00007FF76E775ECA SSL_CTX_get_client_CA_list+414090
+30: 00007FF76E74AB0B SSL_CTX_get_client_CA_list+237003
+31: 00007FF76E7C2C76 SSL_CTX_get_client_CA_list+728886
+32: 00007FF76E7C1990 SSL_CTX_get_client_CA_list+724048
+33: 00007FF76E7BF78A SSL_CTX_get_client_CA_list+715338
+34: 00007FF76EEE376F EVP_MD_CTX_set_update_fn+200559
+35: 00007FF76E7C126B SSL_CTX_get_client_CA_list+722219
+36: 00007FF76F750C5F v8::platform::DefaultJobHandle::UpdatePriority+591
+37: 00007FF76E272E0E node::GetNodeReport+90430
+38: 00007FF76EFC4A36 uv_thread_detach+150
+39: 00007FF770225A73 v8::base::UnsignedDivisionByConstant<unsigned __int64>+2907235
+40: 00007FF8D6FEE957 BaseThreadInitThunk+23
+41: 00007FF8D8F07C1C RtlUserThreadStart+44
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+ 1: 00007FF76E276F4D node::MultiIsolatePlatform::DisposeIsolate+5341
+ 2: 00007FF76F6DE05F V8_Fatal+287
+ 3: 00007FF76EF6DB46 EVP_MD_CTX_set_update_fn+766790
+ 4: 00007FF76EF6D232 EVP_MD_CTX_set_update_fn+764466
+ 5: 00007FF76EF6D060 EVP_MD_CTX_set_update_fn+764000
+ 6: 00007FF76E9F434F EC_KEY_METHOD_set_verify+79647
+ 7: 00007FF76EA33B47 EC_KEY_METHOD_set_verify+339735
+ 8: 00007FF76EA32976 EC_KEY_METHOD_set_verify+335174
+ 9: 00007FF76EA29F66 EC_KEY_METHOD_set_verify+299830
+10: 00007FF76EA2B66B EC_KEY_METHOD_set_verify+305723
+11: 00007FF76EA2A83E EC_KEY_METHOD_set_verify+302094
+12: 00007FF76EA2B0A6 EC_KEY_METHOD_set_verify+304246
+13: 00007FF76EA2A884 EC_KEY_METHOD_set_verify+302164
+14: 00007FF76EA30204 EC_KEY_METHOD_set_verify+325076
+15: 00007FF76EA3B61F EC_KEY_METHOD_set_verify+371183
+16: 00007FF76EA24DEB EC_KEY_METHOD_set_verify+278971
+17: 00007FF76EA1A82A EC_KEY_METHOD_set_verify+236538
+18: 00007FF76EA2B560 EC_KEY_METHOD_set_verify+305456
+19: 00007FF76EA2A884 EC_KEY_METHOD_set_verify+302164
+20: 00007FF76EA30204 EC_KEY_METHOD_set_verify+325076
+21: 00007FF76EA2E68E EC_KEY_METHOD_set_verify+318046
+22: 00007FF76EA2B66B EC_KEY_METHOD_set_verify+305723
+23: 00007FF76EA2A83E EC_KEY_METHOD_set_verify+302094
+24: 00007FF76EA30204 EC_KEY_METHOD_set_verify+325076
+25: 00007FF76EA3B61F EC_KEY_METHOD_set_verify+371183
+26: 00007FF76EA24DEB EC_KEY_METHOD_set_verify+278971
+27: 00007FF76EA1A82A EC_KEY_METHOD_set_verify+236538
+28: 00007FF76EA2B560 EC_KEY_METHOD_set_verify+305456
+29: 00007FF76EA2A884 EC_KEY_METHOD_set_verify+302164
+30: 00007FF76EA30204 EC_KEY_METHOD_set_verify+325076
+31: 00007FF76EA2E68E EC_KEY_METHOD_set_verify+318046
+32: 00007FF76EA2B66B EC_KEY_METHOD_set_verify+305723
+33: 00007FF76EA2A83E EC_KEY_METHOD_set_verify+302094
+ 1: 00007FF76E32403F node::OnFatalError+1343
+34: 00007FF76EA30204 EC_KEY_METHOD_set_verify+325076
+ 2: 00007FF76EF6FAA7 v8::Function::NewInstance+423
+35: 00007FF76EA3B61F EC_KEY_METHOD_set_verify+371183
+ 3: 00007FF76E8E9986 v8::SnapshotCreator::GetIsolate+56566
+36: 00007FF76EA24DEB EC_KEY_METHOD_set_verify+278971
+ 1: 00007FF76E32403F node::OnFatalError+1343
+ 4: 00007FF76E9AF073 v8::base::CPU::has_bmi2+18291
+37: 00007FF76EA242EA EC_KEY_METHOD_set_verify+276154
+ 2: 00007FF76EF6FAA7 v8::Function::NewInstance+423
+ 5: 00007FF76E9AACF7 v8::base::CPU::has_bmi2+1015
+38: 00007FF76EA179E7 EC_KEY_METHOD_set_verify+224695
+ 3: 00007FF76E8E9986 v8::SnapshotCreator::GetIsolate+56566
+ 6: 00007FF76E9B3B4C v8::base::CPU::has_bmi2+37452
+39: 00007FF76EA16BB4 EC_KEY_METHOD_set_verify+221060
+ 4: 00007FF76EF6D5FE EVP_MD_CTX_set_update_fn+765438
+ 7: 00007FF76E995DCB v8::base::CPU::family+39883
+40: 00007FF76EA15EA2 EC_KEY_METHOD_set_verify+217714
+ 5: 00007FF76EA12969 EC_KEY_METHOD_set_verify+204089
+ 8: 00007FF76E979200 v8::String::Utf8Value::~Utf8Value+220032
+41: 00007FF76EA15B4A EC_KEY_METHOD_set_verify+216858
+ 6: 00007FF76EA1AA21 EC_KEY_METHOD_set_verify+237041
+ 9: 00007FF76E978922 v8::String::Utf8Value::~Utf8Value+217762
+42: 00007FF76EA11179 EC_KEY_METHOD_set_verify+197961
+ 7: 00007FF76EA2B560 EC_KEY_METHOD_set_verify+305456
+10: 00007FF76E977219 v8::String::Utf8Value::~Utf8Value+211865
+43: 00007FF76EEED4EF EVP_MD_CTX_set_update_fn+240879
+11: 00007FF76E9774AC v8::String::Utf8Value::~Utf8Value+212524
+ 8: 00007FF76EA2A884 EC_KEY_METHOD_set_verify+302164
+44: 00007FF76EEF02F1 EVP_MD_CTX_set_update_fn+252657
+ 9: 00007FF76EA3C712 EC_KEY_METHOD_set_verify+375522
+12: 00007FF76E97738B v8::String::Utf8Value::~Utf8Value+212235
+45: 00007FF76EF78F63 v8::ScriptCompiler::CompileFunction+1011
+10: 00007FF76EA1C1E5 EC_KEY_METHOD_set_verify+243125
+46: 00007FF76E341563 node::GetCurrentEnvironment+20883
+13: 00007FF76E94E292 v8::String::Utf8Value::~Utf8Value+44050
+11: 00007FF76EA24DEB EC_KEY_METHOD_set_verify+278971
+14: 00000125B7E775FA 
+47: 00007FF76E33FD0E node::GetCurrentEnvironment+14654
+12: 00007FF76EA242EA EC_KEY_METHOD_set_verify+276154
+48: 000002339FDCF64D 
+13: 00007FF76EA179E7 EC_KEY_METHOD_set_verify+224695
+14: 00007FF76EA16BB4 EC_KEY_METHOD_set_verify+221060
+15: 00007FF76EA15EA2 EC_KEY_METHOD_set_verify+217714
+16: 00007FF76EA15B4A EC_KEY_METHOD_set_verify+216858
+17: 00007FF76EA11179 EC_KEY_METHOD_set_verify+197961
+18: 00007FF76EEED4EF EVP_MD_CTX_set_update_fn+240879
+19: 00007FF76EEF02F1 EVP_MD_CTX_set_update_fn+252657
+20: 00007FF76EF78F63 v8::ScriptCompiler::CompileFunction+1011
+21: 00007FF76E341563 node::GetCurrentEnvironment+20883
+22: 00007FF76E33FD0E node::GetCurrentEnvironment+14654
+23: 000001C4AFDCF64D 
+ 1: 00007FF76E32403F node::OnFatalError+1343
+ 2: 00007FF76EF6FAA7 v8::Function::NewInstance+423
+ 3: 00007FF76E8E9986 v8::SnapshotCreator::GetIsolate+56566
+ 4: 00007FF76E71815E SSL_CTX_get_client_CA_list+29726
+ 5: 00007FF76E74C656 SSL_CTX_get_client_CA_list+243990
+ 6: 00007FF76E74BB3E SSL_CTX_get_client_CA_list+241150
+ 7: 00007FF76E75F0A1 SSL_CTX_get_client_CA_list+320353
+ 8: 00007FF76E733F05 SSL_CTX_get_client_CA_list+143813
+ 9: 00007FF76E74F632 SSL_CTX_get_client_CA_list+256242
+10: 00007FF76E760CF6 SSL_CTX_get_client_CA_list+327606
+11: 00007FF76E761AF7 SSL_CTX_get_client_CA_list+331191
+12: 00007FF76E775ECA SSL_CTX_get_client_CA_list+414090
+13: 00007FF76E74AB0B SSL_CTX_get_client_CA_list+237003
+14: 00007FF76E74A6E2 SSL_CTX_get_client_CA_list+235938
+15: 00007FF76E74C695 SSL_CTX_get_client_CA_list+244053
+16: 00007FF76E74BB3E SSL_CTX_get_client_CA_list+241150
+17: 00007FF76E75F0A1 SSL_CTX_get_client_CA_list+320353
+18: 00007FF76E733F05 SSL_CTX_get_client_CA_list+143813
+19: 00007FF76E74F632 SSL_CTX_get_client_CA_list+256242
+20: 00007FF76E760CF6 SSL_CTX_get_client_CA_list+327606
+21: 00007FF76E761AF7 SSL_CTX_get_client_CA_list+331191
+22: 00007FF76E775ECA SSL_CTX_get_client_CA_list+414090
+23: 00007FF76E74AB0B SSL_CTX_get_client_CA_list+237003
+24: 00007FF76E7C2C76 SSL_CTX_get_client_CA_list+728886
+25: 00007FF76E7C1990 SSL_CTX_get_client_CA_list+724048
+26: 00007FF76E7BF78A SSL_CTX_get_client_CA_list+715338
+27: 00007FF76EEE376F EVP_MD_CTX_set_update_fn+200559
+28: 00007FF76E7C126B SSL_CTX_get_client_CA_list+722219
+29: 00007FF76F750C5F v8::platform::DefaultJobHandle::UpdatePriority+591
+30: 00007FF76E272E0E node::GetNodeReport+90430
+31: 00007FF76EFC4A36 uv_thread_detach+150
+32: 00007FF770225A73 v8::base::UnsignedDivisionByConstant<unsigned __int64>+2907235
+33: 00007FF8D6FEE957 BaseThreadInitThunk+23
+34: 00007FF8D8F07C1C RtlUserThreadStart+44
+
+<--- Last few GCs --->
+
+[72184:000001B3DB2ED000]     1567 ms: Scavenge 8.9 (11.7) -> 7.6 (11.7) MB, pooled: 0 MB, 2.06 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[72184:000001B3DB2ED000]     1604 ms: Scavenge 9.7 (12.4) -> 9.0 (17.4) MB, pooled: 0 MB, 2.25 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[72184:000001B3DB2ED000]     3615 ms: Scavenge 13.5 (18.1) -> 11.3 (18.4) MB, pooled: 0 MB, 1.80 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+memory allocation of 34832 bytes failed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+ 1: 00007FF76E32403F node::OnFatalError+1343
+ 2: 00007FF76EF6FAA7 v8::Function::NewInstance+423
+ 3: 00007FF76E8E9986 v8::SnapshotCreator::GetIsolate+56566
+ 4: 00007FF76EC5B272 v8::Promise::MarkAsSilent+547330
+ 5: 00007FF76EC5A4DE v8::Promise::MarkAsSilent+543854
+ 6: 00007FF76EC86A29 v8::Promise::MarkAsSilent+725433
+ 7: 00007FF76EC6BD38 v8::Promise::MarkAsSilent+615624
+ 8: 00007FF76EC77A28 v8::Promise::MarkAsSilent+663992
+ 9: 00007FF76EC74EA0 v8::Promise::MarkAsSilent+652848
+10: 00007FF76EC64425 v8::Promise::MarkAsSilent+584629
+11: 00007FF76EC6269B v8::Promise::MarkAsSilent+577067
+12: 00007FF76EC62A20 v8::Promise::MarkAsSilent+577968
+13: 00007FF76EC645B3 v8::Promise::MarkAsSilent+585027
+14: 00007FF76EC6269B v8::Promise::MarkAsSilent+577067
+15: 00007FF76EC62A20 v8::Promise::MarkAsSilent+577968
+16: 00007FF76EC645B3 v8::Promise::MarkAsSilent+585027
+17: 00007FF76EC6460A v8::Promise::MarkAsSilent+585114
+18: 00007FF76EC6460A v8::Promise::MarkAsSilent+585114
+19: 00007FF76EC6460A v8::Promise::MarkAsSilent+585114
+20: 00007FF76EC6269B v8::Promise::MarkAsSilent+577067
+21: 00007FF76EC62A20 v8::Promise::MarkAsSilent+577968
+22: 00007FF76EC6269B v8::Promise::MarkAsSilent+577067
+23: 00007FF76EC62A20 v8::Promise::MarkAsSilent+577968
+24: 00007FF76EC68C4A v8::Promise::MarkAsSilent+603098
+25: 00007FF76EC6269B v8::Promise::MarkAsSilent+577067
+26: 00007FF76EC62A20 v8::Promise::MarkAsSilent+577968
+27: 00007FF76EC61C3B v8::Promise::MarkAsSilent+574411
+28: 00007FF76EC610AF v8::Promise::MarkAsSilent+571455
+29: 00007FF76EC5F743 v8::Promise::MarkAsSilent+564947
+30: 00007FF76EC56B66 v8::Promise::MarkAsSilent+529142
+31: 00007FF76EEF483F EVP_MD_CTX_set_update_fn+270399
+32: 00007FF76EEEB158 EVP_MD_CTX_set_update_fn+231768
+33: 00007FF76EEEA97D EVP_MD_CTX_set_update_fn+229757
+34: 00007FF76EEEB41C EVP_MD_CTX_set_update_fn+232476
+35: 00007FF76E96DA4B v8::String::Utf8Value::~Utf8Value+173003
+36: 000001B39FE775FA 
+
+<--- Last few GCs --->
+
+[89072:00000162A8C83000]     1564 ms: Scavenge 9.7 (12.4) -> 9.1 (17.4) MB, pooled: 0 MB, 37.71 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[89072:00000162A8C83000]     2001 ms: Scavenge 13.5 (18.4) -> 11.4 (18.7) MB, pooled: 0 MB, 1.53 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[89072:00000162A8C83000]     3039 ms: Scavenge 14.7 (19.4) -> 13.2 (28.7) MB, pooled: 0 MB, 542.98 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+
+<--- Last few GCs --->
+
+[89072:00000162A8C83000]     1564 ms: Scavenge 9.7 (12.4) -> 9.1 (17.4) MB, pooled: 0 MB, 37.71 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[89072:00000162A8C83000]     2001 ms: Scavenge 13.5 (18.4) -> 11.4 (18.7) MB, pooled: 0 MB, 1.53 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[89072:00000162A8C83000]     3039 ms: Scavenge 14.7 (19.4) -> 13.2 (28.7) MB, pooled: 0 MB, 542.98 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+
+<--- Last few GCs --->
+[72540:00000297E859E000]     1315 ms: Scavenge 6.2 (7.6) -> 5.5 (10.3) MB, pooled: 0 MB, 89.40 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+[?25h

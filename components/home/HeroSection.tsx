@@ -7,42 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 
-const SLIDES_DATA = [
-  {
-    price: '45,00 €',
-    priceLabel: 'Premium Collection',
-    href: '/flowers',
-    image: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop',
-    bg: '#e0f2fe',
-  },
-  {
-    price: '120,00 €',
-    priceLabel: 'Wedding Special',
-    href: '/flowers',
-    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
-    bg: '#f0f9ff',
-  },
-  {
-    price: '35,00 €',
-    priceLabel: 'Seasonal Blooms',
-    href: '/flowers',
-    image: 'https://images.unsplash.com/photo-1487530811015-780f25e19780?q=80&w=1000&auto=format&fit=crop',
-    bg: '#e0f2fe',
-  },
-  {
-    price: '65,00 €',
-    priceLabel: 'Premium Massage',
-    href: '/massage',
-    image: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1000&auto=format&fit=crop',
-    bg: '#f0f9ff',
-  },
-  {
-    price: '50,00 €',
-    priceLabel: 'Gift Card',
-    href: '/gift-cards',
-    image: 'https://images.unsplash.com/photo-1548094990-c16ca90f1f0d?q=80&w=1000&auto=format&fit=crop',
-    bg: '#e0f2fe',
-  },
+const DEFAULT_SLIDES_DATA = [
+  { price: '45,00 €', priceLabel: 'Premium Collection', href: '/flowers', image: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop', bg: '#e0f2fe' },
+  { price: '120,00 €', priceLabel: 'Wedding Special', href: '/flowers', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop', bg: '#f0f9ff' },
+  { price: '35,00 €', priceLabel: 'Seasonal Blooms', href: '/flowers', image: 'https://images.unsplash.com/photo-1487530811015-780f25e19780?q=80&w=1000&auto=format&fit=crop', bg: '#e0f2fe' },
+  { price: '65,00 €', priceLabel: 'Premium Massage', href: '/massage', image: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1000&auto=format&fit=crop', bg: '#f0f9ff' },
+  { price: '50,00 €', priceLabel: 'Gift Card', href: '/gift-cards', image: 'https://images.unsplash.com/photo-1548094990-c16ca90f1f0d?q=80&w=1000&auto=format&fit=crop', bg: '#e0f2fe' },
 ];
 
 const FEATURES_DATA = [
@@ -67,11 +37,42 @@ function fadeUp(delay = 0) {
   } as const;
 }
 
+interface DbSlide { id: string; imageUrl: string; bgColor: string; href: string; price: string; priceLabel: string; order: number; }
+
+const HEADLINE_KEYS = [
+  ['slides.s1h1', 'slides.s1h2'],
+  ['slides.s2h1', 'slides.s2h2'],
+  ['slides.s3h1', 'slides.s3h2'],
+  ['slides.s4h1', 'slides.s4h2'],
+  ['slides.s5h1', 'slides.s5h2'],
+] as const;
+
 export default function HeroSection() {
   const t = useTranslations('home');
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const total = SLIDES_DATA.length;
+  const [slidesData, setSlidesData] = useState(DEFAULT_SLIDES_DATA);
+
+  useEffect(() => {
+    fetch('/api/hero-slides')
+      .then((r) => r.ok ? r.json() : [])
+      .then((dbSlides: DbSlide[]) => {
+        if (dbSlides.length > 0) {
+          setSlidesData(
+            dbSlides.map((s) => ({
+              image: s.imageUrl,
+              bg: s.bgColor,
+              href: s.href,
+              price: s.price,
+              priceLabel: s.priceLabel,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const total = slidesData.length;
 
   const goTo = useCallback((idx: number, dir: number) => {
     setDirection(dir);
@@ -86,13 +87,13 @@ export default function HeroSection() {
     return () => clearTimeout(timer);
   }, [current, goTo]);
 
-  const slides = [
-    { ...SLIDES_DATA[0], headline: [t('slides.s1h1'), t('slides.s1h2')] },
-    { ...SLIDES_DATA[1], headline: [t('slides.s2h1'), t('slides.s2h2')] },
-    { ...SLIDES_DATA[2], headline: [t('slides.s3h1'), t('slides.s3h2')] },
-    { ...SLIDES_DATA[3], headline: [t('slides.s4h1'), t('slides.s4h2')] },
-    { ...SLIDES_DATA[4], headline: [t('slides.s5h1'), t('slides.s5h2')] },
-  ];
+  const slides = slidesData.map((s, i) => ({
+    ...s,
+    headline: [
+      t((HEADLINE_KEYS[i]?.[0] ?? 'slides.s1h1') as Parameters<typeof t>[0]),
+      t((HEADLINE_KEYS[i]?.[1] ?? 'slides.s1h2') as Parameters<typeof t>[0]),
+    ],
+  }));
 
   const slide = slides[current];
 
