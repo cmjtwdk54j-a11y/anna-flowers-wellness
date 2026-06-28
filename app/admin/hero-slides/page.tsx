@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { Plus, Trash2, Upload, GripVertical, Eye, EyeOff } from 'lucide-react';
+import { useAdminLang } from '@/components/admin/AdminLangContext';
 
 interface HeroSlide {
   id: string;
@@ -43,6 +44,9 @@ function Field({ label, value, onChange, placeholder }: { label: string; value: 
 }
 
 export default function HeroSlidesPage() {
+  const { t } = useAdminLang();
+  const hs = t.heroSlides;
+
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState<string | null>(null);
@@ -106,7 +110,7 @@ export default function HeroSlidesPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Удалить слайд?')) return;
+    if (!confirm(hs.confirmDelete)) return;
     await fetch(`/api/admin/hero-slides/${id}`, { method: 'DELETE' });
     setSlides((prev) => prev.filter((s) => s.id !== id));
   };
@@ -123,27 +127,27 @@ export default function HeroSlidesPage() {
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Hero слайды</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{hs.title}</h1>
         <div className="flex gap-3">
           {slides.length === 0 && (
             <button onClick={handleSeedDefaults} disabled={seeding}
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium">
-              {seeding ? 'Загрузка...' : 'Загрузить дефолтные'}
+              {seeding ? hs.loading : hs.loadDefaults}
             </button>
           )}
           <button onClick={handleAddSlide}
             className="flex items-center gap-2 px-4 py-2 text-white rounded-lg text-sm font-medium"
             style={{ backgroundColor: '#1e3a8a' }}>
-            <Plus className="w-4 h-4" /> Добавить слайд
+            <Plus className="w-4 h-4" /> {hs.addSlide}
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-gray-400">Загрузка...</div>
+        <div className="text-center py-12 text-gray-400">{hs.loading}</div>
       ) : slides.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">
-          <p className="text-gray-400">Слайдов нет. Нажмите «Загрузить дефолтные» или «Добавить слайд».</p>
+          <p className="text-gray-400">{hs.empty}</p>
         </div>
       ) : (
         <div className="grid gap-6">
@@ -151,20 +155,19 @@ export default function HeroSlidesPage() {
             <div key={slide.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="flex gap-4 p-4">
 
-                {/* Order + drag */}
                 <div className="flex flex-col items-center gap-1 pt-1 flex-shrink-0">
                   <GripVertical className="w-4 h-4 text-gray-300" />
                   <span className="text-xs font-bold text-gray-300">#{idx + 1}</span>
                 </div>
 
-                {/* Image preview */}
+                {/* Image */}
                 <div className="relative w-36 h-36 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer group"
                   style={{ backgroundColor: slide.bgColor }}
                   onClick={() => fileInputRefs.current[slide.id]?.click()}>
                   <Image src={slide.imageUrl} alt={`Slide ${idx + 1}`} fill className="object-cover" sizes="144px" unoptimized />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     {uploading === slide.id
-                      ? <span className="text-white text-xs font-bold">Загрузка...</span>
+                      ? <span className="text-white text-xs font-bold">{hs.uploading}</span>
                       : <Upload className="w-6 h-6 text-white" />}
                   </div>
                   <input type="file" accept="image/*" className="hidden"
@@ -172,43 +175,39 @@ export default function HeroSlidesPage() {
                     onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageUpload(slide.id, f); }} />
                 </div>
 
-                {/* All fields */}
+                {/* Fields */}
                 <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-3">
-
-                  {/* Headlines FI */}
                   <div className="col-span-2">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">🇫🇮 Финский заголовок</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">{hs.headlineFi}</p>
                     <div className="grid grid-cols-2 gap-3">
-                      <Field label="Строка 1 (FI)" value={slide.headline_fi} placeholder="Kauneutta ja"
+                      <Field label={hs.line1fi} value={slide.headline_fi} placeholder="Kauneutta ja"
                         onChange={(v) => handleField(slide, 'headline_fi', v)} />
-                      <Field label="Строка 2 (FI)" value={slide.headline_fi2} placeholder="hyvinvointia"
+                      <Field label={hs.line2fi} value={slide.headline_fi2} placeholder="hyvinvointia"
                         onChange={(v) => handleField(slide, 'headline_fi2', v)} />
                     </div>
                   </div>
 
-                  {/* Headlines EN */}
                   <div className="col-span-2">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-green-500 mb-2">🇬🇧 Английский заголовок</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-green-500 mb-2">{hs.headlineEn}</p>
                     <div className="grid grid-cols-2 gap-3">
-                      <Field label="Строка 1 (EN)" value={slide.headline_en} placeholder="Beauty &"
+                      <Field label={hs.line1en} value={slide.headline_en} placeholder="Beauty &"
                         onChange={(v) => handleField(slide, 'headline_en', v)} />
-                      <Field label="Строка 2 (EN)" value={slide.headline_en2} placeholder="Wellbeing"
+                      <Field label={hs.line2en} value={slide.headline_en2} placeholder="Wellbeing"
                         onChange={(v) => handleField(slide, 'headline_en2', v)} />
                     </div>
                   </div>
 
-                  {/* Link + color */}
                   <div>
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1">Ссылка кнопки</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1">{hs.link}</label>
                     <select value={slide.href} onChange={(e) => handleField(slide, 'href', e.target.value)}
                       className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-400">
-                      <option value="/flowers">Цветочный магазин</option>
-                      <option value="/massage">Массаж</option>
-                      <option value="/gift-cards">Подарочные карты</option>
+                      <option value="/flowers">{hs.linkFlowers}</option>
+                      <option value="/massage">{hs.linkMassage}</option>
+                      <option value="/gift-cards">{hs.linkGiftCards}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1">Цвет фона</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1">{hs.bgColor}</label>
                     <div className="flex gap-2 items-center">
                       <input type="color" value={slide.bgColor}
                         onChange={(e) => handleField(slide, 'bgColor', e.target.value)}
@@ -217,16 +216,15 @@ export default function HeroSlidesPage() {
                     </div>
                   </div>
 
-                  {/* Price badge */}
-                  <Field label="Цена (бейдж)" value={slide.price} placeholder="45,00 €"
+                  <Field label={hs.price} value={slide.price} placeholder="45,00 €"
                     onChange={(v) => handleField(slide, 'price', v)} />
-                  <Field label="Подпись бейджа" value={slide.priceLabel} placeholder="Premium Collection"
+                  <Field label={hs.priceLabel} value={slide.priceLabel} placeholder="Premium Collection"
                     onChange={(v) => handleField(slide, 'priceLabel', v)} />
                 </div>
 
                 {/* Actions */}
                 <div className="flex flex-col gap-2 flex-shrink-0">
-                  <button onClick={() => handleToggleActive(slide)} title={slide.isActive ? 'Скрыть' : 'Показать'}
+                  <button onClick={() => handleToggleActive(slide)}
                     className={`p-2 rounded-lg transition-colors ${slide.isActive ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}>
                     {slide.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
@@ -238,7 +236,7 @@ export default function HeroSlidesPage() {
               </div>
 
               <div className="px-4 pb-3 ml-[76px]">
-                <p className="text-[11px] text-gray-400">Нажмите на фото чтобы заменить (JPG/PNG/WebP, макс. 5MB)</p>
+                <p className="text-[11px] text-gray-400">{hs.photoHint}</p>
               </div>
             </div>
           ))}
