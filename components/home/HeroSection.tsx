@@ -39,14 +39,6 @@ function fadeUp(delay = 0) {
 
 interface DbSlide { id: string; imageUrl: string; bgColor: string; href: string; price: string; priceLabel: string; order: number; }
 
-const HEADLINE_KEYS = [
-  ['slides.s1h1', 'slides.s1h2'],
-  ['slides.s2h1', 'slides.s2h2'],
-  ['slides.s3h1', 'slides.s3h2'],
-  ['slides.s4h1', 'slides.s4h2'],
-  ['slides.s5h1', 'slides.s5h2'],
-] as const;
-
 export default function HeroSection() {
   const t = useTranslations('home');
   const [current, setCurrent] = useState(0);
@@ -87,12 +79,17 @@ export default function HeroSection() {
     return () => clearTimeout(timer);
   }, [current, goTo]);
 
+  const headlineDefaults = [
+    [t('slides.s1h1'), t('slides.s1h2')],
+    [t('slides.s2h1'), t('slides.s2h2')],
+    [t('slides.s3h1'), t('slides.s3h2')],
+    [t('slides.s4h1'), t('slides.s4h2')],
+    [t('slides.s5h1'), t('slides.s5h2')],
+  ];
+
   const slides = slidesData.map((s, i) => ({
     ...s,
-    headline: [
-      t((HEADLINE_KEYS[i]?.[0] ?? 'slides.s1h1') as Parameters<typeof t>[0]),
-      t((HEADLINE_KEYS[i]?.[1] ?? 'slides.s1h2') as Parameters<typeof t>[0]),
-    ],
+    headline: headlineDefaults[i] ?? headlineDefaults[0],
   }));
 
   const slide = slides[current];
