@@ -118,9 +118,9 @@ export default function MassagePageClient() {
                     className="overflow-hidden"
                   >
                     {/* Description */}
-                    {services[0]?.desc_fi && (
+                    {(isFi ? services[0]?.desc_fi : services[0]?.desc_en) && (
                       <p className="px-5 pb-3 text-sm text-gray-400 leading-relaxed border-b border-gray-100">
-                        {services[0].desc_fi}
+                        {isFi ? services[0].desc_fi : services[0].desc_en}
                       </p>
                     )}
 
