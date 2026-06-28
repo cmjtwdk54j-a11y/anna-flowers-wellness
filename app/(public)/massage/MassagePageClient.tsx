@@ -1,16 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Clock, MapPin, X, Calendar, User, Phone, Mail, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { MASSAGE_SERVICES, MASSAGE_CATEGORIES, BUSINESS_INFO, cn } from '@/lib/utils';
 
-type ServiceVariant = typeof MASSAGE_SERVICES[number];
+interface DisplayService {
+  id: string;
+  name_fi: string;
+  name_en: string;
+  desc_fi: string;
+  desc_en: string;
+  duration: number;
+  price: number;
+}
+
+interface DisplayCategory {
+  id: string;
+  name_fi: string;
+  name_en: string;
+  services: DisplayService[];
+}
 
 interface ModalState {
-  service: ServiceVariant;
+  service: DisplayService;
 }
+
+const FALLBACK_CATEGORIES: DisplayCategory[] = MASSAGE_CATEGORIES.map((cat) => ({
+  id: cat.id,
+  name_fi: cat.label,
+  name_en: cat.label_en,
+  services: MASSAGE_SERVICES
+    .filter((s) => s.category === cat.id)
+    .map((s) => ({
+      id: s.id,
+      name_fi: s.name_fi,
+      name_en: s.name_en,
+      desc_fi: s.desc_fi,
+      desc_en: s.desc_en,
+      duration: s.duration,
+      price: s.price,
+    })),
+}));
 
 export default function MassagePageClient() {
   const t = useTranslations('massage');
@@ -18,8 +50,18 @@ export default function MassagePageClient() {
   const locale = useLocale();
   const isFi = locale === 'fi';
   const fromWord = isFi ? 'alkaen' : 'from';
+  const [displayCategories, setDisplayCategories] = useState<DisplayCategory[]>(FALLBACK_CATEGORIES);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [modal, setModal] = useState<ModalState | null>(null);
+
+  useEffect(() => {
+    fetch('/api/massage/services')
+      .then((r) => r.ok ? r.json() : null)
+      .then((data: DisplayCategory[] | null) => {
+        if (data && data.length > 0) setDisplayCategories(data);
+      })
+      .catch(() => {});
+  }, []);
   const [form, setForm] = useState({ name: '', phone: '', email: '', date: '', time: '', notes: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,10 +120,10 @@ export default function MassagePageClient() {
 
       {/* Accordion */}
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 space-y-2">
-        {MASSAGE_CATEGORIES.map((cat) => {
-          const services = MASSAGE_SERVICES.filter((s) => s.category === cat.id);
+        {displayCategories.map((cat) => {
+          const services = cat.services;
           const isOpen = openCategory === cat.id;
-          const minPrice = Math.min(...services.map((s) => s.price));
+          const minPrice = services.length > 0 ? Math.min(...services.map((s) => s.price)) : 0;
 
           return (
             <div
@@ -97,9 +139,9 @@ export default function MassagePageClient() {
               >
                 <div>
                   <span className="font-semibold text-base" style={{ color: 'var(--burgundy)' }}>
-                    {isFi ? cat.label : cat.label_en}
+                    {isFi ? cat.name_fi : cat.name_en}
                   </span>
-                  {!isOpen && (
+                  {!isOpen && minPrice > 0 && (
                     <span className="ml-3 text-xs text-gray-400">{fromWord} {minPrice} €</span>
                   )}
                 </div>

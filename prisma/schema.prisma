@@ -225,6 +225,38 @@ model PromoCode {
   @@map("promo_codes")
 }
 
+model MassageCategory {
+  id        String           @id @default(cuid())
+  slug      String           @unique
+  name_fi   String
+  name_en   String
+  sortOrder Int              @default(0)
+  isActive  Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  services  MassageService[]
+
+  @@map("massage_categories")
+}
+
+model MassageService {
+  id         String          @id @default(cuid())
+  categoryId String
+  name_fi    String
+  name_en    String
+  desc_fi    String          @default("")
+  desc_en    String          @default("")
+  duration   Int
+  price      Decimal         @db.Decimal(10, 2)
+  sortOrder  Int             @default(0)
+  isActive   Boolean         @default(true)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  category MassageCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("massage_services")
+}
+
 model HeroSlide {
   id           String  @id @default(cuid())
   order        Int     @default(0)

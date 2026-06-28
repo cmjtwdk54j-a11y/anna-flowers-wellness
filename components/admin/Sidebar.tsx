@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Package, ShoppingBag, Tag, FolderTree,
-  BarChart2, Settings, LogOut, Flower2, X, Menu, Images,
+  BarChart2, Settings, LogOut, Flower2, X, Menu, Images, Waves,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -23,6 +23,7 @@ export default function Sidebar() {
     { href: '/admin/promo-codes', label: t.nav.promoCodes, icon: Tag },
     { href: '/admin/categories', label: t.nav.categories, icon: FolderTree },
     { href: '/admin/hero-slides', label: t.nav.heroSlides, icon: Images },
+    { href: '/admin/massage', label: t.nav.massageServices, icon: Waves },
     { href: '/admin/analytics', label: t.nav.analytics, icon: BarChart2 },
     { href: '/admin/settings', label: t.nav.settings, icon: Settings },
   ];
