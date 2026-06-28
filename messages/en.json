@@ -114,6 +114,7 @@
     "notice": "Notice",
     "addAnyway": "Add anyway",
     "filters": {
+      "categories": "Categories",
       "occasion": "Occasion",
       "color": "Colour",
       "maxPrice": "Price",
@@ -177,6 +178,7 @@
   },
   "massage": {
     "title": "Head Massage",
+    "heroTitle": "Massage & Spa",
     "subtitle": "A relaxing and revitalizing experience",
     "description": "Head massage improves blood circulation, reduces stress, and promotes hair growth. Our expert hands take care of your wellbeing.",
     "benefits": {
@@ -212,7 +214,10 @@
       "date": "Date",
       "time": "Time",
       "notes": "Additional notes",
+      "book": "Book",
       "submit": "Book Now",
+      "namePlaceholder": "First Last Name",
+      "notesPlaceholder": "Additional info...",
       "success": "Booking received! We will contact you soon.",
       "selectService": "Select service",
       "selectTime": "Select time",
@@ -413,7 +418,8 @@
     "addonsSelected": "{count} extras added",
     "orderError": "Failed to place order. Please try again.",
     "networkError": "No network connection. Check your internet and try again.",
-    "soon": "Soon"
+    "soon": "Soon",
+    "paypalDesc": "Pay securely with PayPal"
   },
   "success": {
     "title": "Order confirmed!",

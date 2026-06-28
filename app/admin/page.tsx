@@ -64,7 +64,7 @@ async function getDashboardStats(): Promise<DashboardStats | { error: string } |
 
     const alerts: DashboardStats['alerts'] = [];
     const outOfStock = await prisma.product.count({ where: { inStock: false } });
-    if (outOfStock > 0) alerts.push({ type: 'warning', message: `${outOfStock} tuotetta loppu varastosta` });
+    if (outOfStock > 0) alerts.push({ type: 'warning', message: `${outOfStock} products out of stock` });
 
     return {
       revenue: { today: todayRevenue, week: weekRevenue, month: monthRevenue },

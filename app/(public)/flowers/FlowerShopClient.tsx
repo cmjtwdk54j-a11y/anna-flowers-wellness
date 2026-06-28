@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Plus, AlertCircle, X, Menu, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
@@ -19,6 +19,8 @@ interface ShopCategory { id: string; slug: string; name_fi: string; name_en: str
 export default function FlowerShopClient({ products }: { products: CatalogProduct[] }) {
   const t = useTranslations('flowers');
   const tCommon = useTranslations('common');
+  const locale = useLocale();
+  const isFi = locale === 'fi';
   const { addItem, openCart } = useCart();
 
   const [activeCategory, setActiveCategory] = useState('all');
@@ -120,7 +122,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
           aria-label="Toggle categories"
         >
           <Menu className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Kategoriat</span>
+          <span className="hidden sm:inline">{t('filters.categories')}</span>
         </button>
 
         <select value={occasion} onChange={(e) => setOccasion(e.target.value)} className={selectClass}>
@@ -198,7 +200,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
               >
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">
-                    Kategoriat
+                    {t('filters.categories')}
                   </p>
                   <button
                     onClick={() => setSidebarOpen(false)}
@@ -219,7 +221,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
                   )}
                   style={activeCategory === 'all' ? { backgroundColor: 'var(--burgundy)' } : undefined}
                 >
-                  <span>Kaikki</span>
+                  <span>{t('categories.all')}</span>
                   <span className="text-xs opacity-60">{products.length}</span>
                 </button>
 
@@ -243,7 +245,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
                       >
                         <span className="flex items-center gap-2">
                           {cat.icon && <span>{cat.icon}</span>}
-                          {cat.name_fi}
+                          {isFi ? cat.name_fi : cat.name_en}
                         </span>
                         <div className="flex items-center gap-1.5">
                           <span className="text-xs opacity-60">{cat.productCount}</span>
@@ -271,7 +273,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
                                   key={sub.id}
                                   className="w-full text-left px-3 py-2 rounded-lg text-xs text-gray-500 hover:text-gray-800 hover:bg-blue-50 transition-colors font-medium"
                                 >
-                                  {sub.name_fi}
+                                  {isFi ? sub.name_fi : sub.name_en}
                                 </button>
                               ))}
                             </div>
@@ -329,7 +331,7 @@ export default function FlowerShopClient({ products }: { products: CatalogProduc
 
                     <Link href={`/flowers/${product.slug}`}>
                       <h3 className="font-serif text-sm sm:text-lg lg:text-xl mb-1 group-hover:opacity-70 transition-opacity leading-tight" style={{ color: 'var(--burgundy)' }}>
-                        {product.name_fi}
+                        {isFi ? product.name_fi : product.name_en}
                       </h3>
                     </Link>
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Clock, MapPin, X, Calendar, User, Phone, Mail, MessageSquare, CheckCircle2 } from 'lucide-react';
-import { MASSAGE_SERVICES, MASSAGE_CATEGORIES, cn } from '@/lib/utils';
+import { MASSAGE_SERVICES, MASSAGE_CATEGORIES, BUSINESS_INFO, cn } from '@/lib/utils';
 
 type ServiceVariant = typeof MASSAGE_SERVICES[number];
 
@@ -14,6 +14,7 @@ interface ModalState {
 
 export default function MassagePageClient() {
   const t = useTranslations('massage');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
   const isFi = locale === 'fi';
   const fromWord = isFi ? 'alkaen' : 'from';
@@ -66,11 +67,11 @@ export default function MassagePageClient() {
             Aava Floristi · Sincere 9-Master
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl font-medium mb-4" style={{ color: 'var(--burgundy)' }}>
-            Hieronta & Spa
+            {t('heroTitle')}
           </h1>
           <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
             <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-            Puistolantori 1 · Puistola · Helsinki
+            {BUSINESS_INFO.address}
           </div>
         </div>
       </section>
@@ -143,7 +144,7 @@ export default function MassagePageClient() {
                               className="text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full transition-all text-white"
                               style={{ backgroundColor: 'var(--burgundy)' }}
                             >
-                              Varaa
+                              {t('booking.book')}
                             </button>
                           </div>
                         </div>
@@ -181,7 +182,7 @@ export default function MassagePageClient() {
               {/* Modal header */}
               <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-0.5">Varaa aika</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-0.5">{t('booking.title')}</p>
                   <p className="font-semibold text-base" style={{ color: 'var(--burgundy)' }}>
                     {isFi ? modal.service.name_fi : modal.service.name_en}
                   </p>
@@ -205,7 +206,7 @@ export default function MassagePageClient() {
                     <h3 className="font-serif text-xl mb-2" style={{ color: 'var(--burgundy)' }}>{t('booking.thanks')}</h3>
                     <p className="text-sm text-gray-400">{t('booking.success')}</p>
                     <button onClick={closeModal} className="mt-5 text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--accent-pink)' }}>
-                      Sulje
+                      {tCommon('close')}
                     </button>
                   </div>
                 ) : (
@@ -218,7 +219,7 @@ export default function MassagePageClient() {
                         <input
                           type="text" required value={form.name}
                           onChange={(e) => setForm({ ...form, name: e.target.value })}
-                          placeholder="Etunimi Sukunimi"
+                          placeholder={t('booking.namePlaceholder')}
                           className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-300 transition-colors"
                         />
                       </div>
@@ -274,7 +275,7 @@ export default function MassagePageClient() {
                         <textarea
                           rows={2} value={form.notes}
                           onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                          placeholder="Lisätietoja..."
+                          placeholder={t('booking.notesPlaceholder')}
                           className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-300 transition-colors resize-none"
                         />
                       </div>

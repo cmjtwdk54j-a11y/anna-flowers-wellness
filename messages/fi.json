@@ -114,6 +114,7 @@
     "notice": "Huomio",
     "addAnyway": "Lisää silti",
     "filters": {
+      "categories": "Kategoriat",
       "occasion": "Tilaisuus",
       "color": "Väri",
       "maxPrice": "Hinta",
@@ -177,6 +178,7 @@
   },
   "massage": {
     "title": "Päänahkahieronta",
+    "heroTitle": "Hieronta & Spa",
     "subtitle": "Rentouttava ja elvyttävä kokemus",
     "description": "Päänahkahieronta parantaa verenkiertoa, vähentää stressiä ja edistää hiusten kasvua. Asiantuntevat kätemme huolehtivat sinun hyvinvoinnistasi.",
     "benefits": {
@@ -212,7 +214,10 @@
       "date": "Päivämäärä",
       "time": "Aika",
       "notes": "Lisätietoja",
+      "book": "Varaa",
       "submit": "Varaa aika",
+      "namePlaceholder": "Etunimi Sukunimi",
+      "notesPlaceholder": "Lisätietoja...",
       "success": "Varaus vastaanotettu! Otamme sinuun yhteyttä pian.",
       "selectService": "Valitse palvelu",
       "selectTime": "Valitse aika",
@@ -414,7 +419,8 @@
     "addonsSelected": "{count} lisätuotetta valittu",
     "orderError": "Tilauksen käsittelyssä tapahtui virhe. Yritä uudelleen.",
     "networkError": "Verkkoyhteys ei toimi. Tarkista internetyhteys ja yritä uudelleen.",
-    "soon": "Pian"
+    "soon": "Pian",
+    "paypalDesc": "Maksa turvallisesti PayPalilla"
   },
   "success": {
     "title": "Tilaus vahvistettu!",
