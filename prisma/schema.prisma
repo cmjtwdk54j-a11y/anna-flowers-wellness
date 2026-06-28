@@ -226,14 +226,18 @@ model PromoCode {
 }
 
 model HeroSlide {
-  id         String  @id @default(cuid())
-  order      Int     @default(0)
-  imageUrl   String
-  bgColor    String  @default("#e0f2fe")
-  href       String  @default("/flowers")
-  price      String  @default("")
-  priceLabel String  @default("")
-  isActive   Boolean @default(true)
+  id           String  @id @default(cuid())
+  order        Int     @default(0)
+  imageUrl     String
+  bgColor      String  @default("#e0f2fe")
+  href         String  @default("/flowers")
+  price        String  @default("")
+  priceLabel   String  @default("")
+  headline_fi  String  @default("")
+  headline_fi2 String  @default("")
+  headline_en  String  @default("")
+  headline_en2 String  @default("")
+  isActive     Boolean @default(true)
 
   @@map("hero_slides")
 }

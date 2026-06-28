@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 const DEFAULT_SLIDES_DATA = [
   { price: '45,00 €', priceLabel: 'Premium Collection', href: '/flowers', image: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop', bg: '#e0f2fe' },
@@ -37,34 +37,54 @@ function fadeUp(delay = 0) {
   } as const;
 }
 
-interface DbSlide { id: string; imageUrl: string; bgColor: string; href: string; price: string; priceLabel: string; order: number; }
+interface DbSlide {
+  id: string; imageUrl: string; bgColor: string; href: string;
+  price: string; priceLabel: string; order: number;
+  headline_fi: string; headline_fi2: string;
+  headline_en: string; headline_en2: string;
+}
 
 export default function HeroSection() {
   const t = useTranslations('home');
+  const locale = useLocale();
+  const isFi = locale === 'fi';
+
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [slidesData, setSlidesData] = useState(DEFAULT_SLIDES_DATA);
+  const [dbSlides, setDbSlides] = useState<DbSlide[] | null>(null);
 
   useEffect(() => {
     fetch('/api/hero-slides')
       .then((r) => r.ok ? r.json() : [])
-      .then((dbSlides: DbSlide[]) => {
-        if (dbSlides.length > 0) {
-          setSlidesData(
-            dbSlides.map((s) => ({
-              image: s.imageUrl,
-              bg: s.bgColor,
-              href: s.href,
-              price: s.price,
-              priceLabel: s.priceLabel,
-            }))
-          );
-        }
-      })
+      .then((data: DbSlide[]) => { if (data.length > 0) setDbSlides(data); })
       .catch(() => {});
   }, []);
 
-  const total = slidesData.length;
+  const headlineDefaults = [
+    [t('slides.s1h1'), t('slides.s1h2')],
+    [t('slides.s2h1'), t('slides.s2h2')],
+    [t('slides.s3h1'), t('slides.s3h2')],
+    [t('slides.s4h1'), t('slides.s4h2')],
+    [t('slides.s5h1'), t('slides.s5h2')],
+  ];
+
+  const slides = dbSlides
+    ? dbSlides.map((s, i) => ({
+        image: s.imageUrl,
+        bg: s.bgColor,
+        href: s.href,
+        price: s.price,
+        priceLabel: s.priceLabel,
+        headline: isFi
+          ? [s.headline_fi || headlineDefaults[i]?.[0] || '', s.headline_fi2 || headlineDefaults[i]?.[1] || '']
+          : [s.headline_en || headlineDefaults[i]?.[0] || '', s.headline_en2 || headlineDefaults[i]?.[1] || ''],
+      }))
+    : DEFAULT_SLIDES_DATA.map((s, i) => ({
+        ...s,
+        headline: headlineDefaults[i] ?? headlineDefaults[0],
+      }));
+
+  const total = slides.length;
 
   const goTo = useCallback((idx: number, dir: number) => {
     setDirection(dir);
@@ -78,19 +98,6 @@ export default function HeroSection() {
     const timer = setTimeout(() => goTo(current + 1, 1), 5000);
     return () => clearTimeout(timer);
   }, [current, goTo]);
-
-  const headlineDefaults = [
-    [t('slides.s1h1'), t('slides.s1h2')],
-    [t('slides.s2h1'), t('slides.s2h2')],
-    [t('slides.s3h1'), t('slides.s3h2')],
-    [t('slides.s4h1'), t('slides.s4h2')],
-    [t('slides.s5h1'), t('slides.s5h2')],
-  ];
-
-  const slides = slidesData.map((s, i) => ({
-    ...s,
-    headline: headlineDefaults[i] ?? headlineDefaults[0],
-  }));
 
   const slide = slides[current];
 
