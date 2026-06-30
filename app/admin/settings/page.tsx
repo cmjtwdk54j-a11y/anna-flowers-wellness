@@ -14,9 +14,9 @@ const DEFAULT: StoreSettingsData = {
   telegram: '',
   deliveryFee: 9.9,
   minOrderAmount: 0,
-  weekdays: 'Ma–Pe: 9:00–18:00',
-  saturday: 'La: 10:00–16:00',
-  sunday: 'Su: Suljettu',
+  weekdays: 'Ma–Pe: 9:00–19:00',
+  saturday: 'La: 9:00–16:00',
+  sunday: 'Su: 9:00–16:00',
   confirmationText: 'Kiitos tilauksestasi! Otamme sinuun yhteyttä pian.',
 };
 
@@ -121,9 +121,9 @@ export default function SettingsPage() {
           {lang === 'fi' ? 'Aukioloajat' : 'Opening hours'}
         </h2>
         <div className="grid sm:grid-cols-3 gap-4">
-          <F label={lang === 'fi' ? 'Arkisin' : 'Weekdays'} field="weekdays" placeholder="Ma–Pe: 9:00–18:00" />
-          <F label={lang === 'fi' ? 'Lauantai' : 'Saturday'} field="saturday" placeholder="La: 10:00–16:00" />
-          <F label={lang === 'fi' ? 'Sunnuntai' : 'Sunday'} field="sunday" placeholder="Su: Suljettu" />
+          <F label={lang === 'fi' ? 'Arkisin' : 'Weekdays'} field="weekdays" placeholder="Ma–Pe: 9:00–19:00" />
+          <F label={lang === 'fi' ? 'Lauantai' : 'Saturday'} field="saturday" placeholder="La: 9:00–16:00" />
+          <F label={lang === 'fi' ? 'Sunnuntai' : 'Sunday'} field="sunday" placeholder="Su: 9:00–16:00" />
         </div>
       </section>
 

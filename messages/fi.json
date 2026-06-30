@@ -283,9 +283,9 @@
     "schoolDelivery": "Toimitamme myös kouluihin",
     "times": {
       "title": "Toimitusajat",
-      "weekdays": "Maanantai–Perjantai: 9:00–18:00",
-      "saturday": "Lauantai: 10:00–16:00",
-      "sunday": "Sunnuntai: Suljettu",
+      "weekdays": "Maanantai–Perjantai: 9:00–19:00",
+      "saturday": "Lauantai: 9:00–16:00",
+      "sunday": "Sunnuntai: 9:00–16:00",
       "mondayLabel": "Maanantai – Perjantai",
       "saturdayLabel": "Lauantai",
       "sundayLabel": "Sunnuntai",

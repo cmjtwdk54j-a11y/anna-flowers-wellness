@@ -283,9 +283,9 @@
     "schoolDelivery": "We also deliver to schools",
     "times": {
       "title": "Delivery Times",
-      "weekdays": "Monday–Friday: 9:00–18:00",
-      "saturday": "Saturday: 10:00–16:00",
-      "sunday": "Sunday: Closed",
+      "weekdays": "Monday–Friday: 9:00–19:00",
+      "saturday": "Saturday: 9:00–16:00",
+      "sunday": "Sunday: 9:00–16:00",
       "mondayLabel": "Monday – Friday",
       "saturdayLabel": "Saturday",
       "sundayLabel": "Sunday",

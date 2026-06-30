@@ -121,8 +121,8 @@ export const BUSINESS_INFO = {
     spot2: '2 lisäpaikkaa – 2 tunnin aikaraja',
   },
   hours: {
-    weekdays: '9:00–18:00',
-    saturday: '10:00–16:00',
-    sunday: 'Suljettu',
+    weekdays: '9:00–19:00',
+    saturday: '9:00–16:00',
+    sunday: '9:00–16:00',
   },
 };

@@ -122,21 +122,21 @@ export default function DeliveryPage() {
                   <Clock className="w-4 h-4" style={{ color: 'var(--burgundy)' }} />
                   <div>
                     <p className="text-sm font-medium text-gray-800">{t('times.mondayLabel')}</p>
-                    <p className="text-sm text-gray-400">9:00 – 18:00</p>
+                    <p className="text-sm text-gray-400">9:00 – 19:00</p>
                   </div>
                 </li>
                 <li className="flex items-center gap-3 py-3 border-b border-pink-50">
                   <Clock className="w-4 h-4" style={{ color: 'var(--burgundy)' }} />
                   <div>
                     <p className="text-sm font-medium text-gray-800">{t('times.saturdayLabel')}</p>
-                    <p className="text-sm text-gray-400">10:00 – 16:00</p>
+                    <p className="text-sm text-gray-400">9:00 – 16:00</p>
                   </div>
                 </li>
                 <li className="flex items-center gap-3 py-3">
-                  <Clock className="w-4 h-4 text-gray-200" />
+                  <Clock className="w-4 h-4" style={{ color: 'var(--burgundy)' }} />
                   <div>
                     <p className="text-sm font-medium text-gray-800">{t('times.sundayLabel')}</p>
-                    <p className="text-sm text-gray-300">{t('times.closed')}</p>
+                    <p className="text-sm text-gray-400">9:00 – 16:00</p>
                   </div>
                 </li>
               </ul>

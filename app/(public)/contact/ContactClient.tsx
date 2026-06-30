@@ -119,7 +119,7 @@ export default function ContactClient() {
                   </li>
                   <li className="flex justify-between text-sm">
                     <span className="text-stone-500">{t('sunday')}</span>
-                    <span className="text-stone-400">{BUSINESS_INFO.hours.sunday}</span>
+                    <span className="text-stone-800 font-medium">{BUSINESS_INFO.hours.sunday}</span>
                   </li>
                 </ul>
               </div>
